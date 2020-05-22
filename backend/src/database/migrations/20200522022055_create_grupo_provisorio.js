@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-    return knex.schema.createTable('grupos', function(table){
+    return knex.schema.createTable('gruposProvisorios', function(table){
 
         table.increments();
 
@@ -23,6 +23,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable('grupos');
+    return knex.schema.dropTable('gruposProvisorios');
 };
-

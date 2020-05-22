@@ -4,7 +4,7 @@ module.exports = {
     async existeAluno(idAlunos = []) {
         let ehAluno = false;
 
-        for (x = 0; x <= 3; x++) {
+        for (x = 0; x <= 4; x++) {
 
             if (idAlunos[x] !== "") {
                 const idAlunoBanco = await connection('alunos').where('id', idAlunos[x]).select('id').first();

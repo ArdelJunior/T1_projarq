@@ -1,10 +1,11 @@
 const connection = require('../database/connection');
 const existeAluno = require('../helper/existeAlunoHelper');
+const cursoDiferente = require('../helper/cursoDiferenteHelper');
 
 module.exports = {
 
     async index(request, response) {
-        const grupos = await connection('grupos').select('*');
+        const grupos = await connection('gruposProvisorios').select('*');
 
         return response.json(grupos);
     },
@@ -15,12 +16,15 @@ module.exports = {
 
         const idAluno1 = request.headers.authorization;
 
-        if(await existeAluno.existeAluno([idAluno2, idAluno3, idAluno4, idAluno5]) == false){
+        if(await existeAluno.existeAluno([idAluno1, idAluno2, idAluno3, idAluno4, idAluno5]) == false){
             return response.status(400).json({ error: 'Há alguma ID de aluno incorreta, tente novamente.' });
         }
-        
 
-        const [id] = await connection('grupos').insert({
+        if(await cursoDiferente.verificaCurso([idAluno1, idAluno2, idAluno3, idAluno4, idAluno5]) == false){
+            return response.status(400).json({ error: 'É preciso ter no mínimo dois cursos diferentes.' });
+        }
+            
+        const [id] = await connection('gruposProvisorios').insert({
             nomeGrupo,
             idAluno1,
             idAluno2,
@@ -36,7 +40,7 @@ module.exports = {
         const { id } = request.params;
         const idAluno = request.headers.authorization;
 
-        const grupo = await connection('grupos')
+        const grupo = await connection('gruposProvisorios')
             .where('id', id)
             .select('idAluno1')
             .first();
@@ -45,9 +49,9 @@ module.exports = {
             return response.status(401).json({ error: 'Operação não permitida.' });
         }
 
-        await connection('grupos').where('id', id).delete();
+        await connection('gruposProvisorios').where('id', id).delete();
 
-        return response.status(204).send('Grupo excluído');
+        return response.status(204).send();
     },
 
     async alterar(request, response) {
@@ -59,7 +63,7 @@ module.exports = {
             return response.status(400).json({ error: 'Há alguma ID de aluno incorreta, tente novamente.' });
         }
 
-        const grupo = await connection('grupos')
+        const grupo = await connection('gruposProvisorios')
             .where('id', id)
             .select('idAluno1')
             .first();
@@ -68,7 +72,7 @@ module.exports = {
             return response.status(401).json({ error: 'Operação não permitida.' });
         }
 
-        await connection('grupos')
+        await connection('gruposProvisorios')
         .where('id', id)
         .update({
             idAluno2: idAluno2,
