@@ -3,14 +3,16 @@ const express = require('express');
 const AlunoController = require('./controllers/AlunoController');
 const ProfessorController = require('./controllers/ProfessorController');
 const GrupoProvisorioController = require('./controllers/GrupoProvisorioController');
-const SessionController = require('./controllers/SessionController');
+const AlunoSessionController = require('./controllers/AlunoSessionController');
 const GrupoFinalController = require('./controllers/GrupoFinalController');
 const AvaliaçãoController = require('./controllers/AvaliaçãoController');
-
+const ProfessorSessionController = require('./controllers/ProfessorSessionController');
  
 const routes = express.Router();
  
-routes.post('/sessions', SessionController.login);
+routes.post('/alunoSession', AlunoSessionController.login);
+
+routes.post('/professorSession', ProfessorSessionController.login);
 
 routes.get('/alunos', AlunoController.index);
 routes.post('/alunos', AlunoController.create);
