@@ -6,6 +6,7 @@ exports.up = function(knex) {
         table.integer('nota2').notNullable();
         table.integer('nota3').notNullable();
         table.integer('nota4').notNullable();
+        table.integer('nota5').notNullable();
         
         table.string('professor_id').notNullable();
         table.foreign('professor_id').references('id').inTable('professores');
