@@ -5,6 +5,8 @@ const ProfessorController = require('./controllers/ProfessorController');
 const GrupoProvisorioController = require('./controllers/GrupoProvisorioController');
 const SessionController = require('./controllers/SessionController');
 const GrupoFinalController = require('./controllers/GrupoFinalController');
+const AvaliaçãoController = require('./controllers/AvaliaçãoController');
+
  
 const routes = express.Router();
  
@@ -23,5 +25,8 @@ routes.put('/gruposProvisorios/:id', GrupoProvisorioController.alterar);
 
 routes.get('/gruposFinais', GrupoFinalController.index);
 routes.post('/gruposFinais', GrupoFinalController.create);
+
+routes.get('/avaliacoes', AvaliaçãoController.index);
+routes.post('/avaliacoes', AvaliaçãoController.create);
  
 module.exports = routes; 
