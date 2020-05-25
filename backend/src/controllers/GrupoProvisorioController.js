@@ -1,6 +1,5 @@
 const connection = require('../database/connection');
-const existeAluno = require('../helper/existeAlunoHelper');
-const cursoDiferente = require('../helper/cursoDiferenteHelper');
+const { validateTimeSugerido, getPayload } = require('../helper/AlunoHelper');
 
 module.exports = {
 
@@ -11,27 +10,17 @@ module.exports = {
     },
 
     async create(request, response) {
+        const { aluno, time } = request.body;
 
-        const { nomeGrupo, idAluno2, idAluno3, idAluno4, idAluno5 } = request.body;
-
-        const idAluno1 = request.headers.authorization;
-
-        if(await existeAluno.existeAluno([idAluno1, idAluno2, idAluno3, idAluno4, idAluno5]) == false){
-            return response.status(400).json({ error: 'Há alguma ID de aluno incorreta, tente novamente.' });
+        try {
+            await validateTimeSugerido(aluno, time);
+        } catch(err) {
+            return response.status(400).json({error: err.message});
         }
 
-        if(await cursoDiferente.verificaCurso([idAluno1, idAluno2, idAluno3, idAluno4, idAluno5]) == false){
-            return response.status(400).json({ error: 'É preciso ter no mínimo dois cursos diferentes.' });
-        }
-            
-        const [id] = await connection('gruposProvisorios').insert({
-            nomeGrupo,
-            idAluno1,
-            idAluno2,
-            idAluno3,
-            idAluno4,
-            idAluno5
-        });
+        const payload = getPayload(aluno, time);
+
+        const [id] = await connection('gruposProvisorios').insert(payload);
 
         return response.json({ id });
     },
@@ -54,37 +43,33 @@ module.exports = {
         return response.status(204).send();
     },
 
-    async alterar(request, response) {
+    async update(request, response) {
         const { id } = request.params;
-        const idAluno = request.headers.authorization;
-        const {idAluno2, idAluno3, idAluno4, idAluno5} = request.body;
+        const { aluno, time } = request.body;
 
-        if(await existeAluno.existeAluno([idAluno2, idAluno3, idAluno4, idAluno5]) == false){
-            return response.status(400).json({ error: 'Há alguma ID de aluno incorreta, tente novamente.' });
+        try {
+            await validateTimeSugerido(aluno, time);
+        } catch(err) {
+            console.error(err);
+            return response.status(400).json({error: err.message});
         }
+
+        const payload = getPayload(aluno, time);
+        console.log(payload);
 
         const grupo = await connection('gruposProvisorios')
             .where('id', id)
             .select('idAluno1')
             .first();
 
-        if (grupo.idAluno1 !== idAluno) {
+        if (grupo.idAluno1 !== aluno) {
             return response.status(401).json({ error: 'Operação não permitida.' });
         }
 
         await connection('gruposProvisorios')
         .where('id', id)
-        .update({
-            idAluno2: idAluno2,
-            idAluno3: idAluno3,
-            idAluno4: idAluno4,
-            idAluno5: idAluno5
-        });
+        .update(payload);
 
-        return response.status(200).json('Grupo modificado');
-
-
+        return response.status(201).json({success: true});
     },
-
-
 };
