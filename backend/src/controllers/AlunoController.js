@@ -1,70 +1,29 @@
-const { v4: uuid} = require('uuid');
-const connection = require('../database/connection'); 
- 
+const Aluno = require("../models/Aluno");
+const { hashPassword } = require("../helper/encryptPassword");
+
 module.exports = {
- 
-    async index (request, response) {
-        const alunos = await connection('alunos as a')
-            .select(['a.id', 'a.matricula', 'a.nome', 'c.nome as curso'])
-            .join('cursos as c', 'a.curso', 'c.id');
-    
-        return response.json(alunos);
-    },
-    
-    async get (request, response) {
-        const aluno = await connection('alunos as a')
-            .select(['a.id', 'a.matricula', 'a.nome', 'c.nome as curso'])
-            .join('cursos as c', 'a.curso', 'c.id')
-            .where('a.id', '=', request.params.id);
-    
-        return response.json(aluno);
-    },
- 
-    async create (request, response) {
-    
-        const {matricula, nome, curso} = request.body;
+  async index(request, response) {
+    const alunos = await Aluno.list();
+    return response.json(alunos);
+  },
 
-        if(!matricula) {
-            return response.status(400).json({error: "Matrícula não inserida"});
-        }
-        if(!nome) {
-            return response.status(400).json({error: "Nome não inserido"});
-        }
-        if(!curso) {
-            return response.status(400).json({error: "Curso não inserido"});
-        }
+  async get(request, response) {
+    const aluno = await Aluno.get(request.params.id);
 
-        const id = uuid();
+    return response.json(aluno);
+  },
 
-        const cursos = await connection('cursos')
-            .select('id').where('nome', '=', curso);
+  async create(request, response) {
+    const { matricula, nome, curso, email, password } = request.body;
 
-        let idCurso;
-        
-        try {
-            idCurso = cursos[0]['id'];
-            if(idCurso === undefined) {
-                throw new Error('');
-            }
-        }
-        catch(e) {
-            return response.status(400).json({error: `Curso ${curso} não encontrado`});
-        }
-            
-        try {
-            await connection ('alunos').insert({
-                id,
-                matricula,
-                nome,
-                curso: idCurso,
-            })
-            return response.status(201).json({id});
-        } catch(e) {
-            console.error(e);
-            // if(/constraint/i.test(e.code)) {
-            //     return response.status(400).json({error: `O aluno ${matricula} já existe`});
-            // }
-            return response.status(400).json({e});
-        }
+    const hashedPass = hashPassword(password);
+
+    try {
+      await Aluno.new(matricula, nome, curso, email, hashedPass);
+      return response.status(201).json({ success: true });
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({ error: error.message });
     }
+  },
 };

@@ -8,11 +8,11 @@ exports.up = function(knex) {
         table.integer('nota4').notNullable();
         table.integer('nota5').notNullable();
         
-        table.string('professor_id').notNullable();
-        table.foreign('professor_id').references('id').inTable('professores');
+        table.string('id_avaliador').notNullable();
+        table.foreign('id_avaliador').references('id').inTable('avaliadores');
 
-        table.string('nomeGrupo').notNullable();
-        table.foreign('nomeGrupo').references('nomeGrupo').inTable('gruposFinais');
+        table.string('nome_grupo').notNullable();
+        table.foreign('nome_grupo').references('nome_grupo').inTable('grupos_finais');
       
       });
 };

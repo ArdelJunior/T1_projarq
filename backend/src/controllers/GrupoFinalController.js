@@ -4,7 +4,7 @@ const { validateTimeFinal, getPayload } = require('../helper/AlunoHelper');
 module.exports = {
 
     async index(request, response) {
-        const grupos = await connection('gruposFinais').select('*');
+        const grupos = await connection('grupos_finais').select('*');
 
         return response.json(grupos);
     },
@@ -20,7 +20,7 @@ module.exports = {
 
         const payload = getPayload(aluno, time);
 
-        const [id] = await connection('gruposFinais').insert(payload);
+        const [id] = await connection('grupos_finais').insert(payload);
 
         return response.json({ id });
     },
@@ -28,7 +28,7 @@ module.exports = {
     async delete(request, response) {
         const { id } = request.params;
 
-        await connection('gruposFinais').where('id', id).delete();
+        await connection('grupos_finais').where('id', id).delete();
 
         return response.status(204).send();
     },
@@ -46,7 +46,7 @@ module.exports = {
 
         const payload = getPayload(aluno, time);
 
-        await connection('gruposFinais')
+        await connection('grupos_finais')
         .where('id', id)
         .update(payload);
 

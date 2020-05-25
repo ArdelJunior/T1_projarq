@@ -1,42 +1,28 @@
-const connection = require('../database/connection'); 
+const connection = require("../database/connection");
+const Avaliacao = require("../models/Avaliacao");
+const Avaliador = require("../models/Avaliador");
 
 module.exports = {
+  async index(request, response) {
+    const avaliador = request.headers.authorization;
 
-    async index (request, response){
-        const professor_id = request.headers.authorization; 
+    const avaliacoes = await Avaliacao.list(avaliador);
 
-        const avaliacoes = await connection ('avaliacoes')
-            .where('professor_id', professor_id)
-            .select('*');
+    return response.json(avaliacoes);
+  },
 
-        return response.json(avaliacoes);
-    },
-  
-    async create (request, response) {
-    
-        const {nomeGrupo, nota1, nota2, nota3, nota4, nota5} = request.body; 
+  async create(request, response) {
+    const { nome_grupo, nota1, nota2, nota3, nota4, nota5 } = request.body;
 
-        const professor_id = request.headers.authorization;
+    const avaliador = request.headers.authorization;
 
-        const professor = await connection('professores')
-            .where('id', professor_id)
-            .select('id')
-            .first();
+    const avaliadorExists = await Avaliador.get(avaliador);
 
-        if (!professor) {
-            return response.status(401).json({ error: 'Operação não permitida.' });
-        }
-
-            
-        await connection ('avaliacoes').insert({ 
-            nota1,
-            nota2,
-            nota3,
-            nota4,
-            nota5,
-            professor_id,
-            nomeGrupo
-        })
-        return response.status(201).json('Avaliação cadastrada');
+    if (!avaliadorExists) {
+      return response.status(401).json({ error: "Operação não permitida." });
     }
+
+    await Avaliacao.new(avaliador, nome_grupo, nota1, nota2, nota3, nota4, nota5);
+    return response.status(201).json({success: true});
+  },
 };

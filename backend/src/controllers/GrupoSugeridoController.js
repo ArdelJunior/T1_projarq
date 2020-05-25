@@ -4,7 +4,7 @@ const { validateTimeSugerido, getPayload } = require('../helper/AlunoHelper');
 module.exports = {
 
     async index(request, response) {
-        const grupos = await connection('gruposProvisorios').select('*');
+        const grupos = await connection('grupos_sugeridos').select('*');
 
         return response.json(grupos);
     },
@@ -20,7 +20,7 @@ module.exports = {
 
         const payload = getPayload(aluno, time);
 
-        const [id] = await connection('gruposProvisorios').insert(payload);
+        const [id] = await connection('grupos_sugeridos').insert(payload);
 
         return response.json({ id });
     },
@@ -29,7 +29,7 @@ module.exports = {
         const { id } = request.params;
         const idAluno = request.headers.authorization;
 
-        const grupo = await connection('gruposProvisorios')
+        const grupo = await connection('grupos_sugeridos')
             .where('id', id)
             .select('idAluno1')
             .first();
@@ -38,7 +38,7 @@ module.exports = {
             return response.status(401).json({ error: 'Operação não permitida.' });
         }
 
-        await connection('gruposProvisorios').where('id', id).delete();
+        await connection('grupos_sugeridos').where('id', id).delete();
 
         return response.status(204).send();
     },
@@ -57,7 +57,7 @@ module.exports = {
         const payload = getPayload(aluno, time);
         console.log(payload);
 
-        const grupo = await connection('gruposProvisorios')
+        const grupo = await connection('grupos_sugeridos')
             .where('id', id)
             .select('idAluno1')
             .first();
@@ -66,7 +66,7 @@ module.exports = {
             return response.status(401).json({ error: 'Operação não permitida.' });
         }
 
-        await connection('gruposProvisorios')
+        await connection('grupos_sugeridos')
         .where('id', id)
         .update(payload);
 

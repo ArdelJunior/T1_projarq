@@ -1,11 +1,11 @@
 exports.up = function(knex) {
-    return knex.schema.createTable('gruposProvisorios', function(table){
+    return knex.schema.createTable('grupos_finais', function(table){
 
         table.increments();
 
-        table.string ('nomeGrupo').unique();
+        table.string('nome').unique();
         
-        table.string('idAluno1').notNullable().unique();
+        table.string('idAluno1').notNullable();
         table.foreign('idAluno1').references('id').inTable('alunos');
         
         table.string('idAluno2').notNullable();
@@ -23,5 +23,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable('gruposProvisorios');
+    return knex.schema.dropTable('grupos_finais');
 };
