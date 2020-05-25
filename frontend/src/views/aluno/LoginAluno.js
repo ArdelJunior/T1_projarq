@@ -14,6 +14,7 @@ class LoginAluno extends Component {
       .catch((error) => {
         console.error(error.response.data);
       });
+    this.props.history.push("/aluno")
   };
 
   render() {

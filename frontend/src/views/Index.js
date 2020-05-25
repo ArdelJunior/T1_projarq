@@ -42,7 +42,7 @@ class Index extends Component {
                     </Button>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button component={Link} to="#" variant="contained" color="primary" size="large" fullWidth>
+                    <Button component={Link} to="/avaliador" variant="contained" color="primary" size="large" fullWidth>
                       Sou avaliador
                     </Button>
                   </Grid>
