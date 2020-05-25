@@ -7,8 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
 import Topbar from "../../components/Topbar";
-import CardAluno from "../../components/cards/CardAluno";
-import CardAlunoSelect from "../../components/cards/CardAlunoSelect";
+import ListCardAluno from "../../components/cards/ListCardAluno";
 import Toastr from "../../components/common/Toastr";
 
 import { getAlunos, setTimeSugerido } from "../../utils/api";
@@ -161,27 +160,13 @@ class CreateTimeSugerido extends Component {
     });
   };
 
-  renderAlunos = () => {
-    const alunosList = this.state.alunos;
-    return alunosList.map((item, key) => {
-      return <CardAlunoSelect key={key} idx={key} nome={item.nome} curso={item.curso} selected={item.selected} onClick={this.toggleSelect} />;
-    });
-  };
-
-  renderTimeSugerido = () => {
-    const alunosList = this.state.alunos.filter((item) => item.selected);
-    return alunosList.map((item, key) => {
-      return <CardAluno key={key} idx={key} nome={item.nome} curso={item.curso} />;
-    });
-  };
-
   render() {
     const { classes } = this.props;
     const currentPath = this.props.location.pathname;
     return (
       <React.Fragment>
         <CssBaseline>
-          {/* <Topbar currentPath={currentPath} /> */}
+          <Topbar currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -211,9 +196,7 @@ class CreateTimeSugerido extends Component {
                 </Grid>
               </Box>
               <Box flex={9} className={classes.vScroll}>
-                <Grid container spacing={2} className={classes.list}>
-                  {this.renderTimeSugerido()}
-                </Grid>
+                <ListCardAluno alunos={this.state.alunos.filter((item) => item.selected)} />
               </Box>
               <Box flex={1} className={classes.center}>
                 <Button color="primary" variant="contained" className={classes.actionButton} onClick={this.handleSubmitClick}>
@@ -235,9 +218,7 @@ class CreateTimeSugerido extends Component {
               </Toolbar>
             </AppBar>
             <div className={classes.dialogBody}>
-              <Grid container spacing={3} className={classes.list}>
-                {this.renderAlunos()}
-              </Grid>
+              <ListCardAluno alunos={this.state.alunos} forSelect={true} onClick={this.toggleSelect} />
             </div>
           </Dialog>
         </CssBaseline>

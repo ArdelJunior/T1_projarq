@@ -13,7 +13,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Menu from './Menu';
+// import Menu from './Menu';
+import MenuAluno from './MenuAluno';
+import MenuAvaliador from './MenuAvaliador';
 
 const logo = require('../images/logo.svg');
 
@@ -101,6 +103,22 @@ class Topbar extends Component {
     window.scrollTo(0, 0);
   }
 
+  renderMenuList = () => {
+    const menu = this.props.type === "avaliador" ? MenuAvaliador : MenuAluno;
+    return menu.map((item, index) => (
+      <ListItem component={Link} to={{pathname: item.pathname, search: this.props.location.search}} button key={item.label}>
+        <ListItemText primary={item.label} />
+      </ListItem>
+    ))
+  }
+
+  renderMenuTab = () => {
+    const menu = this.props.type === "avaliador" ? MenuAvaliador : MenuAluno;
+    return menu.map((item, index) => (
+      <Tab key={index} component={Link} to={{pathname: item.pathname, search: this.props.location.search}} classes={{root: this.props.classes.tabItem}} label={item.label} />
+    ))
+  }
+
   current = () => {
     if(this.props.currentPath === '/home') {
       return 0
@@ -133,7 +151,7 @@ class Topbar extends Component {
                     <Typography variant="h6" color="inherit" noWrap>
                       <Link to='/' className={classes.link}>
                         <img width={20} src={logo} alt="" />
-                        <span className={classes.tagline}>Material Sense</span>
+                        <span className={classes.tagline}>Hackaton</span>
                       </Link>
                     </Typography>
                   </div>
@@ -153,11 +171,7 @@ class Topbar extends Component {
                         <SwipeableDrawer anchor="right" open={this.state.menuDrawer} onClose={this.mobileMenuClose} onOpen={this.mobileMenuOpen}>
                           <AppBar title="Menu" />
                           <List>
-                            {Menu.map((item, index) => (
-                              <ListItem component={Link} to={{pathname: item.pathname, search: this.props.location.search}} button key={item.label}>
-                                <ListItemText primary={item.label} />
-                              </ListItem>
-                            ))}
+                            {this.renderMenuList()}
                           </List>
                         </SwipeableDrawer>
                         <Tabs
@@ -166,9 +180,7 @@ class Topbar extends Component {
                           textColor="primary"
                           onChange={this.handleChange}
                         >
-                          {Menu.map((item, index) => (
-                            <Tab key={index} component={Link} to={{pathname: item.pathname, search: this.props.location.search}} classes={{root: classes.tabItem}} label={item.label} />
-                          ))}
+                          {this.renderMenuTab()}
                         </Tabs>
                       </div>
                     </React.Fragment>
