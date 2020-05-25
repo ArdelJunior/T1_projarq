@@ -1,5 +1,5 @@
+const { v4: uuid} = require('uuid');
 const connection = require('../database/connection'); 
-const crypto= require ('crypto'); 
  
 module.exports = {
  
@@ -13,7 +13,7 @@ module.exports = {
     
         const {cpf, nome} = request.body; 
 
-        const id = crypto.randomBytes(4).toString('HEX');
+        const id = uuid();
             
         await connection ('professores').insert({ 
             cpf,
