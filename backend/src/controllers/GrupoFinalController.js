@@ -1,56 +1,83 @@
-const connection = require('../database/connection');
-const { validateTimeFinal, getPayload } = require('../helper/AlunoHelper');
+const connection = require("../database/connection");
+const Aluno = require("../models/Aluno");
+const { validateTimeFinal, getPayload } = require("../helper/AlunoHelper");
 
 module.exports = {
+  async index(request, response) {
+    const grupos = await connection("grupos_finais").select("*");
 
-    async index(request, response) {
-        const grupos = await connection('grupos_finais').select('*');
+    return response.json(grupos);
+  },
 
-        return response.json(grupos);
-    },
+  async findByAluno(request, response) {
+    const { id } = request.params;
+    const grupo = await connection("grupos_finais")
+      .where("idAluno1", "=", id)
+      .orWhere("idAluno2", "=", id)
+      .orWhere("idAluno3", "=", id)
+      .orWhere("idAluno4", "=", id)
+      .orWhere("idAluno5", "=", id)
+      .first();
 
-    async create(request, response) {
-        const { aluno, time } = request.body;
+    if (!grupo) {
+      return response.status(204);
+    }
 
-        try {
-            await validateTimeFinal(aluno, time);
-        } catch(err) {
-            return response.status(400).json({error: err.message});
-        }
+    const ids = [
+        grupo.idAluno1,
+        grupo.idAluno2,
+        grupo.idAluno3,
+        grupo.idAluno4,
+        grupo.idAluno5,
+    ];
 
-        const payload = getPayload(aluno, time);
+    const alunos = await Promise.all(ids.map(async (e) => {
+        const aluno = await Aluno.get(e);
+        return aluno;
+    }));
 
-        const [id] = await connection('grupos_finais').insert(payload);
+    return response.status(alunos.length > 0 ? 200 : 204).json(alunos);
+  },
 
-        return response.json({ id });
-    },
+  async create(request, response) {
+    const { aluno, time } = request.body;
 
-    async delete(request, response) {
-        const { id } = request.params;
+    try {
+      await validateTimeFinal(aluno, time);
+    } catch (err) {
+      return response.status(400).json({ error: err.message });
+    }
 
-        await connection('grupos_finais').where('id', id).delete();
+    const payload = getPayload(aluno, time);
 
-        return response.status(204).send();
-    },
+    const [id] = await connection("grupos_finais").insert(payload);
 
-    async update(request, response) {
-        const { id } = request.params;
-        const { aluno, time } = request.body;
+    return response.json({ id });
+  },
 
-        try {
-            await validateTimeFinal(aluno, time);
-        } catch(err) {
-            console.error(err);
-            return response.status(400).json({error: err.message});
-        }
+  async delete(request, response) {
+    const { id } = request.params;
 
-        const payload = getPayload(aluno, time);
+    await connection("grupos_finais").where("id", id).delete();
 
-        await connection('grupos_finais')
-        .where('id', id)
-        .update(payload);
+    return response.status(204).send();
+  },
 
-        return response.status(201).json({success: true});
-    },
+  async update(request, response) {
+    const { id } = request.params;
+    const { aluno, time } = request.body;
 
+    try {
+      await validateTimeFinal(aluno, time);
+    } catch (err) {
+      console.error(err);
+      return response.status(400).json({ error: err.message });
+    }
+
+    const payload = getPayload(aluno, time);
+
+    await connection("grupos_finais").where("id", id).update(payload);
+
+    return response.status(201).json({ success: true });
+  },
 };

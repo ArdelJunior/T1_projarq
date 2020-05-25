@@ -27,8 +27,12 @@ routes.post('/grupos_sugeridos', GrupoSugeridoController.create);
 routes.delete('/grupos_sugeridos/:id', GrupoSugeridoController.delete);
 routes.put('/grupos_sugeridos/:id', GrupoSugeridoController.update);
 
-routes.get('/gruposFinais', GrupoFinalController.index);
-routes.post('/gruposFinais', GrupoFinalController.create);
+routes.get('/grupos_sugeridos_aluno/:id', GrupoSugeridoController.findByAluno);
+
+routes.get('/grupos_finais', GrupoFinalController.index);
+routes.post('/grupos_finais', GrupoFinalController.create);
+
+routes.get('/grupos_finais_aluno/:id', GrupoFinalController.findByAluno);
 
 routes.get('/avaliacoes', AvaliacaoController.index);
 routes.post('/avaliacoes', AvaliacaoController.create);
