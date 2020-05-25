@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { Container, CssBaseline, Grid, Typography, TextField, Button } from "@material-ui/core";
+import { Container, CssBaseline, Grid, Typography, TextField, Button, Select, MenuItem } from "@material-ui/core";
 import withStyles from "@material-ui/styles/withStyles";
 import { withRouter, Link, Redirect } from "react-router-dom";
+import axios from "axios";
 
 import Topbar from "../../components/Topbar";
+import { getCursos } from "../../utils/api";
+import Toastr from "../../components/common/Toastr";
 const backgroundShape = require("../../images/shape.svg");
 
 const styles = (theme) => ({
@@ -41,9 +44,35 @@ class SignupAluno extends Component {
     matricula: "",
     nome: "",
     email: "",
+    curso: "",
     password: "",
     redirect: false,
+
+    cursos: [],
+
+    errorMessage: "",
+    showError: false,
+    loaded: false,
   };
+
+  componentDidMount = () => {
+    axios
+      .get(getCursos)
+      .then((response) => {
+        this.setState({
+          cursos: response.data,
+          loaded: true,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setState({
+          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
+          showError: true,
+          loaded: true,
+        });
+      });
+  }
 
   handleInputChange = (event) => {
     this.setState({
@@ -58,6 +87,20 @@ class SignupAluno extends Component {
     })
   };
 
+  handleToastrClose = () => {
+    this.setState({
+      showError: false,
+      errorMessage: null,
+    });
+  };
+
+  renderCursos = () => {
+    const cursosList = this.state.cursos;
+    return cursosList.map((item, key) => {
+      return <MenuItem value={item.id}>{item.nome}</MenuItem>
+    });
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -68,6 +111,14 @@ class SignupAluno extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
+        <Toastr
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            timeout={6000}
+            severity="error"
+            message={this.state.errorMessage}
+            open={this.state.showError}
+            onClose={this.handleToastrClose}
+          />
           <div className={classes.root}>
             <Container component="main" maxWidth="xs">
               <div className={classes.paper}>
@@ -85,6 +136,11 @@ class SignupAluno extends Component {
                     </Grid>
                     <Grid item xs={12}>
                       <TextField id="password" name="password" label="Senha" variant="outlined" type="password" required autoFocus fullWidth onChange={this.handleInputChange} />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Select id="curso" name="curso" label="Curso" variant="outlined" type="curso" required autoFocus fullWidth onChange={this.handleInputChange}>
+                        {this.renderCursos()}
+                      </Select>
                     </Grid>
                   </Grid>
                   <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
