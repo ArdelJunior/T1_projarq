@@ -12,6 +12,9 @@ import LoginAluno from "./views/aluno/LoginAluno";
 import SignUpAluno from "./views/aluno/SignUpAluno";
 import CreateTimeSugerido from "./views/aluno/CreateTimeSugerido";
 
+import DashboardAvaliador from "./views/avaliador/DashboardAvaliador";
+import GerenciarAlunos from "./views/avaliador/GerenciarAlunos";
+
 export default (props) => (
   <BrowserRouter>
     <ScrollToTop>
@@ -20,6 +23,9 @@ export default (props) => (
         <Route path="/aluno/signup" component={SignUpAluno} />
         <Route path="/aluno/criar-time-sugerido" component={CreateTimeSugerido} />
         <Route path="/aluno" component={DashboardAluno} />
+
+        <Route path="/avaliador/alunos" component={GerenciarAlunos} />
+        <Route path="/avaliador" component={DashboardAvaliador} />
 
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/wizard" component={Wizard} />
