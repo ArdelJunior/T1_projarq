@@ -5,7 +5,7 @@ exports.up = function(knex) {
 
         table.string ('nomeGrupo').unique();
         
-        table.string('idAluno1').notNullable();
+        table.string('idAluno1').notNullable().unique();
         table.foreign('idAluno1').references('id').inTable('alunos');
         
         table.string('idAluno2').notNullable();
