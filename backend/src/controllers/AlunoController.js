@@ -9,7 +9,16 @@ module.exports = {
             .join('cursos as c', 'a.curso', 'c.id');
     
         return response.json(alunos);
-    }, 
+    },
+    
+    async get (request, response) {
+        const aluno = await connection('alunos as a')
+            .select(['a.id', 'a.matricula', 'a.nome', 'c.nome as curso'])
+            .join('cursos as c', 'a.curso', 'c.id')
+            .where('a.id', '=', request.params.id);
+    
+        return response.json(aluno);
+    },
  
     async create (request, response) {
     
