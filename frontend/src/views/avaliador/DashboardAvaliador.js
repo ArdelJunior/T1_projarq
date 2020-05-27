@@ -34,8 +34,7 @@ const styles = (theme) => ({
 
 class Dashboard extends Component {
   state = {
-    nome: "Aluno",
-    id: "1b435aef-949f-4c81-afbc-6cec74b40126",
+    id: 1,
     alunos: [],
   };
 

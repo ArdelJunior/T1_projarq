@@ -74,7 +74,7 @@ class CreateTimeSugerido extends Component {
     alunos: [],
     time: [],
     timeId: null,
-    idAluno: "1b435aef-949f-4c81-afbc-6cec74b40126",
+    idAluno: 1,
     showError: false,
     errorMessage: null,
   };
@@ -103,7 +103,9 @@ class CreateTimeSugerido extends Component {
         this.setState({
           timeId: rs.data.id,
           time: rs.data.alunos,
-          alunos: this.state.alunos.map((aluno) => (rs.data.alunos.filter((item) => aluno.id === item.id).length ? { ...aluno, selected: true } : { ...aluno })),
+          alunos: this.state.alunos
+            .map((aluno) => (rs.data.alunos && rs.data.alunos.filter((item) => aluno.id === item.id).length ? { ...aluno, selected: true } : { ...aluno }))
+            .filter((aluno) => aluno.id !== this.state.idAluno),
         });
       })
       .catch((error) => {
@@ -151,12 +153,14 @@ class CreateTimeSugerido extends Component {
       });
       return;
     }
-    
-    const req = this.state.timeId ? axios.put(setTimeSugerido + "/" + this.state.timeId, { time, aluno: this.state.idAluno }) : axios.post(setTimeSugerido, { time, aluno: this.state.idAluno });
+
+    const req = this.state.timeId
+      ? axios.put(setTimeSugerido + "/" + this.state.timeId, { time, aluno: this.state.idAluno })
+      : axios.post(setTimeSugerido, { time, aluno: this.state.idAluno });
     req
       .then((response) => {
         console.log(response);
-        this.props.history.push("/aluno")
+        this.props.history.push("/aluno");
       })
       .catch((err) => {
         console.error(err);

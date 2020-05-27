@@ -6,13 +6,6 @@ import {
   CssBaseline,
   Typography,
   Grid,
-  Dialog,
-  IconButton,
-  Fab,
-  Toolbar,
-  AppBar,
-  Slide,
-  Button,
   Box,
   Backdrop,
   CircularProgress,
@@ -21,17 +14,16 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
 
 import Topbar from "../../components/Topbar";
-import ListCardAluno from "../../components/cards/ListCardAluno";
 import Toastr from "../../components/common/Toastr";
 
-import { getAlunos, setTimeSugerido } from "../../utils/api";
+import { getAlunos, getTimeSugeridoAluno } from "../../utils/api";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -87,27 +79,104 @@ const styles = (theme) => ({
 class GerenciarAlunos extends Component {
   state = {
     alunos: [],
-    loaded: true
+    loaded: true,
+
+    timeSugerido: [],
+    alunoTimeSugerido: "",
+    modalOpen: false,
+
+    showError: false,
+    errorMessage: null,
   };
 
   componentDidMount() {
-    axios.get(getAlunos).then(rs => {
-      this.setState({
-        alunos: rs.data
+    axios
+      .get(getAlunos)
+      .then((rs) => {
+        this.setState({
+          alunos: rs.data,
+        });
       })
-    })
+      .catch((err) => {
+        this.setState({
+          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
+          showError: true,
+        });
+      });
   }
 
+  getAlunosTime = (aluno) => {
+    console.log({ aluno });
+    axios
+      .get(getTimeSugeridoAluno + aluno.id)
+      .then((rs) => {
+        this.setState({
+          timeSugerido: rs.data.alunos,
+          alunoTimeSugerido: aluno.nome,
+          modalOpen: true,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
+          showError: true,
+        });
+      });
+  };
+
+  handleRowClick = (event, item) => {
+    this.getAlunosTime(item);
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      modalOpen: false,
+    });
+  };
+
+  renderDialogContent = () => {
+    const { classes } = this.props;
+    return (
+      this.state.timeSugerido.length > 0 && (
+        <React.Fragment>
+          <div className={classes.dialogBody}>
+            <DialogTitle>
+              <div align="center">Time sugerido por {this.state.alunoTimeSugerido}</div>
+            </DialogTitle>
+            <DialogContent>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Aluno</TableCell>
+                    <TableCell align="center">Curso</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {this.state.timeSugerido.map((aluno, key) => {
+                    return (
+                      <TableRow key={key}>
+                        <TableCell align="center">{aluno.nome}</TableCell>
+                        <TableCell align="center">{aluno.curso}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </DialogContent>
+          </div>
+        </React.Fragment>
+      )
+    );
+  };
+
   renderRows = () => {
-    console.log(this.state.alunos);
-    return this.state.alunos.map((aluno) => {
+    return this.state.alunos.map((aluno, key) => {
       return (
-        <TableRow>
+        <TableRow hover key={key} onClick={(e) => this.handleRowClick(e, aluno)}>
           <TableCell align="center">{aluno.nome}</TableCell>
           <TableCell align="center">{aluno.matricula}</TableCell>
           <TableCell align="center">{aluno.curso}</TableCell>
           <TableCell align="center">{aluno.email}</TableCell>
-          <TableCell align="center"></TableCell>
         </TableRow>
       );
     });
@@ -131,11 +200,16 @@ class GerenciarAlunos extends Component {
           <Backdrop className={classes.backdrop} open={!this.state.loaded}>
             <CircularProgress />
           </Backdrop>
+
+          <Dialog open={this.state.modalOpen} onClose={this.handleModalClose}>
+            {this.state.modalOpen ? this.renderDialogContent() : ""}
+          </Dialog>
+
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
               <Box flex={1}>
                 <Grid container>
-                  <Grid item xs={12} style={{textAlign: "center"}}>
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
                     <Typography variant="h6" gutterBottom>
                       Alunos inscritos
                     </Typography>
@@ -147,23 +221,24 @@ class GerenciarAlunos extends Component {
                   <Table stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <TableCell key="aluno_nome" align="center" style={{ minWidth: 100 }}>Nome</TableCell>
-                        <TableCell key="aluno_matricula" align="center" style={{ minWidth: 100 }}>Matrícula</TableCell>
-                        <TableCell key="aluno_curso" align="center" style={{ minWidth: 100 }}>Curso</TableCell>
-                        <TableCell key="aluno_email" align="center" style={{ minWidth: 100 }}>E-mail</TableCell>
-                        <TableCell key="aluno_time_sugerido" align="center" style={{ minWidth: 100 }}>Time sugerido</TableCell>
+                        <TableCell key="aluno_nome" align="center" style={{ minWidth: 100 }}>
+                          Nome
+                        </TableCell>
+                        <TableCell key="aluno_matricula" align="center" style={{ minWidth: 100 }}>
+                          Matrícula
+                        </TableCell>
+                        <TableCell key="aluno_curso" align="center" style={{ minWidth: 100 }}>
+                          Curso
+                        </TableCell>
+                        <TableCell key="aluno_email" align="center" style={{ minWidth: 100 }}>
+                          E-mail
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>{this.renderRows()}</TableBody>
                   </Table>
                 </TableContainer>
-                {/* <ListCardAluno alunos={this.state.alunos.filter((item) => item.selected)} /> */}
               </Box>
-              {/* <Box flex={1} className={classes.center}>
-                <Button color="primary" variant="contained" className={classes.actionButton} onClick={this.handleSubmitClick}>
-                  Finalizar
-                </Button>
-              </Box> */}
             </Box>
           </div>
         </CssBaseline>
