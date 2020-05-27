@@ -10,7 +10,7 @@ import Topbar from "../../components/Topbar";
 import ListCardAluno from "../../components/cards/ListCardAluno";
 import Toastr from "../../components/common/Toastr";
 
-import { getAlunos, setTimeSugerido } from "../../utils/api";
+import { getAlunos, getTimeSugeridoAluno, setTimeSugerido } from "../../utils/api";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -72,6 +72,9 @@ class CreateTimeSugerido extends Component {
     modalOpen: false,
     loaded: false,
     alunos: [],
+    time: [],
+    timeId: null,
+    idAluno: "1b435aef-949f-4c81-afbc-6cec74b40126",
     showError: false,
     errorMessage: null,
   };
@@ -89,6 +92,24 @@ class CreateTimeSugerido extends Component {
         console.error(err);
         this.setState({
           errorMessage: err.response ? err.response.data.error : "Erro de conexão",
+          showError: true,
+          loaded: true,
+        });
+      });
+
+    axios
+      .get(getTimeSugeridoAluno + this.state.idAluno)
+      .then((rs) => {
+        this.setState({
+          timeId: rs.data.id,
+          time: rs.data.alunos,
+          alunos: this.state.alunos.map((aluno) => (rs.data.alunos.filter((item) => aluno.id === item.id).length ? { ...aluno, selected: true } : { ...aluno })),
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        this.setState({
+          errorMessage: error.response ? error.response.data.error : "Erro de conexão",
           showError: true,
           loaded: true,
         });
@@ -130,11 +151,12 @@ class CreateTimeSugerido extends Component {
       });
       return;
     }
-    axios
-      .post(setTimeSugerido, { time, aluno: "1c20e521-722b-4eb1-ae3a-bf6e8f5368be" })
+    
+    const req = this.state.timeId ? axios.put(setTimeSugerido + "/" + this.state.timeId, { time, aluno: this.state.idAluno }) : axios.post(setTimeSugerido, { time, aluno: this.state.idAluno });
+    req
       .then((response) => {
         console.log(response);
-        alert("OK");
+        this.props.history.push("/aluno")
       })
       .catch((err) => {
         console.error(err);

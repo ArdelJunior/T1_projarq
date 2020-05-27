@@ -13,7 +13,17 @@ module.exports = {
     }
   },
 
-  async findByAluno(request, response) {
+  async get(request, response) {
+    const { id } = request.params;
+    try {
+      const time = await TimeSugerido.get(id);
+      return response.json(time);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+  },
+
+  async getByAluno(request, response) {
     const { id } = request.params;
     try {
       const time = await TimeSugerido.getByAluno(id);
@@ -32,23 +42,6 @@ module.exports = {
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
-
-    // const { aluno, time } = request.body;
-
-    // try {
-    //   await validateTimeSugerido(aluno, time);
-    // } catch (err) {
-    //   return response.status(400).json({ error: err.message });
-    // }
-
-    // try {
-    //   const payload = getPayload(aluno, time);
-    //   console.log({ time, payload });
-    //   const id = await connection("grupos_sugeridos").insert(payload);
-    //   return response.json({ id });
-    // } catch (err) {
-    //   return response.status(400).json({ error: err.message });
-    // }
   },
 
   async delete(request, response) {
@@ -59,18 +52,6 @@ module.exports = {
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
-    // const idAluno = request.headers.authorization;
-
-    // const grupo = await connection("grupos_sugeridos")
-    //   .where("id", id)
-    //   .select("idAluno1")
-    //   .first();
-
-    // if (grupo.idAluno1 !== idAluno) {
-    //   return response.status(401).json({ error: "Operação não permitida." });
-    // }
-
-    // await connection("grupos_sugeridos").where("id", id).delete();
 
     return response.status(204).send();
   },
@@ -95,27 +76,6 @@ module.exports = {
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
-    // const { aluno, time } = request.body;
-
-    // try {
-    //   await validateTimeSugerido(aluno, time);
-    // } catch (err) {
-    //   console.error(err);
-    //   return response.status(400).json({ error: err.message });
-    // }
-
-    // const grupo = await connection("grupos_sugeridos")
-    //   .where("id", id)
-    //   .select("idAluno1")
-    //   .first();
-
-    // if (grupo.idAluno1 !== aluno) {
-    //   return response.status(401).json({ error: "Operação não permitida." });
-    // }
-
-    // const payload = getPayload(aluno, time);
-
-    // await connection("grupos_sugeridos").where("id", id).update(payload);
 
     return response.status(201).json({ success: true });
   },

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
+import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Wizard from "./components/Wizard";
 import Cards from "./components/Cards";
@@ -26,6 +26,10 @@ export default (props) => (
 
         <Route path="/avaliador/alunos" component={GerenciarAlunos} />
         <Route path="/avaliador" component={DashboardAvaliador} />
+
+        <Route path="/logout">
+          <Redirect to="/" />
+        </Route>
 
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/wizard" component={Wizard} />

@@ -41,12 +41,12 @@ class Dashboard extends Component {
   };
 
   componentDidMount() {
-    axios.get(getTimeSugeridoAluno + this.state.id).then((rs) => {
-      console.log(rs);
-      this.setState({
-        alunos: rs.data,
-      });
-    });
+    // axios.get(getTimeSugeridoAluno + this.state.id).then((rs) => {
+    //   console.log(rs);
+    //   this.setState({
+    //     alunos: rs.data.alunos || [],
+    //   });
+    // });
   }
 
   render() {
@@ -60,9 +60,9 @@ class Dashboard extends Component {
               <Box flex={2}></Box>
               <Box flex={10}>
                 <div className={classes.center}>
-                  <Typography variant="h5">Seu time sugerido</Typography>
+                  <Typography variant="h5">OLAAAAAARRRRRRR</Typography>
                 </div>
-                <ListCardAluno alunos={this.state.alunos} />
+                {/* <ListCardAluno alunos={this.state.alunos} /> */}
               </Box>
             </Box>
           </div>

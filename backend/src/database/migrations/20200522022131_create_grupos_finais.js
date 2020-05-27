@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-    return knex.schema.createTable('grupos_finais', function(table){
+    return knex.schema.createTable('grupos_finais', function(table) {
 
         table.increments();
 

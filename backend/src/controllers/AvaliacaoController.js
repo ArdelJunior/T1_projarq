@@ -4,25 +4,45 @@ const Avaliador = require("../models/Avaliador");
 
 module.exports = {
   async index(request, response) {
-    const avaliador = request.headers.authorization;
+    // const avaliador = request.headers.authorization;
 
-    const avaliacoes = await Avaliacao.list(avaliador);
+    const avaliacoes = await Avaliacao.list();
 
     return response.json(avaliacoes);
   },
 
-  async create(request, response) {
-    const { nome_grupo, nota1, nota2, nota3, nota4, nota5 } = request.body;
+  async getByTime(request, response) {
+    const { id } = request.params;
 
-    const avaliador = request.headers.authorization;
-
-    const avaliadorExists = await Avaliador.get(avaliador);
-
-    if (!avaliadorExists) {
-      return response.status(401).json({ error: "Operação não permitida." });
+    try {
+      const avaliacoes = await Avaliacao.getByTime(id);
+      return response.json(avaliacoes);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
     }
+  },
 
-    await Avaliacao.new(avaliador, nome_grupo, nota1, nota2, nota3, nota4, nota5);
-    return response.status(201).json({success: true});
+  async create(request, response) {
+    // const { id_avaliador, id_time, id_criterio, nota } = request.body;
+    const { id_avaliador, id_time, avaliacoes } = request.body;
+
+    try {
+      await Avaliacao.new(id_avaliador, id_time, avaliacoes);
+      return response.json({ success: true });
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+    // const { nome_grupo, nota1, nota2, nota3, nota4, nota5 } = request.body;
+
+    // const avaliador = request.headers.authorization;
+
+    // const avaliadorExists = await Avaliador.get(avaliador);
+
+    // if (!avaliadorExists) {
+    //   return response.status(401).json({ error: "Operação não permitida." });
+    // }
+
+    // await Avaliacao.new(avaliador, nome_grupo, nota1, nota2, nota3, nota4, nota5);
+    // return response.status(201).json({success: true});
   },
 };

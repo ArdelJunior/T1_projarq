@@ -50,7 +50,7 @@ module.exports = {
 
     const payload = getPayload(aluno, time);
 
-    const [id] = await connection("grupos_finais").insert(payload);
+    const id = await connection("grupos_finais").insert(payload);
 
     return response.json({ id });
   },

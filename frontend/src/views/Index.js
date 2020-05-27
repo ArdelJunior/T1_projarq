@@ -4,6 +4,8 @@ import withStyles from "@material-ui/styles/withStyles";
 import { Typography, Grid, Container, Button } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
+import Topbar from "../components/Topbar";
+
 const backgroundShape = require("../images/shape.svg");
 
 const styles = (theme) => ({
@@ -32,6 +34,7 @@ class Index extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
+          <Topbar noTabs />
           <div className={classes.root}>
             <Container component="main" maxWidth="xs">
               <div className={classes.paper}>
