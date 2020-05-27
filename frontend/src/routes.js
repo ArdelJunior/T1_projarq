@@ -14,6 +14,8 @@ import CreateTimeSugerido from "./views/aluno/CreateTimeSugerido";
 
 import DashboardAvaliador from "./views/avaliador/DashboardAvaliador";
 import GerenciarAlunos from "./views/avaliador/GerenciarAlunos";
+import GerenciarTimes from "./views/avaliador/GerenciarTimes";
+
 
 export default (props) => (
   <BrowserRouter>
@@ -25,6 +27,7 @@ export default (props) => (
         <Route path="/aluno" component={DashboardAluno} />
 
         <Route path="/avaliador/alunos" component={GerenciarAlunos} />
+        <Route path="/avaliador/times" component={GerenciarTimes} />
         <Route path="/avaliador" component={DashboardAvaliador} />
 
         <Route path="/logout">

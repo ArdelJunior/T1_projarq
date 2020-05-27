@@ -24,7 +24,7 @@ module.exports = {
       .join("cursos as ac", "a.curso", "ac.id")
       .orderBy("ts.id");
 
-    return await knexnest(sql);
+    return await knexnest(sql ,[]);
   },
 
   async get(id) {
@@ -49,7 +49,7 @@ module.exports = {
       .join("cursos as ac", "a.curso", "ac.id")
       .where("id", "=", id);
 
-    return await knexnest(sql);
+    return await knexnest(sql,[]);
   },
 
   async getByAluno(id) {
@@ -74,7 +74,7 @@ module.exports = {
       .join("cursos as ac", "a.curso", "ac.id")
       .where("ts.criado_por", "=", id);
 
-    return await knexnest(sql);
+    return await knexnest(sql, []);
   },
 
   async new(criado_por, alunos) {

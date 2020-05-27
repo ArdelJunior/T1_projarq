@@ -6,7 +6,7 @@ module.exports = {
     const sql = connection("times as ts")
       .select([
         "ts.id as _id",
-        "ts.nome as nome",
+        "ts.nome as _nome",
         "cp.id as _criador_id",
         "cp.nome as _criador_nome",
         "cp.email as _criador_email",
@@ -22,7 +22,7 @@ module.exports = {
       .leftJoin("cursos as ac", "a.curso", "ac.id")
       .orderBy("ts.id");
 
-    return await knexnest(sql);
+    return await knexnest(sql, []);
   },
 
   async get(id) {
