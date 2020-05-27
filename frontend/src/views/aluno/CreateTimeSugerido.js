@@ -74,7 +74,7 @@ class CreateTimeSugerido extends Component {
     alunos: [],
     time: [],
     timeId: null,
-    idAluno: 1,
+    idAluno: 2,
     showError: false,
     errorMessage: null,
   };
@@ -155,7 +155,7 @@ class CreateTimeSugerido extends Component {
     }
 
     const req = this.state.timeId
-      ? axios.put(setTimeSugerido + "/" + this.state.timeId, { time, aluno: this.state.idAluno })
+      ? axios.put(setTimeSugerido + "/" + this.state.timeId, { alunos: time, aluno: this.state.idAluno })
       : axios.post(setTimeSugerido, { time, aluno: this.state.idAluno });
     req
       .then((response) => {

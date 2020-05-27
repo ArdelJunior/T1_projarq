@@ -21,6 +21,7 @@ import {
 } from "@material-ui/core";
 
 import Topbar from "../../components/Topbar";
+import CollapsibleRow from "../../components/tables/CollapsibleRow";
 import Toastr from "../../components/common/Toastr";
 
 import { getAlunos, getTimeSugeridoAluno } from "../../utils/api";
@@ -136,36 +137,43 @@ class GerenciarAlunos extends Component {
 
   renderDialogContent = () => {
     const { classes } = this.props;
-    return (
-      this.state.timeSugerido.length > 0 && (
-        <React.Fragment>
-          <div className={classes.dialogBody}>
-            <DialogTitle>
-              <div align="center">Time sugerido por {this.state.alunoTimeSugerido}</div>
-            </DialogTitle>
-            <DialogContent>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Aluno</TableCell>
-                    <TableCell align="center">Curso</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.timeSugerido.map((aluno, key) => {
-                    return (
-                      <TableRow key={key}>
-                        <TableCell align="center">{aluno.nome}</TableCell>
-                        <TableCell align="center">{aluno.curso}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </DialogContent>
-          </div>
-        </React.Fragment>
-      )
+    return this.state.timeSugerido && this.state.timeSugerido.length > 0 ? (
+      <React.Fragment>
+        <div className={classes.dialogBody}>
+          <DialogTitle>
+            <div align="center">Time sugerido por {this.state.alunoTimeSugerido}</div>
+          </DialogTitle>
+          <DialogContent>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Aluno</TableCell>
+                  <TableCell align="center">Curso</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.timeSugerido.map((aluno, key) => {
+                  return (
+                    <TableRow key={key}>
+                      <TableCell align="center">{aluno.nome}</TableCell>
+                      <TableCell align="center">{aluno.curso}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </DialogContent>
+        </div>
+      </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <div className={classes.dialogBody}>
+          <DialogTitle>
+            <div align="center">Time sugerido por {this.state.alunoTimeSugerido}</div>
+          </DialogTitle>
+          <DialogContent></DialogContent>
+        </div>
+      </React.Fragment>
     );
   };
 
