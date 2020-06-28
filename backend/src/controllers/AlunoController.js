@@ -1,4 +1,5 @@
 const Aluno = require("../models/Aluno");
+const AlunoFactory = require("../factories/AlunoFactory");
 const { hashPassword } = require("../helper/encryptPassword");
 
 module.exports = {
@@ -15,11 +16,10 @@ module.exports = {
 
   async create(request, response) {
     const { matricula, nome, curso, email, password } = request.body;
-
     const hashedPass = hashPassword(password);
 
     try {
-      await Aluno.new(matricula, nome, curso, email, hashedPass);
+      await AlunoFactory.create(matricula, nome, curso, email, hashedPass);
       return response.status(201).json({ success: true });
     } catch (error) {
       console.error(error);

@@ -15,10 +15,10 @@ module.exports = {
     const { nome, email, password } = request.body;
 
     if (!nome) {
-      return response.status(400).json({ error: "Nome não inserido" });
+      return response.status(400).json({ error: "Nome não especificado" });
     }
     if (!email) {
-      return response.status(400).json({ error: "E-mail não inserido" });
+      return response.status(400).json({ error: "E-mail não especificado" });
     }
     if (!password) {
       return response.status(400).json({ error: "Senha não inserida" });

@@ -1,6 +1,6 @@
-const connection = require("../database/connection");
-const Aluno = require("../models/Aluno");
 const Time = require("../models/Time");
+const TimeFactory = require("../factories/TimeFactory");
+const { getByCriador, deleteByCriador } = require("../models/Time");
 
 module.exports = {
   async index(request, response) {
@@ -22,10 +22,10 @@ module.exports = {
     }
   },
 
-  async getByAvaliador(request, response) {
+  async getByCriador(request, response) {
     const { id } = request.params;
     try {
-      const time = await Time.getByAvaliador(id);
+      const time = await Time.getByCriador(id);
       return response.json(time);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -36,7 +36,7 @@ module.exports = {
     const { criado_por, nome, alunos } = request.body;
 
     try {
-      await Time.new(criado_por, nome, alunos);
+      await TimeFactory.create(criado_por, nome, alunos);
       return response.status(201).json({ success: true });
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -55,11 +55,11 @@ module.exports = {
     return response.status(204).send();
   },
 
-  async deleteByAvaliador(request, response) {
+  async deleteByCriador(request, response) {
     const { id } = request.params;
 
     try {
-      await Time.deleteByAvaliador(id);
+      await Time.deleteByCriador(id);
       return response.status(204).send();
     } catch (error) {
       return response.status(400).json({ error: error.message });

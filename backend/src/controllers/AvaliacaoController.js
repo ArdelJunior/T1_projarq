@@ -1,6 +1,5 @@
-const connection = require("../database/connection");
 const Avaliacao = require("../models/Avaliacao");
-const Avaliador = require("../models/Avaliador");
+const AvaliacaoFactory = require("../factories/AvaliacaoFactory");
 
 module.exports = {
   async index(request, response) {
@@ -27,7 +26,7 @@ module.exports = {
     const { id_avaliador, id_time, avaliacoes } = request.body;
 
     try {
-      await Avaliacao.new(id_avaliador, id_time, avaliacoes);
+      await AvaliacaoFactory.create(id_avaliador, id_time, avaliacoes);
       return response.json({ success: true });
     } catch (error) {
       return response.status(400).json({ error: error.message });

@@ -52,7 +52,7 @@ module.exports = {
     return await knexnest(sql,[]);
   },
 
-  async getByAluno(id) {
+  async getByCriador(id) {
     const sql = connection("times_sugeridos as ts")
       .select([
         "ts.id as id",
@@ -123,7 +123,7 @@ module.exports = {
     return await connection("times_sugeridos").where("id", "=", id).delete();
   },
 
-  async deleteByAluno(id) {
+  async deleteByCriador(id) {
     const time = await connection("times_sugeridos")
       .where("criado_por", "=", id)
       .select("id")

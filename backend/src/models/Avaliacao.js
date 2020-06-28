@@ -8,12 +8,14 @@ module.exports = {
       .distinct()
       .join("times as ts", "ts.id", "a.id_time");
 
-    const avaliacoes = await Promise.all(times.map(async(t) => {
-      return {
-        time: t,
-        avaliacoes: await this.getByTime(t.id)
-      }
-    }));
+    const avaliacoes = await Promise.all(
+      times.map(async (t) => {
+        return {
+          time: t,
+          avaliacoes: await this.getByTime(t.id),
+        };
+      })
+    );
 
     return avaliacoes;
   },
@@ -26,9 +28,8 @@ module.exports = {
         "av.id as _avaliador_id",
         "av.nome as _avaliador_nome",
         "av.email as _avaliador_email",
-        "a.id as _avaliacoes__id",
-        "c.nome as _avaliacoes__criterio",
-        "a.nota as _avaliacoes__nota",
+        "c.nome as _avaliacao__criterio",
+        "a.nota as _avaliacao__nota",
       ])
       .join("times as ts", "a.id_time", "ts.id")
       .join("criterios as c", "a.id_criterio", "c.id")
@@ -43,14 +44,13 @@ module.exports = {
       .where("id_time", "=", id)
       .select("id_avaliador")
       .distinct();
-    console.log(avaliadores);
+
     const avaliacoes = await Promise.all(
       avaliadores.map(async (av) => {
         const sql = connection("avaliacoes as a")
           .select([
             "av.nome as _avaliador_nome",
             "av.email as _avaliador_email",
-            "a.id as _avaliacao__id",
             "c.nome as _avaliacao__criterio",
             "a.nota as _avaliacao__nota",
           ])
@@ -77,7 +77,6 @@ module.exports = {
         nota: av.nota,
       };
     });
-
 
     return await connection("avaliacoes").insert(payload);
   },
