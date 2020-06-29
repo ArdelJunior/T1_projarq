@@ -120,22 +120,9 @@ class Topbar extends Component {
   }
 
   current = () => {
-    if(this.props.currentPath === '/home') {
-      return 0
-    }
-    if(this.props.currentPath === '/dashboard') {
-      return 1
-    }
-    if(this.props.currentPath === '/signup') {
-      return 2
-    }
-    if(this.props.currentPath === '/wizard') {
-      return 3
-    }
-    if(this.props.currentPath === '/cards') {
-      return 4
-    }
-
+    const menu = this.props.type === "avaliador" ? MenuAvaliador : MenuAluno;
+    const index = menu.findIndex((item) => item.pathname === this.props.currentPath);
+    return index === -1 ? 0 : index;
   }
 
   render() {
@@ -143,7 +130,7 @@ class Topbar extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar position="absolute" color="default" className={classes.appBar}>
+      <AppBar color="default" className={classes.appBar}>
         <Toolbar>
             <Grid container spacing={10} alignItems="baseline">
               <Grid item xs={12} className={classes.flex}>
@@ -175,7 +162,7 @@ class Topbar extends Component {
                           </List>
                         </SwipeableDrawer>
                         <Tabs
-                          value={this.current() || this.state.value}
+                          value={this.current()}
                           indicatorColor="primary"
                           textColor="primary"
                           onChange={this.handleChange}
