@@ -12,26 +12,21 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
-  Dialog,
   DialogTitle,
   DialogContent,
   Fab,
-  TextField,
-  Button,
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
 
 import Topbar from "../../components/Topbar";
 import Toastr from "../../components/common/Toastr";
 import CardTime from "../../components/cards/CardTime";
-import CardEditTime from "../../components/cards/CardEditTime";
 
-import { getAlunos, getTimeFinal, getAvaliacoesTime } from "../../utils/api";
+import { getAlunos, getTimeFinal, deleteTimeFinal } from "../../utils/api";
+import DialogPrompt from "../../components/dialogs/DialogPrompt";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -92,8 +87,14 @@ class GerenciarTimes extends Component {
     modalOpen: false,
     modalAddTimeOpen: false,
 
-    showError: false,
-    errorMessage: null,
+    promptOpen: false,
+    promptMessage: "",
+
+    timeToDelete: null,
+
+    toastOpen: false,
+    toastSeverity: "info",
+    toastMessage: "",
 
     alunos: [],
   };
@@ -101,6 +102,22 @@ class GerenciarTimes extends Component {
   componentDidMount() {
     this.getTimes();
     this.getAlunosList();
+  }
+
+  showToast = (severity, message) => {
+    this.setState({
+      toastOpen: true,
+      toastSeverity: severity,
+      toastMessage: message,
+    });
+  }
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: ""
+    })
   }
 
   getTimes = () => {
@@ -112,10 +129,7 @@ class GerenciarTimes extends Component {
         });
       })
       .catch((err) => {
-        this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
-        });
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
 
@@ -123,23 +137,20 @@ class GerenciarTimes extends Component {
     axios
       .get(getAlunos)
       .then((rs) => {
-        console.log(rs.data.map(d => d.nome));
         this.setState({
           alunos: rs.data,
         });
       })
       .catch((err) => {
-        this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
-        });
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
 
   renderTimes = () => {
     const times = this.state.times;
+    console.log(times);
     return times.map((time, key) => {
-      return <CardTime time={time} key={key} />;
+      return <CardTime time={time} key={key} onEditClick={() => this.handleEditTimeClick(time)} onDeleteClick={() => this.handleDeleteTimeClick(time)} />;
     });
   };
 
@@ -157,15 +168,48 @@ class GerenciarTimes extends Component {
     });
   };
 
-  // handleRowClick = (event, item) => {
-  //   this.getAlunosTime(item);
-  // };
-
   handleModalClose = () => {
     this.setState({
       modalOpen: false,
     });
   };
+
+  closePrompt = () => {
+    this.setState({
+      promptOpen: false,
+      timeToDelete: null,
+      promptDeleteTime: "",
+    });
+  };
+
+  handleEditTimeClick = (time) => {
+    this.props.history.push(`/avaliador/times/edit/${time.id}`);
+  };
+
+  handleDeleteTimeClick = (time) => {
+    this.setState({
+      promptOpen: true,
+      timeToDelete: time,
+      promptDeleteTime: `Confirma a exclusão do time ${time.nome}?`
+    });
+  };
+
+  handleDeleteTimePromptClick = (option) => {
+    console.log(option);
+    console.log(this.state.timeToDelete);
+
+    const { id } = this.state.timeToDelete;
+
+    axios.delete(deleteTimeFinal + id).then((data) => {
+      this.getTimes();
+      this.getAlunosList();
+      this.showToast("success", "Time excluído com sucesso");
+    }).catch((err) => {
+      this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+    }).finally(() => {
+      this.closePrompt();
+    });
+  }
 
   renderDialogContent = () => {
     const { classes } = this.props;
@@ -212,18 +256,19 @@ class GerenciarTimes extends Component {
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
-            severity="error"
-            message={this.state.errorMessage}
-            open={this.state.showError}
-            onClose={this.handleToastrClose}
+            severity={this.state.toastSeverity}
+            message={this.state.toastMessage}
+            open={this.state.toastOpen}
+            onClose={this.handleToastClose}
           />
+
           <Backdrop className={classes.backdrop} open={!this.state.loaded}>
             <CircularProgress />
           </Backdrop>
 
-          <Dialog open={this.state.modalOpen} onClose={this.handleModalClose}>
+          {/* <Dialog open={this.state.modalOpen} onClose={this.handleModalClose}>
             {this.state.modalOpen ? this.renderDialogContent() : ""}
-          </Dialog>
+          </Dialog> */}
 
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
@@ -256,40 +301,7 @@ class GerenciarTimes extends Component {
             </Box>
           </div>
 
-          <Dialog maxWidth="lg" open={this.state.modalAddTimeOpen} onClose={this.handleModalAddTimeClose}>
-            <DialogTitle>Adicionar time</DialogTitle>
-            <DialogContent>
-              <div className={classes.dialogBody}>
-                <form onSubmit={this.handleAddTimeSubmit()}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        id="nome"
-                        name="nome"
-                        label="Nome"
-                        autoComplete="nome"
-                        variant="outlined"
-                        required
-                        fullWidth
-                        onChange={this.handleInputChange}
-                        autoFocus
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <CardEditTime rightList={this.state.alunos} />
-                    </Grid>
-                  </Grid>
-                  <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                    Adicionar
-                  </Button>
-                </form>
-                <Table>
-                  <TableHead></TableHead>
-                  <TableBody></TableBody>
-                </Table>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <DialogPrompt open={this.state.promptOpen} onClick={(option) => this.handleDeleteTimePromptClick(option)} title={"Excluir Time"} prompt={this.state.promptDeleteTime} />;
         </CssBaseline>
       </React.Fragment>
     );

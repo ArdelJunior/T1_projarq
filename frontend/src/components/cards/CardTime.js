@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import { Table, TableHead, TableCell, TableBody, TableRow } from "@material-ui/core";
+import { Typography, Paper, Grid, Table, TableCell, TableBody, TableRow, Box, Fab, ButtonGroup, Button, IconButton } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const styles = (theme) => ({
   root: {
@@ -13,52 +12,27 @@ const styles = (theme) => ({
     padding: theme.spacing(3),
     // textAlign: "left",
     color: theme.palette.text.secondary,
-    height: "300px",
+    minHeight: "320px",
   },
-  itemContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    [theme.breakpoints.down("sm")]: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-    },
+  container: {
     height: "100%",
+  },
+  header: {
+    textAlign: "center",
+  },
+  body: {
+    textAlign: "center",
     overflowY: "auto",
-    width: "100%",
   },
-  baseline: {
-    alignSelf: "baseline",
-    // marginLeft: theme.spacing(4),
-    [theme.breakpoints.down("sm")]: {
-      display: "flex",
-      flexDirection: "column",
-      
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-      marginLeft: 0,
-    },
-    textAlign: "center",
-      alignItems: "center",
-      width: "100%",
+  footer: {
+    textAlign: "right",
   },
-  inline: {
-    display: "inline-block",
-    // marginLeft: theme.spacing(4),
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: 0,
-    },
-    margin: "auto",
-    textAlign: "center",
-  },
-
   cardTitle: {
     marginBottom: theme.spacing(2),
   },
   table: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 class CardTime extends Component {
@@ -74,38 +48,50 @@ class CardTime extends Component {
   };
 
   renderRows = (time) => {
+    const { classes } = this.props;
     const alunos = time.alunos;
-    return time.alunos.length
-      ? alunos.map((a, key) => {
-          return (
-            <TableRow key={key}>
-              <TableCell>{a.nome}</TableCell>
-              <TableCell>{a.curso}</TableCell>
-            </TableRow>
-          );
-        })
-      : "Nenhum aluno";
+    return time.alunos.length ? (
+      <Table className={classes.table}>
+        <TableBody>
+          {alunos.map((a, key) => {
+            return (
+              <TableRow key={key}>
+                <TableCell>{a.nome}</TableCell>
+                <TableCell>{a.curso}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    ) : (
+      "Nenhum aluno"
+    );
   };
 
   render() {
-    const { classes, time, onClick, className } = this.props;
+    const { classes, time, onEditClick, onDeleteClick, className } = this.props;
 
     return (
-      <Grid item xs={12} md={4} className={classes.root} onClick={onClick}>
+      <Grid item xs={12} md={4} className={classes.root}>
         <Paper className={className || classes.paper}>
-          <div className={classes.itemContainer}>
-            <div className={classes.baseline}>
-              <div className={classes.inline}>
-                <Typography variant="h6" className={classes.cardTitle}>
-                  {time.nome}
-                </Typography>
-                <Table className={classes.table}>
-                  {/* <TableHead>{this.renderHeader(time)}</TableHead> */}
-                  <TableBody>{this.renderRows(time)}</TableBody>
-                </Table>
-              </div>
-            </div>
-          </div>
+          <Box display="flex" flexDirection="column" className={classes.container}>
+            <Box flex={2} className={classes.header}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="h6" className={classes.cardTitle}>
+                    {time.nome}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2} style={{ position: "absolute" }}>
+                  <IconButton onClick={onEditClick} size="small"><EditIcon /></IconButton>
+                  <IconButton onClick={onDeleteClick} size="small"><DeleteIcon /></IconButton>
+                </Grid>
+              </Grid>
+            </Box>
+            <Box flex={9} className={classes.body}>
+              {this.renderRows(time)}
+            </Box>
+          </Box>
         </Paper>
       </Grid>
     );

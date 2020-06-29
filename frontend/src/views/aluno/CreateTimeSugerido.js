@@ -4,13 +4,13 @@ import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
 import { CssBaseline, Typography, Grid, Dialog, IconButton, Fab, Toolbar, AppBar, Slide, Button, Box, Backdrop, CircularProgress } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
 
 import Topbar from "../../components/Topbar";
 import ListCardAluno from "../../components/cards/ListCardAluno";
 import Toastr from "../../components/common/Toastr";
 
 import { getAlunos, getTimeSugeridoAluno, setTimeSugerido } from "../../utils/api";
+import DialogListAlunos from "../../components/dialogs/DialogListAlunos";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -26,7 +26,7 @@ const styles = (theme) => ({
   },
   block: {
     padding: theme.spacing(4),
-    height: "100vh",
+    height: "90vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -41,17 +41,6 @@ const styles = (theme) => ({
     overflowX: "hidden",
     overflowY: "auto",
   },
-  dialogBody: {
-    backgroundColor: "#f5f5f5",
-    padding: theme.spacing(4),
-  },
-  appBar: {
-    position: "relative",
-  },
-  dialogTitle: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
   actionButton: {
     textTransform: "uppercase",
     margin: theme.spacing(2),
@@ -61,10 +50,6 @@ const styles = (theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
-});
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 class CreateTimeSugerido extends Component {
@@ -232,21 +217,7 @@ class CreateTimeSugerido extends Component {
             </Box>
           </div>
 
-          <Dialog fullScreen open={this.state.modalOpen} TransitionComponent={Transition} onClose={this.handleClose}>
-            <AppBar className={classes.appBar}>
-              <Toolbar>
-                <IconButton edge="start" color="inherit" onClick={this.handleModalClose} aria-label="close">
-                  <CloseIcon />
-                </IconButton>
-                <Typography variant="h6" className={classes.dialogTitle}>
-                  Alunos inscritos
-                </Typography>
-              </Toolbar>
-            </AppBar>
-            <div className={classes.dialogBody}>
-              <ListCardAluno alunos={this.state.alunos} forSelect={true} onClick={this.toggleSelect} />
-            </div>
-          </Dialog>
+          <DialogListAlunos alunos={this.state.alunos} open={this.state.modalOpen} onClose={this.handleModalClose} onCardClick={this.toggleSelect} />
         </CssBaseline>
       </React.Fragment>
     );
