@@ -148,7 +148,6 @@ class GerenciarTimes extends Component {
 
   renderTimes = () => {
     const times = this.state.times;
-    console.log(times);
     return times.map((time, key) => {
       return <CardTime time={time} key={key} onEditClick={() => this.handleEditTimeClick(time)} onDeleteClick={() => this.handleDeleteTimeClick(time)} />;
     });
@@ -195,8 +194,10 @@ class GerenciarTimes extends Component {
   };
 
   handleDeleteTimePromptClick = (option) => {
-    console.log(option);
-    console.log(this.state.timeToDelete);
+    if(!option) {
+      this.closePrompt();
+      return false;
+    }
 
     const { id } = this.state.timeToDelete;
 
