@@ -20,6 +20,7 @@ export const deleteTimeFinal = apiRoot + "times/";
 
 export const getAvaliacoes = apiRoot + "avaliacoes";
 export const getAvaliacoesTime = apiRoot + "avaliacoes/time/";
+export const getAvaliacoesAvaliador = apiRoot + "avaliacoes/avaliador/";
 
 
 

@@ -71,8 +71,8 @@ module.exports = {
   async getByAvaliador(id) {
     const sql = connection("avaliacoes as a")
       .select([
-        "ts.id as _time__id",
-        "ts.nome as _time__nome",
+        "ts.id as _time_id",
+        "ts.nome as _time_nome",
         "c.nome as _avaliacao__criterio",
         "a.nota as _avaliacao__nota",
       ])

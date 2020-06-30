@@ -19,6 +19,7 @@ import AddTime from "./views/avaliador/AddTime";
 import EditTime from "./views/avaliador/EditTime";
 
 import Page404 from "./views/Page404";
+import Avaliacoes from "./views/avaliador/Avaliacoes";
 
 export default (props) => (
   <BrowserRouter>
@@ -35,6 +36,7 @@ export default (props) => (
         <Route path="/avaliador/times/add" component={AddTime} />
         <Route path="/avaliador/times/edit/:id" component={EditTime} />
         <Route path="/avaliador/times" component={GerenciarTimes} />
+        <Route path="/avaliador/avaliacoes" component={Avaliacoes} />
         <Route path="/avaliador" component={DashboardAvaliador} />
 
         <Route path="/logout">

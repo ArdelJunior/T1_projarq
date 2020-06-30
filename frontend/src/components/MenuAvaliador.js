@@ -11,6 +11,10 @@ const MenuAvaliador = [
     label: "Gerenciar times",
     pathname: "/avaliador/times"
   },
+  {
+    label: "Avaliações",
+    pathname: "/avaliador/avaliacoes"
+  }
 ]
 
 export default MenuAvaliador;
