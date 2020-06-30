@@ -25,6 +25,7 @@ routes.post('/avaliadores', AvaliadorController.create);
 
 routes.get('/avaliacoes', AvaliacaoController.index);
 routes.get('/avaliacoes/time/:id', AvaliacaoController.getByTime);
+routes.get('/avaliacoes/avaliador/:id', AvaliacaoController.getByAvaliador);
 routes.post('/avaliacoes', AvaliacaoController.create);
 
 routes.get('/cursos', CursoController.index);

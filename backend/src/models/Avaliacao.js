@@ -68,6 +68,22 @@ module.exports = {
     return avaliacoes;
   },
 
+  async getByAvaliador(id) {
+    const sql = connection("avaliacoes as a")
+      .select([
+        "ts.id as _time__id",
+        "ts.nome as _time__nome",
+        "c.nome as _avaliacao__criterio",
+        "a.nota as _avaliacao__nota",
+      ])
+      .join("times as ts", "a.id_time", "ts.id")
+      .join("criterios as c", "a.id_criterio", "c.id")
+      .join("avaliadores as av", "a.id_avaliador", "av.id")
+      .where("a.id_avaliador", "=", id);
+
+    return knexnest(sql);
+  },
+
   async new(id_avaliador, id_time, avaliacoes) {
     const payload = avaliacoes.map((av) => {
       return {
