@@ -5,9 +5,12 @@ module.exports = {
   async index(request, response) {
     // const avaliador = request.headers.authorization;
 
-    const avaliacoes = await Avaliacao.list();
-
-    return response.json(avaliacoes);
+    try {
+      const avaliacoes = await Avaliacao.list();
+      return response.json(avaliacoes);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
   },
 
   async getByTime(request, response) {
@@ -42,17 +45,17 @@ module.exports = {
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
-    // const { nome_grupo, nota1, nota2, nota3, nota4, nota5 } = request.body;
-
-    // const avaliador = request.headers.authorization;
-
-    // const avaliadorExists = await Avaliador.get(avaliador);
-
-    // if (!avaliadorExists) {
-    //   return response.status(401).json({ error: "Operação não permitida." });
-    // }
-
-    // await Avaliacao.new(avaliador, nome_grupo, nota1, nota2, nota3, nota4, nota5);
-    // return response.status(201).json({success: true});
   },
+
+  async delete(request, response) {
+    const { id } = request.params;
+
+    try {
+      await Avaliacao.delete(id);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+
+    return response.status(204).send();
+  }
 };

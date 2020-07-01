@@ -93,7 +93,7 @@ module.exports = {
         nota: av.nota,
       };
     });
-
+    
     return await connection("avaliacoes").insert(payload);
   },
 

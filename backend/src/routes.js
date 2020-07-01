@@ -17,6 +17,7 @@ routes.post('/alunoSession', AlunoSessionController.login);
 routes.post('/avaliadorSession', AvaliadorSessionController.login);
 
 routes.get('/alunos', AlunoController.index);
+routes.get('/alunos/semtime', AlunoController.listUnassigned);
 routes.get('/alunos/:id', AlunoController.get);
 routes.post('/alunos', AlunoController.create);
 
@@ -27,6 +28,7 @@ routes.get('/avaliacoes', AvaliacaoController.index);
 routes.get('/avaliacoes/time/:id', AvaliacaoController.getByTime);
 routes.get('/avaliacoes/avaliador/:id', AvaliacaoController.getByAvaliador);
 routes.post('/avaliacoes', AvaliacaoController.create);
+routes.delete('/avaliacoes/:id', AvaliacaoController.delete);
 
 routes.get('/cursos', CursoController.index);
 

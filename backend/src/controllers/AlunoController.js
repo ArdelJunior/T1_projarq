@@ -4,8 +4,23 @@ const { hashPassword } = require("../helper/encryptPassword");
 
 module.exports = {
   async index(request, response) {
-    const alunos = await Aluno.list();
-    return response.json(alunos);
+    try {
+      const alunos = await Aluno.list();
+      return response.json(alunos);
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({ error: error.message });
+    }
+  },
+
+  async listUnassigned(request, response) {
+    try {
+      const alunos = await Aluno.listUnassigned();
+      return response.json(alunos);
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({ error: error.message });
+    }
   },
 
   async get(request, response) {
