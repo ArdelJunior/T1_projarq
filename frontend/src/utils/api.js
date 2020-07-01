@@ -1,6 +1,7 @@
 const apiRoot = "http://localhost:3333/";
 
 export const getAlunos = apiRoot + "alunos";
+export const getAlunosSemTime = apiRoot + "alunos/semtime";
 export const loginAluno = apiRoot + "alunos/login";
 export const createAluno = apiRoot + "alunos";
 
@@ -21,7 +22,7 @@ export const deleteTimeFinal = apiRoot + "times/";
 export const getAvaliacoes = apiRoot + "avaliacoes";
 export const getAvaliacoesTime = apiRoot + "avaliacoes/time/";
 export const getAvaliacoesAvaliador = apiRoot + "avaliacoes/avaliador/";
-
+export const deleteAvaliacao = apiRoot + "avaliacoes/"
 
 
 // export const getTime = apiRoot + "grupo/";

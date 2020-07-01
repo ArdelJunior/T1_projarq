@@ -10,7 +10,8 @@ import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import CardAvaliacao from "../../components/cards/CardAvaliacao";
 
-import { getAvaliacoesAvaliador } from "../../utils/api";
+import { getAvaliacoesAvaliador, deleteAvaliacao } from "../../utils/api";
+import DialogPrompt from "../../components/dialogs/DialogPrompt";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -37,9 +38,14 @@ class Avaliacoes extends Component {
     avaliacoes: [],
     avaliador: 1,
 
+    avaliacaoToDelete: null,
+
     toastOpen: false,
     toastSeverity: "info",
     toastMessage: "",
+
+    promptOpen: false,
+    promptMessage: "",
   };
 
   componentDidMount() {
@@ -52,6 +58,14 @@ class Avaliacoes extends Component {
       toastSeverity: severity,
       toastMessage: message,
     });
+  }
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: ""
+    })
   }
 
   getAvaliacoes = () => {
@@ -67,11 +81,42 @@ class Avaliacoes extends Component {
     });
   }
 
+  closePrompt = () => {
+    this.setState({
+      promptOpen: false,
+    });
+  };
+
+  handleDeleteAvaliacaoClick = (avaliacao, time) => {
+    this.setState({
+      promptOpen: true,
+      avaliacaoToDelete: avaliacao,
+      promptDeleteAvaliacao: `Confirma a exclusão da avaliação do time ${time.nome}?`
+    });
+  };
+
+  handleDeleteAvaliacaoPromptClick = (option) => {
+    if(!option) {
+      this.closePrompt();
+      return false;
+    }
+
+    const { id } = this.state.avaliacaoToDelete;
+
+    axios.delete(deleteAvaliacao + id).then((data) => {
+      this.getAvaliacoes();
+      this.showToast("success", "Avaliação excluída com sucesso");
+    }).catch((err) => {
+      this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+    }).finally(() => {
+      this.closePrompt();
+    });
+  }
+
   renderAvaliacoes = () => {
     const { avaliacoes } = this.state;
     return avaliacoes.map((av, key) => {
-      console.log(av);
-      return <CardAvaliacao key={key} time={av.time} avaliacao={av.avaliacao} />;
+      return <CardAvaliacao key={key} time={av.time} avaliacao={av.avaliacao} onEditClick={() => true} onDeleteClick={() => this.handleDeleteAvaliacaoClick(av.avaliacao, av.time)} />;
     });
   };
 
@@ -110,7 +155,7 @@ class Avaliacoes extends Component {
               </Box>
               <Box flex={9} className={classes.vScroll}>
                 <Grid container spacing={3} className={classes.list}>
-                  {this.state.avaliacoes.length && this.renderAvaliacoes()}
+                  {this.state.avaliacoes && this.state.avaliacoes.length && this.renderAvaliacoes()}
                 </Grid>
               </Box>
               {/* <Box flex={2}>
@@ -119,6 +164,8 @@ class Avaliacoes extends Component {
               </Box> */}
             </Box>
           </div>
+
+          <DialogPrompt open={this.state.promptOpen} onClick={(option) => this.handleDeleteAvaliacaoPromptClick(option)} title={"Excluir Avaliação"} prompt={this.state.promptDeleteAvaliacao} />;
         </CssBaseline>
       </React.Fragment>
     );
