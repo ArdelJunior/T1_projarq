@@ -19,7 +19,7 @@ module.exports = {
       ])
       .join("alunos as cp", "cp.id", "ts.criado_por")
       .join("cursos as cpc", "cp.curso", "cpc.id")
-      .join("alunos_times_sugeridos as as", "as.id_time", "ts.id")
+      .join("alunos_times_sugeridos as as", "as.id_time_sugerido", "ts.id")
       .join("alunos as a", "as.id_aluno", "a.id")
       .join("cursos as ac", "a.curso", "ac.id")
       .orderBy("ts.id");
@@ -44,7 +44,7 @@ module.exports = {
       ])
       .join("alunos as cp", "cp.id", "ts.criado_por")
       .join("cursos as cpc", "cp.curso", "cpc.id")
-      .join("alunos_times_sugeridos as as", "as.id_time", "ts.id")
+      .join("alunos_times_sugeridos as as", "as.id_time_sugerido", "ts.id")
       .join("alunos as a", "as.id_aluno", "a.id")
       .join("cursos as ac", "a.curso", "ac.id")
       .where("id", "=", id);
@@ -69,7 +69,7 @@ module.exports = {
       ])
       .join("alunos as cp", "cp.id", "ts.criado_por")
       .join("cursos as cpc", "cp.curso", "cpc.id")
-      .join("alunos_times_sugeridos as as", "as.id_time", "ts.id")
+      .join("alunos_times_sugeridos as as", "as.id_time_sugerido", "ts.id")
       .join("alunos as a", "as.id_aluno", "a.id")
       .join("cursos as ac", "a.curso", "ac.id")
       .where("ts.criado_por", "=", id);
@@ -91,7 +91,7 @@ module.exports = {
       await connection("alunos_times_sugeridos").insert(
         alunos.map((e) => {
           return {
-            id_time: id,
+            id_time_sugerido: id,
             id_aluno: e.id,
           };
         })
@@ -103,13 +103,13 @@ module.exports = {
 
   async update(id, alunos) {
     await connection("alunos_times_sugeridos")
-      .where("id_time", "=", id)
+      .where("id_time_sugerido", "=", id)
       .delete();
 
     return await connection("alunos_times_sugeridos").insert(
       alunos.map((e) => {
         return {
-          id_time: id,
+          id_time_sugerido: id,
           id_aluno: e.id,
         };
       })
@@ -118,7 +118,7 @@ module.exports = {
 
   async delete(id) {
     await connection("alunos_times_sugeridos")
-      .where("id_time", "=", id)
+      .where("id_time_sugerido", "=", id)
       .delete();
     return await connection("times_sugeridos").where("id", "=", id).delete();
   },
@@ -136,14 +136,14 @@ module.exports = {
 
   // async addAluno(id, aluno) {
   //   return await connection("alunos_times_sugeridos").insert({
-  //     id_time: id,
+  //     id_time_sugerido: id,
   //     id_aluno: aluno.id,
   //   });
   // },
 
   // async deleteAluno(id, aluno) {
   //   return await connection("alunos_times_sugeridos")
-  //     .where("id_time", "=", id)
+  //     .where("id_time_sugerido", "=", id)
   //     .andWhere("id_aluno", "=", aluno.id)
   //     .delete();
   // },
