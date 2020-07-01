@@ -75,9 +75,6 @@ class AddTime extends Component {
 
   componentDidMount() {
     this.loadAlunos();
-    if (this.props.id) {
-      this.loadTime(this.props.id);
-    }
   }
 
   loadAlunos = () => {
@@ -86,6 +83,10 @@ class AddTime extends Component {
       .then((response) => {
         this.setState({
           alunos: response.data,
+        }, () => {
+          if (this.props.id) {
+            this.loadTime(this.props.id);
+          }
         });
       })
       .catch((err) => {
@@ -172,13 +173,15 @@ class AddTime extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    const time = this.state.alunos.filter((aluno) => aluno.selected);
+    const alunos = this.state.alunos.filter((aluno) => aluno.selected);
     const { nome, criador } = this.state;
+    console.log({nome, criador, alunos});
 
     const req = this.props.id
-      ? axios.put(`${setTimeFinal}/${this.props.id}`, { alunos: time, nome })
-      : axios.post(setTimeFinal, { alunos: time, nome, criado_por: criador });
+      ? axios.put(`${setTimeFinal}/${this.props.id}`, { time: { alunos, nome } })
+      : axios.post(setTimeFinal, { alunos, nome, criado_por: criador });
 
+    console.log(req);
     req
       .then((response) => {
         console.log(response);

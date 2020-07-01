@@ -68,10 +68,10 @@ module.exports = {
 
   async update(request, response) {
     const { id } = request.params;
-    const { alunos } = request.body;
+    const { time } = request.body;
 
     try {
-      await Time.update(id, alunos);
+      await Time.update(id, time);
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }

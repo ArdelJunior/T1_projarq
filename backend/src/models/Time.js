@@ -95,13 +95,18 @@ module.exports = {
     return true;
   },
 
-  async update(id, alunos) {
+  async update(id, time) {
+    const { nome } = time;
+    await connection("times")
+      .where("id", "=", id)
+      .update({ nome });
+
     await connection("alunos_times")
       .where("id_time", "=", id)
       .delete();
 
     return await connection("alunos_times").insert(
-      alunos.map((e) => {
+      time.alunos.map((e) => {
         return {
           id_time: id,
           id_aluno: e.id,
