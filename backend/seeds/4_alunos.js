@@ -1,7 +1,6 @@
 const { v4: uuid } = require("uuid");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const { getPayload } = require("../src/helper/AlunoHelper");
 
 const alunos = [
   {
@@ -286,36 +285,6 @@ const alunos = [
   },
 ];
 
-// const timesSugeridos = alunos.map((aluno) => {
-//   return {
-//     ...getPayload(
-//       aluno.id,
-//       [...alunos]
-//         .sort(() => 0.5 - Math.random())
-//         .slice(0, Math.ceil(Math.random() * 2) + 2)
-//     ),
-//   };
-// });
-
 exports.seed = function (knex) {
-  // Deletes ALL existing entries
-  return knex("alunos")
-    .truncate()
-    .then(function () {
-      // Inserts seed entries
-      return knex("alunos").insert(alunos);
-      // return knex("grupos_sugeridos")
-      //   .del()
-      //   .then(function () {
-      //     return knex("alunos")
-      //       .del()
-      //       .then(function () {
-      //         // Inserts seed entries
-      //         return knex("alunos")
-      //           .insert(alunos)
-      //           // .then(function () {
-      //           //   return knex("grupos_sugeridos").insert(timesSugeridos);
-      //           // });
-      // });
-    });
+  return knex("alunos").insert(alunos);
 };
