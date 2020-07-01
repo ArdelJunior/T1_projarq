@@ -35,7 +35,22 @@ class Template extends Component {
     toastSeverity: "info",
     toastMessage: "",
   }
-  componentDidMount() {}
+  
+  showToast = (severity, message) => {
+    this.setState({
+      toastOpen: true,
+      toastSeverity: severity,
+      toastMessage: message,
+    });
+  }
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: ""
+    })
+  }
 
   render() {
     const { classes } = this.props;
