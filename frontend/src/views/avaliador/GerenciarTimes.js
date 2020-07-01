@@ -85,7 +85,6 @@ class GerenciarTimes extends Component {
     loaded: true,
 
     modalOpen: false,
-    modalAddTimeOpen: false,
 
     promptOpen: false,
     promptMessage: "",
@@ -153,18 +152,8 @@ class GerenciarTimes extends Component {
     });
   };
 
-  handleAddTimeSubmit = () => {};
-
   handleButtonAddClick = () => {
-    this.setState({
-      modalAddTimeOpen: true,
-    });
-  };
-
-  handleModalAddTimeClose = () => {
-    this.setState({
-      modalAddTimeOpen: false,
-    });
+    this.props.history.push(`/avaliador/times/add`);
   };
 
   handleModalClose = () => {
@@ -296,7 +285,7 @@ class GerenciarTimes extends Component {
               </Box>
               <Box flex={9} className={classes.vScroll}>
                 <Grid container spacing={3} className={classes.list}>
-                  {this.state.times.length && this.renderTimes()}
+                  {this.state.times && this.state.times.length && this.renderTimes()}
                 </Grid>
               </Box>
             </Box>
