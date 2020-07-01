@@ -11,7 +11,7 @@ import BackIcon from "@material-ui/icons/ArrowBack";
 
 import axios from "axios";
 
-import { getAlunos, getTimeFinal, setTimeFinal } from "../../utils/api";
+import { getAlunos, getAlunosSemTime, getTimeFinal, setTimeFinal } from "../../utils/api";
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import { Backdrop, CircularProgress, Box, Fab, Button, TextField } from "@material-ui/core";
@@ -65,10 +65,12 @@ class AddTime extends Component {
     alunos: [],
     time: [],
     nome: "",
-    idAluno: 2,
-    showError: false,
-    errorMessage: "",
+
     criador: 1,
+
+    toastOpen: false,
+    toastSeverity: "info",
+    toastMessage: "",
   };
 
   componentDidMount() {
@@ -84,14 +86,14 @@ class AddTime extends Component {
       .then((response) => {
         this.setState({
           alunos: response.data,
-          loaded: true,
         });
       })
       .catch((err) => {
         console.error(err);
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      })
+      .then(() => {
         this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
           loaded: true,
         });
       });
@@ -109,11 +111,12 @@ class AddTime extends Component {
           ),
         });
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        console.error(err);
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      })
+      .then(() => {
         this.setState({
-          errorMessage: error.response ? error.response.data.error : "Erro de conexão",
-          showError: true,
           loaded: true,
         });
       });
@@ -142,12 +145,21 @@ class AddTime extends Component {
     this.handleModalOpen();
   };
 
-  handleToastrClose = () => {
+  showToast = (severity, message) => {
     this.setState({
-      showError: false,
-      errorMessage: null,
+      toastOpen: true,
+      toastSeverity: severity,
+      toastMessage: message,
     });
-  };
+  }
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: ""
+    })
+  }
 
   toggleSelect = (key, selected) => {
     this.setState((state) => {
@@ -174,10 +186,7 @@ class AddTime extends Component {
       })
       .catch((err) => {
         console.error(err);
-        this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
-        });
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
 
@@ -191,10 +200,10 @@ class AddTime extends Component {
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
-            severity="error"
-            message={this.state.errorMessage}
-            open={this.state.showError}
-            onClose={this.handleToastrClose}
+            severity={this.state.toastSeverity}
+            message={this.state.toastMessage}
+            open={this.state.toastOpen}
+            onClose={this.handleToastClose}
           />
           <Backdrop className={classes.backdrop} open={!this.state.loaded}>
             <CircularProgress />
