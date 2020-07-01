@@ -7,6 +7,11 @@ module.exports = {
     connection: {
       filename: './src/database/db.sqlite'
     },
+    pool: {
+      afterCreate: (conn, cb) => {
+        conn.run('PRAGMA foreign_keys = ON', cb)
+      },
+    },
     migrations:{
       directory: './src/database/migrations'
     },
