@@ -46,11 +46,12 @@ class SignupAluno extends Component {
     curso: "",
     password: "",
     redirect: false,
-
     cursos: [],
 
-    errorMessage: "",
-    showError: false,
+    toastOpen: false,
+    toastSeverity: "info",
+    toastMessage: "",
+
     loaded: false,
   };
 
@@ -60,14 +61,14 @@ class SignupAluno extends Component {
       .then((response) => {
         this.setState({
           cursos: response.data,
-          loaded: true,
         });
       })
       .catch((err) => {
         console.error(err);
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      })
+      .then(() => {
         this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
           loaded: true,
         });
       });
@@ -86,12 +87,21 @@ class SignupAluno extends Component {
     })
   };
 
-  handleToastrClose = () => {
+  showToast = (severity, message) => {
     this.setState({
-      showError: false,
-      errorMessage: null,
+      toastOpen: true,
+      toastSeverity: severity,
+      toastMessage: message,
     });
-  };
+  }
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: ""
+    })
+  }
 
   renderCursos = () => {
     const cursosList = this.state.cursos;
@@ -110,13 +120,13 @@ class SignupAluno extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-        <Toastr
+          <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
-            severity="error"
-            message={this.state.errorMessage}
-            open={this.state.showError}
-            onClose={this.handleToastrClose}
+            severity={this.state.toastSeverity}
+            message={this.state.toastMessage}
+            open={this.state.toastOpen}
+            onClose={this.handleToastClose}
           />
           <div className={classes.root}>
             <Container component="main" maxWidth="xs">

@@ -85,8 +85,9 @@ class GerenciarAlunos extends Component {
     alunoTimeSugerido: "",
     modalOpen: false,
 
-    showError: false,
-    errorMessage: null,
+    toastOpen: false,
+    toastSeverity: "info",
+    toastMessage: "",
   };
 
   componentDidMount() {
@@ -98,11 +99,24 @@ class GerenciarAlunos extends Component {
         });
       })
       .catch((err) => {
-        this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
-        });
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
+  }
+
+  showToast = (severity, message) => {
+    this.setState({
+      toastOpen: true,
+      toastSeverity: severity,
+      toastMessage: message,
+    });
+  }
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: ""
+    })
   }
 
   getAlunosTime = (aluno) => {
@@ -117,10 +131,7 @@ class GerenciarAlunos extends Component {
         });
       })
       .catch((err) => {
-        this.setState({
-          errorMessage: err.response ? err.response.data.error : "Erro de conexão",
-          showError: true,
-        });
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
 
@@ -194,10 +205,10 @@ class GerenciarAlunos extends Component {
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
-            severity="error"
-            message={this.state.errorMessage}
-            open={this.state.showError}
-            onClose={this.handleToastrClose}
+            severity={this.state.toastSeverity}
+            message={this.state.toastMessage}
+            open={this.state.toastOpen}
+            onClose={this.handleToastClose}
           />
           <Backdrop className={classes.backdrop} open={!this.state.loaded}>
             <CircularProgress />

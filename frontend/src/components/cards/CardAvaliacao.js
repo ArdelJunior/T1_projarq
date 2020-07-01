@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
-import { CssBaseline, Grid, Paper, Box, Typography, TableBody, Table, TableRow, TableCell } from "@material-ui/core";
+import { CssBaseline, Grid, Paper, Box, Typography, TableBody, Table, TableRow, TableCell, IconButton } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const styles = (theme) => ({
   root: {
@@ -58,7 +60,7 @@ class CardAvaliacao extends Component {
   };
 
   render() {
-    const { classes, className, time, avaliacao } = this.props;
+    const { classes, className, onEditClick, onDeleteClick, time, avaliacao } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -73,8 +75,8 @@ class CardAvaliacao extends Component {
                     </Typography>
                   </Grid>
                   <Grid item xs={2} style={{ position: "absolute" }}>
-                    {/* <IconButton onClick={onEditClick} size="small"><EditIcon /></IconButton>
-                  <IconButton onClick={onDeleteClick} size="small"><DeleteIcon /></IconButton> */}
+                    <IconButton onClick={onEditClick} size="small"><EditIcon /></IconButton>
+                    <IconButton onClick={onDeleteClick} size="small"><DeleteIcon /></IconButton>
                   </Grid>
                 </Grid>
               </Box>
