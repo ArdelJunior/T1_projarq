@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 
-import Login from "../common/Login";
+import Login from "../../components/screens/Login";
 import { loginAvaliador } from "../../utils/api";
-import Axios from "axios";
+import axios from "axios";
 
 class LoginAvaliador extends Component {
   handleSubmit = (data) => {
-    console.log(data);
-    Axios.post(loginAvaliador, data)
+    axios.post(loginAvaliador, data)
       .then((data) => {
-        console.log(data);
+        this.props.history.push("/avaliador")
       })
       .catch((error) => {
         console.error(error.response.data);

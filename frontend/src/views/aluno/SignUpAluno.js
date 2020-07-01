@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Container, CssBaseline, Grid, Typography, TextField, Button, Select, MenuItem } from "@material-ui/core";
 import withStyles from "@material-ui/styles/withStyles";
-import { withRouter, Link, Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import axios from "axios";
 
-import Topbar from "../../components/Topbar";
 import { getCursos } from "../../utils/api";
 import Toastr from "../../components/common/Toastr";
 const backgroundShape = require("../../images/shape.svg");
@@ -96,7 +95,7 @@ class SignupAluno extends Component {
 
   renderCursos = () => {
     const cursosList = this.state.cursos;
-    return cursosList.map((item, key) => {
+    return cursosList.map((item) => {
       return <MenuItem value={item.id}>{item.nome}</MenuItem>
     });
   }

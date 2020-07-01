@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
-import { CssBaseline, Typography, Grid, Dialog, IconButton, Fab, Toolbar, AppBar, Slide, Button, Box, Backdrop, CircularProgress } from "@material-ui/core";
+import { CssBaseline, Typography, Grid, Fab, Button, Box, Backdrop, CircularProgress } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-import Topbar from "../../components/Topbar";
+import Topbar from "../../components/common/Topbar";
 import ListCardAluno from "../../components/cards/ListCardAluno";
 import Toastr from "../../components/common/Toastr";
 
@@ -52,7 +52,7 @@ const styles = (theme) => ({
   },
 });
 
-class CreateTimeSugerido extends Component {
+class CriarTimeSugerido extends Component {
   state = {
     modalOpen: false,
     loaded: false,
@@ -224,4 +224,4 @@ class CreateTimeSugerido extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(CreateTimeSugerido));
+export default withRouter(withStyles(styles)(CriarTimeSugerido));

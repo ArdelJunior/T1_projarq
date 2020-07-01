@@ -20,7 +20,7 @@ import {
   DialogContent,
 } from "@material-ui/core";
 
-import Topbar from "../../components/Topbar";
+import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 
 import { getAlunos, getTimeSugeridoAluno } from "../../utils/api";

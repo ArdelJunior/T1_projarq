@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Typography from "@material-ui/core/Typography";
@@ -12,7 +12,7 @@ import BackIcon from "@material-ui/icons/ArrowBack";
 import axios from "axios";
 
 import { getAlunos, getTimeFinal, setTimeFinal } from "../../utils/api";
-import Topbar from "../../components/Topbar";
+import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import { Backdrop, CircularProgress, Box, Fab, Button, TextField } from "@material-ui/core";
 import ListCardAluno from "../../components/cards/ListCardAluno";

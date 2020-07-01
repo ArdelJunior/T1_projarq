@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import withStyles from "@material-ui/styles/withStyles";
-import { Typography, Grid, Container, Button } from "@material-ui/core";
+import { Grid, Container, Button } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import Topbar from "../components/Topbar";
+import Topbar from "../components/common/Topbar";
 
 const backgroundShape = require("../images/shape.svg");
 
@@ -45,7 +45,7 @@ class Index extends Component {
                     </Button>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button component={Link} to="/avaliador" variant="contained" color="primary" size="large" fullWidth>
+                    <Button component={Link} to="/avaliador/login" variant="contained" color="primary" size="large" fullWidth>
                       Sou avaliador
                     </Button>
                   </Grid>

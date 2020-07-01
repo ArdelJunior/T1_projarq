@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
-import { CssBaseline, Typography, Grid, Dialog, IconButton, Fab, Toolbar, AppBar, Slide, Button, Box, Backdrop, CircularProgress } from "@material-ui/core";
+import { CssBaseline, Typography, Box } from "@material-ui/core";
 
-import Topbar from "../../components/Topbar";
+import Topbar from "../../components/common/Topbar";
 
 import { getTimeSugeridoAluno } from "../../utils/api";
 

@@ -17,7 +17,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import MenuAluno from './MenuAluno';
 import MenuAvaliador from './MenuAvaliador';
 
-const logo = require('../images/logo.svg');
+const logo = require('../../images/logo.svg');
 
 const styles = theme => ({
   appBar: {
