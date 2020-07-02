@@ -11,7 +11,7 @@ import BackIcon from "@material-ui/icons/ArrowBack";
 
 import axios from "axios";
 
-import { getAlunos, getAlunosSemTime, getTimeFinal, setTimeFinal } from "../../utils/api";
+import { getAlunos, getTimeFinal, setTimeFinal } from "../../utils/api";
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import { Backdrop, CircularProgress, Box, Fab, Button, TextField } from "@material-ui/core";

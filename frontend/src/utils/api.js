@@ -10,6 +10,8 @@ export const loginAvaliador = apiRoot + "avaliadores/login";
 
 export const getCursos = apiRoot + "cursos";
 
+export const getCriterios = apiRoot + "criterios";
+
 export const getTimeSugerido = apiRoot + "times_sugeridos/"
 export const setTimeSugerido = apiRoot + "times_sugeridos";
 
@@ -22,7 +24,9 @@ export const deleteTimeFinal = apiRoot + "times/";
 export const getAvaliacoes = apiRoot + "avaliacoes";
 export const getAvaliacoesTime = apiRoot + "avaliacoes/time/";
 export const getAvaliacoesAvaliador = apiRoot + "avaliacoes/avaliador/";
-export const deleteAvaliacao = apiRoot + "avaliacoes/"
+export const addAvaliacao = apiRoot + "avaliacoes";
+export const editAvaliacao = apiRoot + "avaliacoes/";
+export const deleteAvaliacao = apiRoot + "avaliacoes/";
 
 
 // export const getTime = apiRoot + "grupo/";

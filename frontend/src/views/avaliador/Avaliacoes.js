@@ -12,6 +12,7 @@ import CardAvaliacao from "../../components/cards/CardAvaliacao";
 
 import { getAvaliacoesAvaliador, deleteAvaliacao } from "../../utils/api";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
+import DialogAddAvaliacao from "../../components/dialogs/DialogAddAvaliacao";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -40,6 +41,9 @@ class Avaliacoes extends Component {
 
     avaliacaoToDelete: null,
 
+    currentAvaliacao: null,
+    dialogAddAvaliacaoOpen: false,
+
     toastOpen: false,
     toastSeverity: "info",
     toastMessage: "",
@@ -58,28 +62,29 @@ class Avaliacoes extends Component {
       toastSeverity: severity,
       toastMessage: message,
     });
-  }
+  };
 
   handleToastClose = () => {
     this.setState({
       toastOpen: false,
       toastSeverity: "info",
-      toastMessage: ""
-    })
-  }
+      toastMessage: "",
+    });
+  };
 
   getAvaliacoes = () => {
     const { avaliador } = this.state;
-    axios.get(`${getAvaliacoesAvaliador}${avaliador}`)
-    .then((rs) => {
-      this.setState({
-        avaliacoes: rs.data,
+    axios
+      .get(`${getAvaliacoesAvaliador}${avaliador}`)
+      .then((rs) => {
+        this.setState({
+          avaliacoes: rs.data,
+        });
+      })
+      .catch((err) => {
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
-    })
-    .catch((err) => {
-      this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
-    });
-  }
+  };
 
   closePrompt = () => {
     this.setState({
@@ -87,36 +92,89 @@ class Avaliacoes extends Component {
     });
   };
 
+  handleButtonAddClick = () => {
+    this.setState(
+      {
+        currentAvaliacao: null,
+      },
+      this.setState({
+        dialogAddAvaliacaoOpen: true,
+      })
+    );
+  };
+
+  handleAddAvaliacaoClose = () => {
+    this.setState({
+      dialogAddAvaliacaoOpen: false,
+    });
+  };
+
+  handleEditAvaliacaoClick = (av) => {
+    console.log(av);
+    this.setState(
+      {
+        currentAvaliacao: av,
+      },
+      this.setState({
+        dialogAddAvaliacaoOpen: true,
+      })
+    );
+  };
+
+  onChangeAvaliacao = (av) => {
+    console.log(av);
+  };
+
+  handleSaveAvaliacao = () => {
+    this.getAvaliacoes();
+  };
+
+  handleSaveAvaliacaoError = (err) => {
+    this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+  };
+
   handleDeleteAvaliacaoClick = (avaliacao, time) => {
     this.setState({
       promptOpen: true,
       avaliacaoToDelete: avaliacao,
-      promptDeleteAvaliacao: `Confirma a exclusão da avaliação do time ${time.nome}?`
+      promptDeleteAvaliacao: `Confirma a exclusão da avaliação do time ${time.nome}?`,
     });
   };
 
   handleDeleteAvaliacaoPromptClick = (option) => {
-    if(!option) {
+    if (!option) {
       this.closePrompt();
       return false;
     }
 
     const { id } = this.state.avaliacaoToDelete;
 
-    axios.delete(deleteAvaliacao + id).then((data) => {
-      this.getAvaliacoes();
-      this.showToast("success", "Avaliação excluída com sucesso");
-    }).catch((err) => {
-      this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
-    }).finally(() => {
-      this.closePrompt();
-    });
-  }
+    axios
+      .delete(deleteAvaliacao + id)
+      .then((data) => {
+        this.getAvaliacoes();
+        this.showToast("success", "Avaliação excluída com sucesso");
+      })
+      .catch((err) => {
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      })
+      .finally(() => {
+        this.closePrompt();
+      });
+  };
 
   renderAvaliacoes = () => {
     const { avaliacoes } = this.state;
     return avaliacoes.map((av, key) => {
-      return <CardAvaliacao key={key} time={av.time} avaliacao={av.avaliacao} onEditClick={() => true} onDeleteClick={() => this.handleDeleteAvaliacaoClick(av.avaliacao, av.time)} />;
+      return (
+        <CardAvaliacao
+          key={key}
+          time={av.time}
+          avaliacao={av.avaliacao}
+          onEditClick={() => this.handleEditAvaliacaoClick(av)}
+          onDeleteClick={() => this.handleDeleteAvaliacaoClick(av.avaliacao, av.time)}
+        />
+      );
     });
   };
 
@@ -127,7 +185,6 @@ class Avaliacoes extends Component {
       <React.Fragment>
         <CssBaseline>
           <Topbar type="avaliador" currentPath={currentPath} />
-
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -136,7 +193,6 @@ class Avaliacoes extends Component {
             open={this.state.toastOpen}
             onClose={this.handleToastClose}
           />
-
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
               <Box flex={1}>
@@ -164,8 +220,20 @@ class Avaliacoes extends Component {
               </Box> */}
             </Box>
           </div>
-
-          <DialogPrompt open={this.state.promptOpen} onClick={(option) => this.handleDeleteAvaliacaoPromptClick(option)} title={"Excluir Avaliação"} prompt={this.state.promptDeleteAvaliacao} />;
+          <DialogPrompt
+            open={this.state.promptOpen}
+            onClick={(option) => this.handleDeleteAvaliacaoPromptClick(option)}
+            title={"Excluir Avaliação"}
+            prompt={this.state.promptDeleteAvaliacao}
+          />
+          ;
+          <DialogAddAvaliacao
+            open={this.state.dialogAddAvaliacaoOpen}
+            onClose={this.handleAddAvaliacaoClose}
+            avaliacao={this.state.currentAvaliacao}
+            onSave={this.handleSaveAvaliacao}
+            onSaveError={this.handleSaveAvaliacaoError}
+          />
         </CssBaseline>
       </React.Fragment>
     );
