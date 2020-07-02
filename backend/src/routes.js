@@ -8,6 +8,7 @@ const AvaliadorSessionController = require('./controllers/AvaliadorSessionContro
 const CursoController = require('./controllers/CursoController');
 const TimeController = require('./controllers/TimeController');
 const TimeSugeridoController = require('./controllers/TimeSugeridoController');
+const CriterioController = require('./controllers/CriterioController');
 // const CriterioController = require('./controllers/CriterioController');
  
 const routes = express.Router();
@@ -25,12 +26,15 @@ routes.get('/avaliadores', AvaliadorController.index);
 routes.post('/avaliadores', AvaliadorController.create);
 
 routes.get('/avaliacoes', AvaliacaoController.index);
+routes.get('/avaliacoes/:id', AvaliacaoController.get);
 routes.get('/avaliacoes/time/:id', AvaliacaoController.getByTime);
 routes.get('/avaliacoes/avaliador/:id', AvaliacaoController.getByAvaliador);
 routes.post('/avaliacoes', AvaliacaoController.create);
 routes.delete('/avaliacoes/:id', AvaliacaoController.delete);
 
 routes.get('/cursos', CursoController.index);
+
+routes.get('/criterios', CriterioController.index);
 
 routes.get('/times_sugeridos', TimeSugeridoController.index);
 routes.get('/times_sugeridos/:id', TimeSugeridoController.get);
