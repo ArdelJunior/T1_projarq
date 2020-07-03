@@ -1,20 +1,12 @@
 const MenuAvaliador = [
   {
-    label: "Home",
-    pathname: "/avaliador",
-  },
-  {
-    label: "Gerenciar alunos",
-    pathname: "/avaliador/alunos"
-  },
-  {
-    label: "Gerenciar times",
-    pathname: "/avaliador/times"
-  },
-  {
     label: "Avaliações",
-    pathname: "/avaliador/avaliacoes"
-  }
+    pathname: "/avaliador"
+  },
+  {
+    label: "Sair",
+    pathname: "/logout",
+  },
 ]
 
 export default MenuAvaliador;

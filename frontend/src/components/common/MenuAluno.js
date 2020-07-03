@@ -4,7 +4,7 @@ const MenuAluno = [
     pathname: "/aluno",
   },
   {
-    label: "Alterar time sugerido",
+    label: "Time sugerido",
     pathname: "/aluno/criar-time-sugerido",
   },
   {
