@@ -1,24 +1,5 @@
 const connection = require("../database/connection");
-const knexnest = require("knexnest");
-const nhjs = require("nesthydrationjs")();
-
-const dotToObj = (obj) => {
-  Object.keys(obj).forEach((k) => {
-    if (k.indexOf(".") > -1) {
-      const [o, v] = k.split(".", 2);
-      if (!obj[o]) {
-        obj[o] = {};
-      }
-      obj[o][v] = obj[k];
-      delete obj[k];
-    }
-
-    if (Array.isArray(obj[k])) {
-      obj[k] = obj[k].map((item) => dotToObj(item));
-    }
-  });
-  return obj;
-};
+const dotPropertyToObject = require("../helper/dotPropertyToObject");
 
 const sqlFirst = async (filter = {}) => {
   const { time, avaliador } = filter;
@@ -51,7 +32,7 @@ const sqlFirst = async (filter = {}) => {
   }
 
   let rs = await sql;
-  rs.forEach((item) => dotToObj(item));
+  rs.forEach((item) => dotPropertyToObject(item));
   return rs;
 };
 
@@ -67,7 +48,7 @@ const getAvaliacao = async (time, avaliador) => {
     .where("a.id_time", "=", time)
     .andWhere("a.id_avaliador", "=", avaliador);
 
-  rs.forEach((item) => dotToObj(item));
+  rs.forEach((item) => dotPropertyToObject(item));
   return rs;
 };
 

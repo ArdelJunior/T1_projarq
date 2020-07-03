@@ -4,7 +4,8 @@ const { hashPassword } = require("../helper/encryptPassword");
 module.exports = {
   async index(request, response) {
     try {
-      const avaliadores = await Avaliador.list();
+      const avaliador = new Avaliador();
+      const avaliadores = await avaliador.list();
       return response.json(avaliadores);
     } catch (error) {
       return response.status(500).json({ error: error.message });
@@ -25,8 +26,9 @@ module.exports = {
     }
 
     try {
+      const avaliador = new Avaliador();
       const hashedPass = hashPassword(password);
-      await Avaliador.new(nome, email, hashedPass);
+      await avaliador.new(nome, email, hashedPass);
       return response.status(201).json({ success: true });
     } catch (error) {
       console.error(error);

@@ -1,29 +1,37 @@
-const connection = require("../database/connection");
+const Pessoa = require("./Pessoa");
 
-module.exports = {
-  async list() {
-    return await connection("avaliadores").select(["id", "nome", "email"]);
-  },
+module.exports = class Avaliador extends Pessoa {
+  constructor() {
+    super("avaliador");
+  }
+}
 
-  async get(id) {
-    return await connection("avaliadores")
-      .where("id", "=", id)
-      .select(["id", "nome", "email"])
-      .first();
-  },
+// const connection = require("../database/connection");
 
-  async getPassword(id) {
-    return await connection("avaliadores")
-      .select("password")
-      .where("id", "=", id)
-      .first();
-  },
+// module.exports = {
+//   async list() {
+//     return await connection("avaliadores").select(["id", "nome", "email"]);
+//   },
 
-  async new(nome, email, password) {
-    return await connection("avaliadores").insert({
-      nome,
-      email,
-      password,
-    });
-  },
-};
+//   async get(id) {
+//     return await connection("avaliadores")
+//       .where("id", "=", id)
+//       .select(["id", "nome", "email"])
+//       .first();
+//   },
+
+//   async getPassword(id) {
+//     return await connection("avaliadores")
+//       .select("password")
+//       .where("id", "=", id)
+//       .first();
+//   },
+
+//   async new(nome, email, password) {
+//     return await connection("avaliadores").insert({
+//       nome,
+//       email,
+//       password,
+//     });
+//   },
+// };

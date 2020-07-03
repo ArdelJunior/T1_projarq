@@ -1,17 +1,12 @@
+const PessoaFactory = require("./PessoaFactory");
 const Avaliador = require("../models/Avaliador");
 
-module.exports = {
-  async create(nome, email, password) {
-    if (!nome) {
-      throw new Error("Nome não especificado");
-    }
-    if (!email) {
-      throw new Error("E-mail não especificado");
-    }
-    if (!password) {
-      throw new Error("Senha não inserida");
-    }
+module.exports = class AvaliadorFactory extends PessoaFactory {
+  constructor() {
+    super();
+  }
 
-    return await Avaliador.new(nome, email, password);
-  },
-};
+  createPessoa() {
+    return new Avaliador();
+  }
+}
