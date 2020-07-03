@@ -26,10 +26,10 @@ routes.get('/avaliadores', AvaliadorController.index);
 routes.post('/avaliadores', AvaliadorController.create);
 
 routes.get('/avaliacoes', AvaliacaoController.index);
-routes.get('/avaliacoes/:id', AvaliacaoController.get);
 routes.get('/avaliacoes/time/:id', AvaliacaoController.getByTime);
 routes.get('/avaliacoes/avaliador/:id', AvaliacaoController.getByAvaliador);
 routes.post('/avaliacoes', AvaliacaoController.create);
+routes.put('/avaliacoes', AvaliacaoController.update);
 routes.delete('/avaliacoes/:id', AvaliacaoController.delete);
 
 routes.get('/cursos', CursoController.index);

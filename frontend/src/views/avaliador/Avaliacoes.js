@@ -147,10 +147,9 @@ class Avaliacoes extends Component {
       return false;
     }
 
-    const { id } = this.state.avaliacaoToDelete;
+    const { avaliacaoToDelete } = this.state;
 
-    axios
-      .delete(deleteAvaliacao + id)
+    Promise.all(avaliacaoToDelete.map((av) => axios.delete(`${deleteAvaliacao}${av.id}`)))
       .then((data) => {
         this.getAvaliacoes();
         this.showToast("success", "Avaliação excluída com sucesso");
@@ -166,6 +165,7 @@ class Avaliacoes extends Component {
   renderAvaliacoes = () => {
     const { avaliacoes } = this.state;
     return avaliacoes.map((av, key) => {
+      console.log({ av });
       return (
         <CardAvaliacao
           key={key}

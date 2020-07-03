@@ -1,104 +1,120 @@
 const connection = require("../database/connection");
 const knexnest = require("knexnest");
+const nhjs = require("nesthydrationjs")();
+
+const dotToObj = (obj) => {
+  Object.keys(obj).forEach((k) => {
+    if (k.indexOf(".") > -1) {
+      const [o, v] = k.split(".", 2);
+      if (!obj[o]) {
+        obj[o] = {};
+      }
+      obj[o][v] = obj[k];
+      delete obj[k];
+    }
+
+    if (Array.isArray(obj[k])) {
+      obj[k] = obj[k].map((item) => dotToObj(item));
+    }
+  });
+  return obj;
+};
+
+const sqlFirst = async (filter = {}) => {
+  const { time, avaliador } = filter;
+
+  let firstFilter = true;
+  let sql = connection("avaliacoes as a")
+    .select([
+      "t.id as time.id",
+      "t.nome as time.nome",
+      "av.id as avaliador.id",
+      "av.nome as avaliador.nome",
+      "av.email as avaliador.email",
+    ])
+    .distinct()
+    .join("times as t", "a.id_time", "t.id")
+    .join("avaliadores as av", "a.id_avaliador", "av.id");
+
+  if (time) {
+    sql = firstFilter
+      ? sql.where("t.id", "=", time)
+      : sql.andWhere("t.id", "=", time);
+    firstFilter = false;
+  }
+
+  if (avaliador) {
+    sql = firstFilter
+      ? sql.where("av.id", "=", avaliador)
+      : sql.andWhere("av.id", "=", avaliador);
+    firstFilter = false;
+  }
+
+  let rs = await sql;
+  rs.forEach((item) => dotToObj(item));
+  return rs;
+};
+
+const getAvaliacao = async (time, avaliador) => {
+  let rs = await connection("avaliacoes as a")
+    .select([
+      "a.id",
+      "a.nota",
+      "c.id as criterio.id",
+      "c.nome as criterio.nome",
+    ])
+    .join("criterios as c", "a.id_criterio", "c.id")
+    .where("a.id_time", "=", time)
+    .andWhere("a.id_avaliador", "=", avaliador);
+
+  rs.forEach((item) => dotToObj(item));
+  return rs;
+};
+
+const getAvaliacoes = async (filter = {}) => {
+  const sql = await sqlFirst(filter);
+  const sqlFinal = await Promise.all(
+    sql.map(async (item) => {
+      const { avaliador, time } = item;
+      item.avaliacao = await getAvaliacao(time.id, avaliador.id);
+      return item;
+    })
+  );
+  return sqlFinal;
+};
 
 module.exports = {
   async list() {
-    const times = await connection("avaliacoes as a")
-      .select(["ts.id", "ts.nome"])
-      .distinct()
-      .join("times as ts", "ts.id", "a.id_time");
-
-    const avaliacoes = await Promise.all(
-      times.map(async (t) => {
-        return {
-          time: t,
-          avaliacoes: await this.getByTime(t.id),
-        };
-      })
-    );
-
-    return avaliacoes;
-  },
-
-  async get(id) {
-    const sql = connection("avaliacoes as a")
-      .select([
-        "ts.id as _time_id",
-        "ts.nome as _time_nome",
-        "av.id as _avaliador_id",
-        "av.nome as _avaliador_nome",
-        "av.email as _avaliador_email",
-        "c.nome as _avaliacao__criterio",
-        "a.nota as _avaliacao__nota",
-      ])
-      .join("times as ts", "a.id_time", "ts.id")
-      .join("criterios as c", "a.id_criterio", "c.id")
-      .join("avaliadores as av", "a.id_avaliador", "av.id")
-      .where("id", "=", id);
-
-    return knexnest(sql);
+    return await getAvaliacoes();
   },
 
   async getByTime(id) {
-    const avaliadores = await connection("avaliacoes")
-      .where("id_time", "=", id)
-      .select("id_avaliador")
-      .distinct();
-
-    const avaliacoes = await Promise.all(
-      avaliadores.map(async (av) => {
-        const sql = connection("avaliacoes as a")
-          .select([
-            "av.nome as _avaliador_nome",
-            "av.email as _avaliador_email",
-            "c.nome as _avaliacao__criterio",
-            "a.nota as _avaliacao__nota",
-          ])
-          .join("times as ts", "a.id_time", "ts.id")
-          .join("criterios as c", "a.id_criterio", "c.id")
-          .join("avaliadores as av", "a.id_avaliador", "av.id")
-          .where("a.id_time", "=", id)
-          .andWhere("id_avaliador", "=", av.id_avaliador);
-
-        const rs = await knexnest(sql);
-        return rs ? rs[0] : null;
-      })
-    );
-
-    return avaliacoes;
+    return await getAvaliacoes({ time: id });
   },
 
   async getByAvaliador(id) {
-    const sql = connection("avaliacoes as a")
-      .select([
-        "ts.id as _time_id",
-        "ts.nome as _time_nome",
-        "c.nome as _avaliacao__criterio",
-        "a.nota as _avaliacao__nota",
-      ])
-      .join("times as ts", "a.id_time", "ts.id")
-      .join("criterios as c", "a.id_criterio", "c.id")
-      .join("avaliadores as av", "a.id_avaliador", "av.id")
-      .where("a.id_avaliador", "=", id);
-
-    return knexnest(sql);
+    return await getAvaliacoes({ avaliador: id });
   },
 
-  async new(id_avaliador, id_time, avaliacoes) {
-    const payload = avaliacoes.map((av) => {
+  async new(id_avaliador, id_time, avaliacao) {
+    const payload = avaliacao.map((av) => {
       return {
         id_avaliador,
         id_time,
-        id_criterio: av.id_criterio,
+        id_criterio: av.criterio.id,
         nota: av.nota,
       };
     });
-    
+
     return await connection("avaliacoes").insert(payload);
   },
 
-  async update(obj) {
-    return await connection("avaliacoes").where("id", "=", id).update(obj);
+  async update(avaliacao) {
+    return await connection("avaliacoes")
+      .where("id", "=", avaliacao.id)
+      // .where("id_avaliador", "=", avaliador)
+      // .andWhere("id_time", "=", time)
+      .update(avaliacao);
   },
 
   async delete(id) {

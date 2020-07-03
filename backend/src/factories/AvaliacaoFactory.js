@@ -1,19 +1,19 @@
 const Avaliacao = require("../models/Avaliacao");
 
 module.exports = {
-  async create(idAvaliador, idTime, avaliacoes) {
-    if (!idAvaliador) {
+  async create(avaliador, time, avaliacao) {
+    if (!avaliador) {
       throw new Error("Avaliador não especificado");
     }
 
-    if (!idTime) {
+    if (!time) {
       throw new Error("Time não especificado");
     }
 
-    if (!avaliacoes) {
-      throw new Error("Avaliações não especificadas");
+    if (!avaliacao) {
+      throw new Error("Avaliação não especificada");
     }
 
-    return await Avaliacao.new(idAvaliador, idTime, avaliacoes);
+    return await Avaliacao.new(avaliador, time, avaliacao);
   },
 };

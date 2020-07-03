@@ -114,9 +114,9 @@ class CardAvaliacao extends Component {
           {avaliacao.map((a, key) => {
             return (
               <TableRow key={key}>
-                <TableCell>{a.criterio}</TableCell>
+                <TableCell>{a.criterio.nome}</TableCell>
                 <TableCell>
-                  <Rating name={a.criterio} value={a.nota} readOnly={!editing} onChange={(e, nota) => onChangeRating(a, nota)} />
+                  <Rating name={a.criterio.nome} value={a.nota} readOnly={!editing} onChange={(e, nota) => onChangeRating(a, nota)} />
                 </TableCell>
               </TableRow>
             );

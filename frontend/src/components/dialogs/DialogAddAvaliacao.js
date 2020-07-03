@@ -50,8 +50,8 @@ class DialogAddAvaliacao extends Component {
       this.setState({
         isNewAvaliacao: true,
         time: { nome: "" },
-        avaliacao: data.map((c) => {
-          return { ...c, nota: 0 };
+        avaliacao: data.map((criterio) => {
+          return { criterio, nota: 0 };
         }),
       });
     });
@@ -71,13 +71,13 @@ class DialogAddAvaliacao extends Component {
   };
 
   saveAvaliacao = () => {
-    const { onSaveError, onClose } = this.props;
+    const { onSaveError, onClose, onSave } = this.props;
     const { avaliacao, time, avaliador, isNewAvaliacao } = this.state;
     console.log({ avaliacao, time, avaliador, isNewAvaliacao });
-    const req = isNewAvaliacao ? axios.post(addAvaliacao, { time: time.id, avaliacao, avaliador }) : axios.put(editAvaliacao + avaliacao.id, avaliacao);
+    const req = isNewAvaliacao ? axios.post(addAvaliacao, { time: time.id, avaliacao, avaliador }) : axios.put(editAvaliacao, { time: time.id, avaliacao, avaliador });
     req
       .then((rs) => {
-        console.log(rs);
+        onSave();
         onClose();
       })
       .catch((err) => {
@@ -102,10 +102,7 @@ class DialogAddAvaliacao extends Component {
   };
 
   handleSaveClick = () => {
-    const { onSave } = this.props;
-    console.log(this.state);
     this.saveAvaliacao();
-    onSave();
   };
 
   render() {
