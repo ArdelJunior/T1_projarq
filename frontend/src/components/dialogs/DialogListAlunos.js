@@ -18,29 +18,27 @@ const styles = (theme) => ({
 });
 
 class DialogListAlunos extends Component {
+  render() {
+    const { classes, alunos, open, onClose, onCardClick } = this.props;
 
-render() {
-  const { classes, alunos, open, onClose, onCardClick } = this.props;
-
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth='lg'>
-            <AppBar position="static">
-              <Toolbar>
-                <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
-                  <CloseIcon />
-                </IconButton>
-                <Typography variant="h6" className={classes.dialogTitle}>
-                  Alunos inscritos
-                </Typography>
-              </Toolbar>
-            </AppBar>
-            <div className={classes.dialogBody}>
-              <ListCardAluno alunos={alunos} forSelect={true} onClick={onCardClick} />
-            </div>
-          </Dialog>
-  );
+    return (
+      <Dialog open={open} onClose={onClose} maxWidth="lg">
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.dialogTitle}>
+              Alunos inscritos
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.dialogBody}>
+          <ListCardAluno alunos={alunos} forSelect={true} onClick={onCardClick} />
+        </div>
+      </Dialog>
+    );
   }
-
 }
 
 export default withRouter(withStyles(styles)(DialogListAlunos));
