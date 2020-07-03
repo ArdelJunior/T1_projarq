@@ -201,7 +201,7 @@ class GerenciarAlunos extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="avaliador" currentPath={currentPath} />
+          <Topbar type="administrador" currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}

@@ -199,7 +199,7 @@ class AddTime extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar currentPath={currentPath} />
+          <Topbar type="administrador" currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}

@@ -5,7 +5,6 @@ import { CssBaseline, Typography, Box } from "@material-ui/core";
 
 import Topbar from "../../components/common/Topbar";
 
-
 const backgroundShape = require("../../images/shape.svg");
 
 const styles = (theme) => ({
@@ -42,7 +41,7 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar currentPath={0} />
+          <Topbar type="administrador" currentPath={0} />
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
               <Box flex={2}></Box>

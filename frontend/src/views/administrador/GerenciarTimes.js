@@ -153,7 +153,7 @@ class GerenciarTimes extends Component {
   };
 
   handleButtonAddClick = () => {
-    this.props.history.push(`/avaliador/times/add`);
+    this.props.history.push(`/administrador/times/add`);
   };
 
   handleModalClose = () => {
@@ -171,7 +171,7 @@ class GerenciarTimes extends Component {
   };
 
   handleEditTimeClick = (time) => {
-    this.props.history.push(`/avaliador/times/edit/${time.id}`);
+    this.props.history.push(`/administrador/times/edit/${time.id}`);
   };
 
   handleDeleteTimeClick = (time) => {
@@ -242,7 +242,7 @@ class GerenciarTimes extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="avaliador" currentPath={currentPath} />
+          <Topbar type="administrador" currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}

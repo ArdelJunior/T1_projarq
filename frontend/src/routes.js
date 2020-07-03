@@ -10,17 +10,16 @@ import CriarTimeSugerido from "./views/aluno/CriarTimeSugerido";
 
 import LoginAvaliador from "./views/avaliador/LoginAvaliador";
 import SignupAvaliador from "./views/avaliador/SignupAvaliador";
-import DashboardAvaliador from "./views/avaliador/DashboardAvaliador";
-import GerenciarAlunos from "./views/avaliador/GerenciarAlunos";
-import GerenciarTimes from "./views/avaliador/GerenciarTimes";
-import AddTime from "./views/avaliador/AddTime";
-import EditTime from "./views/avaliador/EditTime";
+
+import GerenciarAlunos from "./views/administrador/GerenciarAlunos";
+import GerenciarTimes from "./views/administrador/GerenciarTimes";
+import AddTime from "./views/administrador/AddTime";
+import EditTime from "./views/administrador/EditTime";
 
 import Avaliacoes from "./views/avaliador/Avaliacoes";
 
 import Page404 from "./views/common/Page404";
-
-
+import DashboardAdministrador from "./views/administrador/DashboardAdministrador";
 
 export default (props) => (
   <BrowserRouter>
@@ -35,12 +34,13 @@ export default (props) => (
 
         <Route path="/avaliador/login" component={LoginAvaliador} />
         <Route path="/avaliador/signup" component={SignupAvaliador} />
-        <Route path="/avaliador/alunos" component={GerenciarAlunos} />
-        <Route path="/avaliador/times/add" component={AddTime} />
-        <Route path="/avaliador/times/edit/:id" component={EditTime} />
-        <Route path="/avaliador/times" component={GerenciarTimes} />
-        <Route path="/avaliador/avaliacoes" component={Avaliacoes} />
-        <Route path="/avaliador" component={DashboardAvaliador} />
+        <Route path="/avaliador" component={Avaliacoes} />
+
+        <Route path="/administrador/alunos" component={GerenciarAlunos} />
+        <Route path="/administrador/times/add" component={AddTime} />
+        <Route path="/administrador/times/edit/:id" component={EditTime} />
+        <Route path="/administrador/times" component={GerenciarTimes} />
+        <Route path="/administrador" component={DashboardAdministrador} />
 
         <Route path="/logout">
           <Redirect to="/" />
