@@ -19,7 +19,8 @@ routes.post('/alunoSession', AlunoSessionController.login);
 routes.post('/avaliadorSession', AvaliadorSessionController.login);
 
 routes.get('/alunos', AlunoController.index);
-routes.get('/alunos/semtime', AlunoController.listUnassigned);
+routes.get('/alunos/disponiveis', AlunoController.listUnassigned);
+routes.get('/alunos/disponiveis/:id', AlunoController.listAvailable);
 routes.get('/alunos/:id', AlunoController.get);
 routes.post('/alunos', AlunoController.create);
 

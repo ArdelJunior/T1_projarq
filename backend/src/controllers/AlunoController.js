@@ -25,6 +25,18 @@ module.exports = {
     }
   },
 
+  async listAvailable(request, response) {
+    const { id } = request.params;
+    try {
+      const ac = new Aluno();
+      const alunos = await ac.listAvailable(id);
+      return response.json(alunos);
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({ error: error.message });
+    }
+  },
+
   async get(request, response) {
       const ac = new Aluno();
       const aluno = await ac.get(request.params.id);

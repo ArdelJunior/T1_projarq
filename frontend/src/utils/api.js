@@ -1,7 +1,7 @@
 const apiRoot = "http://localhost:3333/";
 
 export const getAlunos = apiRoot + "alunos";
-export const getAlunosSemTime = apiRoot + "alunos/semtime";
+export const getAlunosDisponiveis = apiRoot + "alunos/disponiveis/";
 export const loginAluno = apiRoot + "alunos/login";
 export const createAluno = apiRoot + "alunos";
 

@@ -11,7 +11,7 @@ import BackIcon from "@material-ui/icons/ArrowBack";
 
 import axios from "axios";
 
-import { getAlunos, getTimeFinal, setTimeFinal } from "../../utils/api";
+import { getAlunosDisponiveis, getTimeFinal, setTimeFinal } from "../../utils/api";
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import { Backdrop, CircularProgress, Box, Fab, Button, TextField } from "@material-ui/core";
@@ -66,6 +66,8 @@ class AddTime extends Component {
     time: [],
     nome: "",
 
+    alunosDisponiveis: [],
+
     criador: 1,
 
     toastOpen: false,
@@ -78,8 +80,9 @@ class AddTime extends Component {
   }
 
   loadAlunos = () => {
+    const url = `${getAlunosDisponiveis}${this.props.id ? this.props.id : ""}`;
     axios
-      .get(getAlunos)
+      .get(url)
       .then((response) => {
         this.setState({
           alunos: response.data,
@@ -179,13 +182,12 @@ class AddTime extends Component {
 
     const req = this.props.id
       ? axios.put(`${setTimeFinal}/${this.props.id}`, { time: { alunos, nome } })
-      : axios.post(setTimeFinal, { alunos, nome, criado_por: criador });
+      : axios.post(setTimeFinal, { alunos, nome, criador: criador });
 
-    console.log(req);
     req
       .then((response) => {
         console.log(response);
-        this.props.history.push("/avaliador/times");
+        this.props.history.push("/administrador/times");
       })
       .catch((err) => {
         console.error(err);
