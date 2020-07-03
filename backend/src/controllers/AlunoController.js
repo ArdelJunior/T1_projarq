@@ -5,7 +5,8 @@ const { hashPassword } = require("../helper/encryptPassword");
 module.exports = {
   async index(request, response) {
     try {
-      const alunos = await Aluno.list();
+      const ac = new Aluno();
+      const alunos = await ac.list();
       return response.json(alunos);
     } catch (error) {
       console.error(error);
@@ -15,7 +16,8 @@ module.exports = {
 
   async listUnassigned(request, response) {
     try {
-      const alunos = await Aluno.listUnassigned();
+      const ac = new Aluno();
+      const alunos = await ac.listUnassigned();
       return response.json(alunos);
     } catch (error) {
       console.error(error);
@@ -24,7 +26,8 @@ module.exports = {
   },
 
   async get(request, response) {
-    const aluno = await Aluno.get(request.params.id);
+      const ac = new Aluno();
+      const aluno = await ac.get(request.params.id);
 
     return response.json(aluno);
   },
@@ -34,7 +37,8 @@ module.exports = {
     const hashedPass = hashPassword(password);
 
     try {
-      await AlunoFactory.create(matricula, nome, curso, email, hashedPass);
+      const ac = new AlunoFactory();
+      await ac.create(matricula, nome, curso, email, hashedPass);
       return response.status(201).json({ success: true });
     } catch (error) {
       console.error(error);

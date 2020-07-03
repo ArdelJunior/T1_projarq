@@ -1,7 +1,7 @@
 const Aluno = require("../models/Aluno");
 const Curso = require("../models/Curso");
 
-module.exports = {
+module.exports = class AlunoFactory {
   async create(matricula, nome, curso, email, password) {
     if (!matricula) {
       throw new Error("Matrícula não inserida");
@@ -33,6 +33,7 @@ module.exports = {
       throw new Error(`Curso ${curso} não encontrado`);
     }
 
-    return await Aluno.new(matricula, nome, idCurso, email, password);
-  },
+    const ac = new Aluno();
+    return await ac.new(matricula, nome, idCurso, email, password);
+  }
 };
