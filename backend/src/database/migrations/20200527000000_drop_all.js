@@ -4,7 +4,9 @@ exports.up = function (knex) {
       return knex.schema.dropTableIfExists("grupos_finais").then(function () {
         return knex.schema.dropTableIfExists("avaliacoes").then(function () {
           return knex.schema.dropTableIfExists("cursos").then(function () {
-            return knex.schema.dropTableIfExists("avaliadores");
+            return knex.schema.dropTableIfExists("avaliadores").then(function() {
+              return knex.schema.dropTableIfExists("administradores");
+            });
           });
         });
       });

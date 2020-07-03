@@ -9,6 +9,7 @@ const CursoController = require('./controllers/CursoController');
 const TimeController = require('./controllers/TimeController');
 const TimeSugeridoController = require('./controllers/TimeSugeridoController');
 const CriterioController = require('./controllers/CriterioController');
+const AdministradorController = require('./controllers/AdministradorController');
 // const CriterioController = require('./controllers/CriterioController');
  
 const routes = express.Router();
@@ -24,6 +25,9 @@ routes.post('/alunos', AlunoController.create);
 
 routes.get('/avaliadores', AvaliadorController.index);
 routes.post('/avaliadores', AvaliadorController.create);
+
+routes.get('/adm', AdministradorController.index);
+routes.post('/adm', AdministradorController.create);
 
 routes.get('/avaliacoes', AvaliacaoController.index);
 routes.get('/avaliacoes/time/:id', AvaliacaoController.getByTime);
