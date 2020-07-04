@@ -15,6 +15,7 @@ import GerenciarAlunos from "./views/administrador/GerenciarAlunos";
 import GerenciarTimes from "./views/administrador/GerenciarTimes";
 import AddTime from "./views/administrador/AddTime";
 import EditTime from "./views/administrador/EditTime";
+import GerenciarAvaliacoes from "./views/administrador/GerenciarAvaliacoes";
 
 import Avaliacoes from "./views/avaliador/Avaliacoes";
 
@@ -40,6 +41,7 @@ export default (props) => (
         <Route path="/administrador/times/add" component={AddTime} />
         <Route path="/administrador/times/edit/:id" component={EditTime} />
         <Route path="/administrador/times" component={GerenciarTimes} />
+        <Route path="/administrador/avaliacoes" component={GerenciarAvaliacoes} />
         <Route path="/administrador" component={DashboardAdministrador} />
 
         <Route path="/logout">

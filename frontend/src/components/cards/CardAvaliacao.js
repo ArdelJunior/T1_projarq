@@ -129,8 +129,8 @@ class CardAvaliacao extends Component {
   };
 
   render() {
-    console.log(this.props);
-    const { classes, className, onEditClick, onDeleteClick, time, avaliacao, toAdd, editing } = this.props;
+    const { classes, className, onEditClick, onDeleteClick, time, avaliacao, avaliador, toAdd, readOnly, editing, showInTitle } = this.props;
+    console.log({time, avaliacao, avaliador});
     return (
       <React.Fragment>
         <CssBaseline />
@@ -142,7 +142,7 @@ class CardAvaliacao extends Component {
                   <Grid item xs={12}>
                     {!toAdd ? (
                       <Typography variant="h6" className={classes.cardTitle}>
-                        {time.nome}
+                        {showInTitle === "avaliador" ? avaliador.nome : time.nome}
                       </Typography>
                     ) : (
                       <FormControl className={classes.select}>
@@ -170,7 +170,7 @@ class CardAvaliacao extends Component {
                     )}
                   </Grid>
                   <Grid item xs={2} style={{ position: "absolute" }}>
-                    {!editing && (
+                    {!editing && !readOnly && (
                       <>
                         <IconButton onClick={onEditClick} size="small">
                           <EditIcon />

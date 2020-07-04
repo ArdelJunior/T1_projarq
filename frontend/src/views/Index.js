@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import withStyles from "@material-ui/styles/withStyles";
-import { Grid, Container, Button } from "@material-ui/core";
+import { Grid, Container, Button, Box, Paper } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Topbar from "../components/common/Topbar";
@@ -10,7 +10,6 @@ const backgroundShape = require("../images/shape.svg");
 
 const styles = (theme) => ({
   root: {
-    flexGrow: 1,
     backgroundColor: theme.palette.grey["100"],
     overflow: "hidden",
     background: `url(${backgroundShape}) no-repeat`,
@@ -19,11 +18,14 @@ const styles = (theme) => ({
     paddingBottom: 200,
     height: "100vh",
   },
+  block: {
+    padding: theme.spacing(4),
+    height: "100vh",
+    maxWidth: 1200,
+    margin: "auto",
+  },
   paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    padding: theme.spacing(8),
   },
 });
 
@@ -37,20 +39,30 @@ class Index extends Component {
           <Topbar noTabs />
           <div className={classes.root}>
             <Container component="main" maxWidth="xs">
-              <div className={classes.paper}>
-                <Grid container spacing={6}>
-                  <Grid item xs={12}>
-                    <Button component={Link} to="/aluno/login" variant="contained" color="primary" size="large" fullWidth>
-                      Sou aluno
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button component={Link} to="/avaliador/login" variant="contained" color="primary" size="large" fullWidth>
-                      Sou avaliador
-                    </Button>
-                  </Grid>
-                </Grid>
-              </div>
+              <Box display="flex" flexDirection="column" className={classes.block}>
+                <Box flex={3}></Box>
+                <Box flex={9}>
+                  {/* <Paper variant="outlined" className={classes.paper}> */}
+                    <Grid container spacing={6}>
+                      <Grid item xs={12}>
+                        <Button component={Link} to="/aluno/login" variant="contained" color="primary" size="large" fullWidth>
+                          Sou aluno
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button component={Link} to="/avaliador/login" variant="contained" color="primary" size="large" fullWidth>
+                          Sou avaliador
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button component={Link} to="/administrador/login" variant="contained" color="primary" size="large" fullWidth>
+                          Sou administrador
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  {/* </Paper> */}
+                </Box>
+              </Box>
             </Container>
           </div>
         </CssBaseline>

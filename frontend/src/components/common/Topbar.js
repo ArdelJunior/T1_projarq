@@ -111,7 +111,7 @@ class Topbar extends Component {
 
     const { type } = this.props;
 
-    return menus[type];
+    return menus[type] || MenuAluno;
   }
 
   renderMenuList = () => {
