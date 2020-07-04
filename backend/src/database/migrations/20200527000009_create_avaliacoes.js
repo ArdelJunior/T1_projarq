@@ -6,6 +6,7 @@ exports.up = function(knex) {
     table.integer("id_time").notNullable().references("id").inTable("times");
     table.integer("id_criterio").notNullable().references("id").inTable("criterios");
     table.integer("id_avaliador").notNullable().references("id").inTable("avaliadores");
+    table.unique(["id_time", "id_avaliador", "id_criterio"]);
   });
 };
 
