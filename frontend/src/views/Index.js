@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import withStyles from "@material-ui/styles/withStyles";
-import { Grid, Container, Button, Box, Paper } from "@material-ui/core";
+import { Grid, Container, Button, Box } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Topbar from "../components/common/Topbar";

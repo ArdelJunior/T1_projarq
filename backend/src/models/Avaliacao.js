@@ -9,7 +9,7 @@ module.exports = class Avaliacao extends IAvaliavel {
   }
 
   getNota(obj) {
-    if(!obj || !obj.avaliacao) {
+    if (!obj || !obj.avaliacao) {
       return 0;
     }
 
@@ -82,6 +82,10 @@ module.exports = class Avaliacao extends IAvaliavel {
 
   async list() {
     return await this.getAvaliacoes();
+  }
+
+  async get(idTime, idAvaliador) {
+    return await this.getAvaliacoes({ time: idTime, avaliador: idAvaliador });
   }
 
   async getByTime(id) {

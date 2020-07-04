@@ -15,6 +15,11 @@ module.exports = {
     }
 
     const ac = new Avaliacao();
+    const check = ac.get(time, avaliador);
+    if(check) {
+      throw new Error("Este time já foi avaliado");
+    }
+    
     return await ac.new(avaliador, time, avaliacao);
   },
 };
