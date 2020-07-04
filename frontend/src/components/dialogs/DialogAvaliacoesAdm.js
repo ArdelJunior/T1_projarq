@@ -3,8 +3,6 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { Dialog, CssBaseline, DialogTitle, DialogContent, DialogActions, Button, Grid } from "@material-ui/core";
 import CardAvaliacao from "../cards/CardAvaliacao";
-import axios from "axios";
-import { addAvaliacao, editAvaliacao, getCriterios } from "../../utils/api";
 
 const styles = (theme) => ({
   dialogBody: {
@@ -54,9 +52,6 @@ class DialogAvaliacoesAdm extends Component {
           <DialogActions>
             <Button onClick={onClose} color="primary">
               Fechar
-            </Button>
-            <Button onClick={this.handleSaveClick} color="primary">
-              Salvar
             </Button>
           </DialogActions>
         </Dialog>

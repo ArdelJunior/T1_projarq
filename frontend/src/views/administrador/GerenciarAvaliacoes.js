@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import { Box, Grid, Table, TableHead, TableBody, TableCell, TableRow, TableContainer } from "@material-ui/core";
-import { getAvaliacoes, getTimeFinal } from "../../utils/api";
+import { getAvaliacoes, getTimeFinal, getAvaliacoesTime } from "../../utils/api";
 import DialogAvaliacoesAdm from "../../components/dialogs/DialogAvaliacoesAdm";
 
 const backgroundShape = require("../../images/shape.svg");
@@ -44,6 +44,7 @@ class GerenciarAvaliacoes extends Component {
   state = {
     avaliacoes: [],
     times: [],
+    timesSorted: [],
 
     toastOpen: false,
     toastSeverity: "info",
@@ -55,7 +56,6 @@ class GerenciarAvaliacoes extends Component {
   };
 
   componentDidMount() {
-    this.getAvaliacoes();
     this.getTimes();
   }
 
@@ -63,14 +63,43 @@ class GerenciarAvaliacoes extends Component {
     axios
       .get(getTimeFinal)
       .then((rs) => {
-        this.setState({
-          times: rs.data,
-        });
+        this.setState(
+          {
+            times: rs.data,
+          },
+          this.loadAvaliacoes
+        );
       })
       .catch((err) => {
         this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
+
+  loadAvaliacoes = () => {
+    const { times } = this.state;
+    this.sortAvaliacoes(times).then((ts) => {
+      this.setState({
+        timesSorted: ts,
+      });
+    });
+  };
+
+  sortAvaliacoes = async (times) => {
+    const ts = await Promise.all(times.map((time) => this.getAvaliacoesTime(time.id)));
+    ts.sort((a, b) => b.nota - a.nota);
+    const tsr = this.rankAvaliacoes(ts);
+    return tsr;
+  };
+
+  rankAvaliacoes = (times) => {
+    let rank = 1;
+    times.forEach(time => {
+      if(time.valid) {
+        time.rank = rank++;
+      }
+    });
+    return times;
+  }
 
   getAvaliacoes = () => {
     axios
@@ -83,6 +112,15 @@ class GerenciarAvaliacoes extends Component {
       .catch((err) => {
         this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
+  };
+
+  getAvaliacoesTime = async (id) => {
+    try {
+      const rs = await axios.get(getAvaliacoesTime + id);
+      return rs.data;
+    } catch (err) {
+      this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+    }
   };
 
   showToast = (severity, message) => {
@@ -99,24 +137,6 @@ class GerenciarAvaliacoes extends Component {
       toastSeverity: "info",
       toastMessage: "",
     });
-  };
-
-  notaAvaliacao = (avaliacao) => {
-    return avaliacao.reduce((acc, a) => a.nota + acc, 0);
-  };
-
-  notaFinal = (avaliacoes) => {
-    return avaliacoes.reduce((acc, a) => this.notaAvaliacao(a.avaliacao) + acc, 0);
-  };
-
-  sortAvaliacoes = (times, avaliacoes) => {
-    return times
-      .map((time) => {
-        const av = avaliacoes.filter((a) => a.time.id === time.id);
-        const sum = this.notaFinal(av);
-        return { ...time, avaliacoes: av, nota: sum };
-      })
-      .sort((a, b) => b.nota - a.nota);
   };
 
   handleRowClick = (time) => {
@@ -138,9 +158,8 @@ class GerenciarAvaliacoes extends Component {
 
   renderAvaliacoes = () => {
     const { classes } = this.props;
-    const { avaliacoes, times } = this.state;
-    const timesSorted = this.sortAvaliacoes(times, avaliacoes);
-
+    const { timesSorted } = this.state;
+    console.log({ timesSorted });
     return timesSorted.map((time, key) => {
       return (
         <TableRow key={key} hover onClick={() => this.handleRowClick(time)}>
@@ -193,7 +212,7 @@ class GerenciarAvaliacoes extends Component {
                           })}
                         </TableRow>
                       </TableHead>
-                      <TableBody>{this.state.avaliacoes && this.state.avaliacoes.length ? this.renderAvaliacoes() : <TableRow></TableRow>}</TableBody>
+                      <TableBody>{this.state.timesSorted && this.state.timesSorted.length ? this.renderAvaliacoes() : <TableRow></TableRow>}</TableBody>
                     </Table>
                   </TableContainer>
                 </Grid>
