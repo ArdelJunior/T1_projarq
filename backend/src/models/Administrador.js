@@ -1,7 +1,7 @@
 const connection = require("../database/connection");
-const Pessoa = require("./Pessoa");
+const IPessoa = require("./IPessoa");
 
-module.exports = class Administrador extends Pessoa {
+module.exports = class Administrador extends IPessoa {
   constructor() {
     super();
     this.table = "administradores";

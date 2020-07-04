@@ -1,6 +1,6 @@
 // const connection = require("../database/connection");
 
-module.exports = class Pessoa {
+module.exports = class IPessoa {
     constructor() {
       if(!this.list) {
         throw new Error("list não implementado");
