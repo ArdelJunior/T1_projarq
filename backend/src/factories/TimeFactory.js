@@ -8,6 +8,7 @@ module.exports = {
     if (!nome) {
       throw new Error("Nome não especificado");
     }
-    return await Time.new(criador, nome, alunos);
+    const time = new Time();
+    return await time.new(criador, nome, alunos);
   },
 };

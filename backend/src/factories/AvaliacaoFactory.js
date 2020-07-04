@@ -14,6 +14,7 @@ module.exports = {
       throw new Error("Avaliação não especificada");
     }
 
-    return await Avaliacao.new(avaliador, time, avaliacao);
+    const ac = new Avaliacao();
+    return await ac.new(avaliador, time, avaliacao);
   },
 };

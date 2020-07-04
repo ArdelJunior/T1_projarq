@@ -4,7 +4,8 @@ const TimeFactory = require("../factories/TimeFactory");
 module.exports = {
   async index(request, response) {
     try {
-      const times = await Time.list();
+      const tc = new Time();
+      const times = await tc.list();
       return response.json(times);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -14,7 +15,8 @@ module.exports = {
   async get(request, response) {
     const { id } = request.params;
     try {
-      const time = await Time.get(id);
+      const tc = new Time();
+      const time = await tc.get(id);
       return response.json(time);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -24,7 +26,8 @@ module.exports = {
   async getByCriador(request, response) {
     const { id } = request.params;
     try {
-      const time = await Time.getByCriador(id);
+      const tc = new Time();
+      const time = await tc.getByCriador(id);
       return response.json(time);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -56,7 +59,8 @@ module.exports = {
     const { id } = request.params;
 
     try {
-      await Time.delete(id);
+      const tc = new Time();
+      await tc.delete(id);
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
@@ -68,7 +72,8 @@ module.exports = {
     const { id } = request.params;
 
     try {
-      await Time.deleteByCriador(id);
+      const tc = new Time();
+      await tc.deleteByCriador(id);
       return response.status(204).send();
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -90,7 +95,8 @@ module.exports = {
     }
 
     try {
-      await Time.update(id, time);
+      const tc = new Time();
+      await tc.update(id, time);
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }

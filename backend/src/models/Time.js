@@ -1,7 +1,21 @@
 const connection = require("../database/connection");
 const knexnest = require("knexnest");
+const IAvaliavel = require("./IAvaliavel");
 
-module.exports = {
+module.exports = class Time extends IAvaliavel {
+  constructor() {
+    super();
+    this.time = null;
+  }
+
+  getNota(obj) {
+    if (!this.time || !this.time.avaliacoes) {
+      throw new Error("Time não definido ainda");
+    }
+
+    return this.time.avaliacoes.reduce((acc, av) => acc + av.nota, 0);
+  }
+
   async list() {
     const sql = connection("times as ts")
       .select([
@@ -23,7 +37,7 @@ module.exports = {
       .orderBy("ts.id");
 
     return await knexnest(sql, []);
-  },
+  }
 
   async get(id) {
     const sql = connection("times as ts")
@@ -45,8 +59,9 @@ module.exports = {
       .leftJoin("cursos as ac", "a.curso", "ac.id")
       .where("ts.id", "=", id);
 
-    return await knexnest(sql);
-  },
+    this.time = await knexnest(sql);
+    return this.time;
+  }
 
   async getByCriador(id) {
     const sql = connection("times as ts")
@@ -68,8 +83,9 @@ module.exports = {
       .leftJoin("cursos as ac", "a.curso", "ac.id")
       .where("ts.criado_por", "=", id);
 
-    return await knexnest(sql);
-  },
+    this.time = await knexnest(sql);
+    return this.time;
+  }
 
   async new(criado_por, nome, alunos) {
     await connection("times").insert({ criado_por, nome });
@@ -93,17 +109,13 @@ module.exports = {
     }
 
     return true;
-  },
+  }
 
   async update(id, time) {
     const { nome } = time;
-    await connection("times")
-      .where("id", "=", id)
-      .update({ nome });
+    await connection("times").where("id", "=", id).update({ nome });
 
-    await connection("alunos_times")
-      .where("id_time", "=", id)
-      .delete();
+    await connection("alunos_times").where("id_time", "=", id).delete();
 
     return await connection("alunos_times").insert(
       time.alunos.map((e) => {
@@ -113,14 +125,12 @@ module.exports = {
         };
       })
     );
-  },
+  }
 
   async delete(id) {
-    await connection("alunos_times")
-      .where("id_time", "=", id)
-      .delete();
+    await connection("alunos_times").where("id_time", "=", id).delete();
     return await connection("times").where("id", "=", id).delete();
-  },
+  }
 
   async deleteByCriador(id) {
     const time = await connection("times")
@@ -131,19 +141,5 @@ module.exports = {
       throw new Error("Time não encontrado");
     }
     return await this.delete(time.id);
-  },
-
-  // async addAluno(id, aluno) {
-  //   return await connection("alunos_times").insert({
-  //     id_time: id,
-  //     id_aluno: aluno.id,
-  //   });
-  // },
-
-  // async deleteAluno(id, aluno) {
-  //   return await connection("alunos_times")
-  //     .where("id_time", "=", id)
-  //     .andWhere("id_aluno", "=", aluno.id)
-  //     .delete();
-  // },
+  }
 };

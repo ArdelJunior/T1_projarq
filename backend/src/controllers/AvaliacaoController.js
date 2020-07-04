@@ -1,13 +1,14 @@
 const Avaliacao = require("../models/Avaliacao");
 const AvaliacaoFactory = require("../factories/AvaliacaoFactory");
-const { update } = require("../database/connection");
+const Time = require("../models/Time");
 
 module.exports = {
   async index(request, response) {
     // const avaliador = request.headers.authorization;
 
     try {
-      const avaliacoes = await Avaliacao.list();
+      const ac = new Avaliacao();
+      const avaliacoes = await ac.list();
       return response.json(avaliacoes);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -18,7 +19,8 @@ module.exports = {
     const { id } = request.params;
 
     try {
-      const avaliacoes = await Avaliacao.get(id);
+      const ac = new Avaliacao();
+      const avaliacoes = await ac.get(id);
       return response.json(avaliacoes);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -29,8 +31,14 @@ module.exports = {
     const { id } = request.params;
 
     try {
-      const avaliacoes = await Avaliacao.getByTime(id);
-      return response.json(avaliacoes);
+      const ac = new Avaliacao();
+      const tc = new Time();
+
+      const time = await tc.get(id);
+      time.avaliacoes = await ac.getByTime(id);
+      time.nota = tc.getNota();
+      
+      return response.json(time);
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
@@ -40,7 +48,8 @@ module.exports = {
     const { id } = request.params;
 
     try {
-      const avaliacoes = await Avaliacao.getByAvaliador(id);
+      const ac = new Avaliacao();
+      const avaliacoes = await ac.getByAvaliador(id);
       return response.json(avaliacoes);
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -60,11 +69,15 @@ module.exports = {
 
   async update(request, response) {
     const { avaliacao } = request.body;
+
     try {
-      await Promise.all(avaliacao.map(async (av) => {
-        const { id, nota } = av;
-        await Avaliacao.update({ id, nota });
-      }));
+      await Promise.all(
+        avaliacao.map(async (av) => {
+          const { id, nota } = av;
+          const ac = new Avaliacao();
+          await ac.update({ id, nota });
+        })
+      );
       return response.json({ success: true });
     } catch (error) {
       return response.status(400).json({ error: error.message });
@@ -75,10 +88,11 @@ module.exports = {
     const { id } = request.params;
 
     try {
-      await Avaliacao.delete(id);
+      const ac = new Avaliacao();
+      await ac.delete(id);
       return response.status(204).send();
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
-  }
+  },
 };
