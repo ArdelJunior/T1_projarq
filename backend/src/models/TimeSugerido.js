@@ -47,7 +47,7 @@ module.exports = {
       .join("alunos_times_sugeridos as as", "as.id_time_sugerido", "ts.id")
       .join("alunos as a", "as.id_aluno", "a.id")
       .join("cursos as ac", "a.curso", "ac.id")
-      .where("id", "=", id);
+      .where("ts.id", "=", id);
 
     return await knexnest(sql,[]);
   },
@@ -67,14 +67,14 @@ module.exports = {
         "a.email as alunos__email",
         "ac.nome as alunos__curso",
       ])
-      .join("alunos as cp", "cp.id", "ts.criado_por")
-      .join("cursos as cpc", "cp.curso", "cpc.id")
-      .join("alunos_times_sugeridos as as", "as.id_time_sugerido", "ts.id")
-      .join("alunos as a", "as.id_aluno", "a.id")
-      .join("cursos as ac", "a.curso", "ac.id")
+      .leftJoin("alunos as cp", "cp.id", "ts.criado_por")
+      .leftJoin("cursos as cpc", "cp.curso", "cpc.id")
+      .leftJoin("alunos_times_sugeridos as as", "as.id_time_sugerido", "ts.id")
+      .leftJoin("alunos as a", "as.id_aluno", "a.id")
+      .leftJoin("cursos as ac", "a.curso", "ac.id")
       .where("ts.criado_por", "=", id);
 
-    return await knexnest(sql, []);
+    return await knexnest(sql);
   },
 
   async new(criado_por, alunos) {

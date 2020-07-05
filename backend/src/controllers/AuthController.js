@@ -51,9 +51,13 @@ module.exports = {
               .json({ error: "Usuário ou senha incorretos" });
           }
 
-          const token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400,
-          });
+          const token = jwt.sign(
+            { id: user.id, role: role || "aluno" },
+            config.secret,
+            {
+              expiresIn: 86400,
+            }
+          );
 
           const { id, nome, email, matricula, curso } = user;
           return response.json({
@@ -63,6 +67,7 @@ module.exports = {
             matricula,
             curso,
             accessToken: token,
+            role: role || "aluno",
           });
         });
       })

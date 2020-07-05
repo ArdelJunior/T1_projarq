@@ -7,10 +7,11 @@ import Typography from "@material-ui/core/Typography";
 
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
-import { Box, Grid, Table, TableHead, TableBody, TableCell, TableRow, TableContainer, Tooltip, FormControlLabel, Switch } from "@material-ui/core";
+import { Box, Grid, Table, TableHead, TableBody, TableCell, TableRow, TableContainer, FormControlLabel, Switch } from "@material-ui/core";
 import { getAvaliacoes, getTimeFinal, getAvaliacoesTime } from "../../utils/api";
 import DialogAvaliacoesAdm from "../../components/dialogs/DialogAvaliacoesAdm";
 import ApiReq from "../../components/common/ApiReq";
+import LightTooltip from "../../components/common/LightTooltip";
 
 const backgroundShape = require("../../images/shape.svg");
 const gold = require("../../images/gold-cup.svg");
@@ -60,16 +61,6 @@ const styles = (theme) => ({
     paddingTop: theme.spacing(1),
   },
 });
-
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.white,
-    color: "rgba(0, 0, 0, 0.87)",
-    boxShadow: theme.shadows[1],
-    fontSize: "0.875rem",
-    padding: theme.spacing(1),
-  },
-}))(Tooltip);
 
 class GerenciarAvaliacoes extends Component {
   state = {
@@ -227,7 +218,6 @@ class GerenciarAvaliacoes extends Component {
   renderAvaliacoes = () => {
     const { classes } = this.props;
     const { timesSorted, switchChecked } = this.state;
-    console.log({ timesSorted });
     const times = switchChecked ? timesSorted : timesSorted.filter((t) => t.valid);
     return times.map((time, key) => {
       return (

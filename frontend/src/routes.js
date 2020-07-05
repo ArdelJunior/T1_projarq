@@ -9,7 +9,7 @@ import SignUpAluno from "./views/aluno/SignUpAluno";
 import CriarTimeSugerido from "./views/aluno/CriarTimeSugerido";
 
 import LoginAvaliador from "./views/avaliador/LoginAvaliador";
-import SignupAvaliador from "./views/avaliador/SignupAvaliador";
+// import SignupAvaliador from "./views/avaliador/SignupAvaliador";
 
 import GerenciarAlunos from "./views/administrador/GerenciarAlunos";
 import GerenciarTimes from "./views/administrador/GerenciarTimes";
@@ -23,13 +23,14 @@ import Page404 from "./views/common/Page404";
 import DashboardAdministrador from "./views/administrador/DashboardAdministrador";
 import LoginAdministrador from "./views/administrador/LoginAdministrador";
 import Logout from "./views/common/Logout";
-import authHeader from "./services/AuthHeader";
+import authParams from "./services/AuthParams";
 
-const ProtectedRoute = ({component: Component, auth, ...rest}) => {
+const ProtectedRoute = ({component: Component, authRole, ...rest}) => {
   return (
     <Route {...rest} render={(props) => {
-      const header = authHeader();
-      if(header) {
+      const params = authParams();
+      console.log({params});
+      if(params && Object.keys(params).length > 0 && (!authRole || params.role === authRole)) {
         return <Component {...props} />;
       }
       return <Redirect to="/" />;
@@ -45,20 +46,20 @@ export default (props) => (
 
         <Route path="/aluno/login" component={LoginAluno} />
         <Route path="/aluno/signup" component={SignUpAluno} />
-        <ProtectedRoute path="/aluno/criar-time-sugerido" component={CriarTimeSugerido} />
-        <ProtectedRoute path="/aluno" component={DashboardAluno} />
+        <ProtectedRoute path="/aluno/criar-time-sugerido" authRole="aluno" component={CriarTimeSugerido} />
+        <ProtectedRoute path="/aluno" authRole="aluno" component={DashboardAluno} />
 
         <Route path="/avaliador/login" component={LoginAvaliador} />
-        <Route path="/avaliador/signup" component={SignupAvaliador} />
-        <ProtectedRoute path="/avaliador" component={Avaliacoes} />
+        {/* <Route path="/avaliador/signup" component={SignupAvaliador} /> */}
+        <ProtectedRoute path="/avaliador" authRole="avaliador" component={Avaliacoes} />
 
-        <ProtectedRoute path="/administrador/alunos" component={GerenciarAlunos} />
-        <ProtectedRoute path="/administrador/times/add" component={AddTime} />
-        <ProtectedRoute path="/administrador/times/edit/:id" component={EditTime} />
-        <ProtectedRoute path="/administrador/times" component={GerenciarTimes} />
-        <ProtectedRoute path="/administrador/avaliacoes" component={GerenciarAvaliacoes} />
+        <ProtectedRoute path="/administrador/alunos" authRole="administrador" component={GerenciarAlunos} />
+        <ProtectedRoute path="/administrador/times/add" authRole="administrador" component={AddTime} />
+        <ProtectedRoute path="/administrador/times/edit/:id" authRole="administrador" component={EditTime} />
+        <ProtectedRoute path="/administrador/times" authRole="administrador" component={GerenciarTimes} />
+        <ProtectedRoute path="/administrador/avaliacoes" authRole="administrador" component={GerenciarAvaliacoes} />
         <Route path="/administrador/login" component={LoginAdministrador} />
-        <ProtectedRoute path="/administrador" component={DashboardAdministrador} />
+        <ProtectedRoute path="/administrador" authRole="administrador" component={DashboardAdministrador} />
 
         <ProtectedRoute path="/logout" component={Logout} />
 

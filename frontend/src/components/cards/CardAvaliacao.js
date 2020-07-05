@@ -19,7 +19,6 @@ import {
 import { Rating } from "@material-ui/lab";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { getTimeFinal } from "../../utils/api";
 import ApiReq from "../common/ApiReq";
 
 const styles = (theme) => ({
@@ -65,19 +64,12 @@ class CardAvaliacao extends Component {
 
   api = ApiReq.getInstance();
 
-  componentDidMount() {
-    if (this.props.toAdd) {
-      this.getTimes();
-    }
-  }
-
   handleSelectChange = (e) => {
-    const { onChangeTime } = this.props;
-    const { times } = this.state;
+    const { onChangeTime, timesSelect } = this.props;
     this.setState({
       selectedTime: e.target.value,
     });
-    const st = times.filter((t) => t.id === e.target.value);
+    const st = timesSelect.filter((t) => t.id === e.target.value);
     onChangeTime(st.length ? st[0] : null);
   };
 
@@ -91,21 +83,6 @@ class CardAvaliacao extends Component {
     this.setState({
       selectOpen: false,
     });
-  };
-
-  getTimes = () => {
-    this.api
-      .get(getTimeFinal)
-      .then((rs) => {
-        this.setState(
-          {
-            times: rs.data,
-          }
-        );
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   };
 
   renderRows = (avaliacao) => {
@@ -131,8 +108,8 @@ class CardAvaliacao extends Component {
   };
 
   render() {
-    const { classes, className, onEditClick, onDeleteClick, time, avaliacao, avaliador, toAdd, readOnly, editing, showInTitle } = this.props;
-    console.log({time, avaliacao, avaliador});
+    const { classes, className, onEditClick, onDeleteClick, time, timesSelect, avaliacao, avaliador, toAdd, readOnly, editing, showInTitle } = this.props;
+    const { selectOpen, selectedTime } = this.state;
     return (
       <React.Fragment>
         <CssBaseline />
@@ -153,14 +130,14 @@ class CardAvaliacao extends Component {
                           labelId="selectLabel"
                           name="time"
                           placeholder={"Time"}
-                          open={this.state.selectOpen}
+                          open={selectOpen}
                           onOpen={this.handleOpen}
                           onClose={this.handleClose}
-                          value={this.state.selectedTime ? this.state.selectedTime : ""}
+                          value={selectedTime ? selectedTime : ""}
                           onChange={this.handleSelectChange}
                         >
-                          {this.state.times &&
-                            this.state.times.map((t, key) => {
+                          {timesSelect &&
+                            timesSelect.map((t, key) => {
                               return (
                                 <MenuItem key={key} value={t.id}>
                                   {t.nome}

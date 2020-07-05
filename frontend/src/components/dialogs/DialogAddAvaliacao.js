@@ -76,7 +76,14 @@ class DialogAddAvaliacao extends Component {
     const { onSaveError, onClose, onSave } = this.props;
     const { avaliacao, time, avaliador, isNewAvaliacao } = this.state;
     console.log({ avaliacao, time, avaliador, isNewAvaliacao });
-    const req = isNewAvaliacao ? this.api.post(addAvaliacao, { time: time.id, avaliacao, avaliador }) : this.api.put(editAvaliacao, { time: time.id, avaliacao, avaliador });
+    if (!time.id) {
+      onSaveError({ validation: "Escolha o time para avaliar" });
+      return;
+    }
+
+    const req = isNewAvaliacao
+      ? this.api.post(addAvaliacao, { time: time.id, avaliacao, avaliador })
+      : this.api.put(editAvaliacao, { time: time.id, avaliacao, avaliador });
     req
       .then((rs) => {
         onSave();
@@ -108,7 +115,7 @@ class DialogAddAvaliacao extends Component {
   };
 
   render() {
-    const { open, onClose } = this.props;
+    const { open, onClose, timesNaoAvaliados } = this.props;
     const { time, avaliacao, isNewAvaliacao } = this.state;
     return (
       <React.Fragment>
@@ -121,6 +128,7 @@ class DialogAddAvaliacao extends Component {
               avaliacao={avaliacao}
               toAdd={isNewAvaliacao}
               editing={true}
+              timesSelect={timesNaoAvaliados}
               onChangeTime={this.handleChangeTime}
               onChangeRating={this.onChangeRating}
             />

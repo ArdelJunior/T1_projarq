@@ -9,10 +9,11 @@ import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import CardAvaliacao from "../../components/cards/CardAvaliacao";
 
-import { getAvaliacoesAvaliador, deleteAvaliacao } from "../../utils/api";
+import { getAvaliacoesAvaliador, deleteAvaliacao, getTimesNaoAvaliados } from "../../utils/api";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
 import DialogAddAvaliacao from "../../components/dialogs/DialogAddAvaliacao";
 import ApiReq from "../../components/common/ApiReq";
+import LightTooltip from "../../components/common/LightTooltip";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -36,11 +37,10 @@ const styles = (theme) => ({
 class Avaliacoes extends Component {
   state = {
     avaliacoes: [],
-    avaliador: 1,
-
     avaliacaoToDelete: null,
-
     currentAvaliacao: null,
+    timesNaoAvaliados: [],
+
     dialogAddAvaliacaoOpen: false,
 
     toastOpen: false,
@@ -74,16 +74,28 @@ class Avaliacoes extends Component {
   };
 
   getAvaliacoes = () => {
-    const { avaliador } = this.state;
     this.api
-      .get(`${getAvaliacoesAvaliador}${avaliador}`)
+      .get(`${getAvaliacoesAvaliador}`)
       .then((rs) => {
         this.setState({
           avaliacoes: rs.data,
-        });
+        }, this.getTimes());
       })
       .catch((err) => {
         this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      });
+  };
+
+  getTimes = () => {
+    this.api
+      .get(getTimesNaoAvaliados)
+      .then((rs) => {
+        this.setState({
+          timesNaoAvaliados: rs.data,
+        }, this.forceUpdate());
+      })
+      .catch((err) => {
+        console.error(err);
       });
   };
 
@@ -122,16 +134,18 @@ class Avaliacoes extends Component {
     );
   };
 
-  onChangeAvaliacao = (av) => {
-    console.log(av);
-  };
-
   handleSaveAvaliacao = () => {
     this.getAvaliacoes();
   };
 
   handleSaveAvaliacaoError = (err) => {
-    this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+    let message = "Erro de conexão";
+    if(err.validation) {
+      message = err.validation;
+    } else if(err.response) {
+      message = err.response.data.error;
+    }
+    this.showToast("error", message);
   };
 
   handleDeleteAvaliacaoClick = (avaliacao, time) => {
@@ -166,7 +180,6 @@ class Avaliacoes extends Component {
   renderAvaliacoes = () => {
     const { avaliacoes } = this.state;
     return avaliacoes.map((av, key) => {
-      console.log({ av });
       return (
         <CardAvaliacao
           key={key}
@@ -181,7 +194,10 @@ class Avaliacoes extends Component {
 
   render() {
     const { classes } = this.props;
+    const { avaliacoes, timesNaoAvaliados } = this.state;
     const currentPath = this.props.location.pathname;
+    const addDisabled = !timesNaoAvaliados || !timesNaoAvaliados.length;
+    console.log({timesNaoAvaliados});
     return (
       <React.Fragment>
         <CssBaseline>
@@ -204,15 +220,25 @@ class Avaliacoes extends Component {
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
-                    <Fab color="primary" aria-label="add" onClick={this.handleButtonAddClick}>
-                      <AddIcon />
-                    </Fab>
+                    <LightTooltip title={addDisabled ? "Não há mais times para avaliar" : "Adicionar avaliação"}>
+                      <span>
+                      <Fab color="primary" aria-label="add" onClick={this.handleButtonAddClick} disabled={addDisabled}>
+                        <AddIcon />
+                      </Fab>
+                      </span>
+                    </LightTooltip>
                   </Grid>
                 </Grid>
               </Box>
               <Box flex={9}>
                 <Grid container spacing={3} className={classes.list}>
-                  {this.state.avaliacoes && this.state.avaliacoes.length && this.renderAvaliacoes()}
+                  {avaliacoes && avaliacoes.length ? (
+                    this.renderAvaliacoes()
+                  ) : (
+                    <Grid item size={12}>
+                      Não há avaliações
+                    </Grid>
+                  )}
                 </Grid>
               </Box>
               {/* <Box flex={2}>
@@ -232,6 +258,7 @@ class Avaliacoes extends Component {
             open={this.state.dialogAddAvaliacaoOpen}
             onClose={this.handleAddAvaliacaoClose}
             avaliacao={this.state.currentAvaliacao}
+            timesNaoAvaliados={this.state.timesNaoAvaliados}
             onSave={this.handleSaveAvaliacao}
             onSaveError={this.handleSaveAvaliacaoError}
           />

@@ -35,8 +35,20 @@ module.exports = {
     }
   },
 
+  async getNaoAvaliados(request, response) {
+    const { id } = request;
+    try {
+      const tc = new Time();
+      const times = await tc.getNaoAvaliados(id);
+      return response.json(times);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+  },
+
   async create(request, response) {
-    const { criador, nome, alunos } = request.body;
+    const { nome, alunos } = request.body;
+    const { id: criador } = request;
 
     try {
       checkCursos(alunos);

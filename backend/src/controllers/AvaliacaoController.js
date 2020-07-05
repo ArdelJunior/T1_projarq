@@ -53,7 +53,7 @@ module.exports = {
   },
 
   async getByAvaliador(request, response) {
-    const { id } = request.params;
+    const { id } = request;
 
     try {
       const ac = new Avaliacao();
@@ -65,7 +65,8 @@ module.exports = {
   },
 
   async create(request, response) {
-    const { avaliador, time, avaliacao } = request.body;
+    const { time, avaliacao } = request.body;
+    const { id: avaliador } = request;
 
     try {
       await checkAvaliacaoAlreadyExists(time, avaliador);

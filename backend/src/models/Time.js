@@ -87,6 +87,25 @@ module.exports = class Time extends IAvaliavel {
     return this.time;
   }
 
+  async getNaoAvaliados(id) {
+    const subQuery = connection("times as ts")
+      .select(["ts.id"])
+      .distinct()
+      .leftJoin("avaliacoes as a", "a.id_time", "ts.id")
+      .leftJoin("avaliadores as av", "a.id_avaliador", "av.id")
+      .where("av.id", "=", id);
+
+    const sql = connection("times as ts")
+      .select([
+        "ts.id as id",
+        "ts.nome as nome"
+      ])
+      .whereNotIn("ts.id", subQuery)
+      .orderBy("ts.id");
+
+    return await sql;
+  }
+
   async new(criado_por, nome, alunos) {
     await connection("times").insert({ criado_por, nome });
     if (alunos && alunos.length) {

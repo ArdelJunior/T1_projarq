@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
 import Login from "../../components/screens/Login";
-import Toastr from "../../components/common/Toastr";
 import AuthService from "../../services/AuthService";
+import Toastr from "../../components/common/Toastr";
 
 class LoginAluno extends Component {
   state = {
@@ -12,7 +12,6 @@ class LoginAluno extends Component {
   }
 
   handleSubmit = (data) => {
-    console.log({ data });
     AuthService.login(data)
       .then((data) => {
         this.props.history.push("/aluno");

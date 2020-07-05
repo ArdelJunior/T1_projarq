@@ -12,6 +12,7 @@ import { getAlunos, getTimeSugeridoAluno, setTimeSugerido } from "../../utils/ap
 import DialogListAlunos from "../../components/dialogs/DialogListAlunos";
 
 import ApiReq from "../../components/common/ApiReq";
+import authParams from "../../services/AuthParams";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -56,11 +57,11 @@ class CriarTimeSugerido extends Component {
   state = {
     modalOpen: false,
     loaded: false,
+
+    id: null,
     alunos: [],
     time: [],
     timeId: null,
-
-    idAluno: 2,
 
     toastOpen: false,
     toastSeverity: "info",
@@ -70,13 +71,26 @@ class CriarTimeSugerido extends Component {
   api = ApiReq.getInstance();
 
   componentDidMount() {
+    const { id } = authParams();
+    this.setState(
+      {
+        id,
+      },
+      this.loadAlunos()
+    );
+  }
+
+  loadAlunos = () => {
     this.api
       .get(getAlunos)
       .then((response) => {
-        this.setState({
-          alunos: response.data,
-          loaded: true,
-        });
+        this.setState(
+          {
+            alunos: response.data,
+            loaded: true,
+          },
+          this.loadTimeSugerido()
+        );
       })
       .catch((err) => {
         console.error(err);
@@ -87,16 +101,20 @@ class CriarTimeSugerido extends Component {
           loaded: true,
         });
       });
+  };
 
+  loadTimeSugerido = () => {
     this.api
-      .get(getTimeSugeridoAluno + this.state.idAluno)
+      .get(getTimeSugeridoAluno)
       .then((rs) => {
+        const timeId = rs.data ? rs.data.id : null;
+        const time = rs.data ? rs.data.alunos : [];
         this.setState({
-          timeId: rs.data.id,
-          time: rs.data.alunos,
+          timeId,
+          time,
           alunos: this.state.alunos
-            .map((aluno) => (rs.data.alunos && rs.data.alunos.filter((item) => aluno.id === item.id).length ? { ...aluno, selected: true } : { ...aluno }))
-            .filter((aluno) => aluno.id !== this.state.idAluno),
+            .map((aluno) => (time && time.filter((item) => aluno.id === item.id).length ? { ...aluno, selected: true } : { ...aluno }))
+            .filter((aluno) => aluno.id !== this.state.id),
         });
       })
       .catch((err) => {
@@ -108,7 +126,7 @@ class CriarTimeSugerido extends Component {
           loaded: true,
         });
       });
-  }
+  };
 
   handleModalOpen = () => {
     this.setState({
@@ -152,13 +170,15 @@ class CriarTimeSugerido extends Component {
     //   return;
     // }
 
-    const req = this.state.timeId
-      ? this.api.put(setTimeSugerido + "/" + this.state.timeId, { alunos: time, aluno: this.state.idAluno })
-      : this.api.post(setTimeSugerido, { time, aluno: this.state.idAluno });
+    const { timeId, alunos } = this.state;
+    console.log({timeId, alunos, time});
+
+    const req = this.state.timeId ? this.api.put(setTimeSugerido + "/" + this.state.timeId, { alunos: time }) : this.api.post(setTimeSugerido, { alunos: time });
     req
       .then((response) => {
         console.log(response);
-        this.props.history.push("/aluno");
+        this.showToast("success", "Time sugerido salvo com sucesso")
+        // this.props.history.push("/aluno");
       })
       .catch((err) => {
         console.error(err);

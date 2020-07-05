@@ -20,6 +20,7 @@ export const getTimeSugeridoAluno = apiRoot + "times_sugeridos/aluno/"
 export const getTimeFinal = apiRoot + "times/";
 export const setTimeFinal = apiRoot + "times";
 export const deleteTimeFinal = apiRoot + "times/";
+export const getTimesNaoAvaliados = apiRoot + "times/disponiveis";
 
 export const getAvaliacoes = apiRoot + "avaliacoes";
 export const getAvaliacoesTime = apiRoot + "avaliacoes/time/";

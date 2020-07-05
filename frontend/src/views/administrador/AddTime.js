@@ -66,8 +66,6 @@ class AddTime extends Component {
 
     alunosDisponiveis: [],
 
-    criador: 1,
-
     toastOpen: false,
     toastSeverity: "info",
     toastMessage: "",
@@ -180,16 +178,14 @@ class AddTime extends Component {
     event.preventDefault();
 
     const alunos = this.state.alunos.filter((aluno) => aluno.selected);
-    const { nome, criador } = this.state;
-    console.log({ nome, criador, alunos });
+    const { nome } = this.state;
 
     const req = this.props.id
       ? this.api.put(`${setTimeFinal}/${this.props.id}`, { time: { alunos, nome } })
-      : this.api.post(setTimeFinal, { alunos, nome, criador: criador });
+      : this.api.post(setTimeFinal, { alunos, nome });
 
     req
       .then((response) => {
-        console.log(response);
         this.props.history.push("/administrador/times");
       })
       .catch((err) => {

@@ -29,11 +29,6 @@ const styles = (theme) => ({
 });
 
 class Dashboard extends Component {
-  state = {
-    nome: "Davi Dias",
-    id: 1,
-    alunos: [],
-  };
 
   render() {
     const { classes } = this.props;
