@@ -3,8 +3,8 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { Dialog, CssBaseline, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
 import CardAvaliacao from "../cards/CardAvaliacao";
-import axios from "axios";
 import { addAvaliacao, editAvaliacao, getCriterios } from "../../utils/api";
+import ApiReq from "../common/ApiReq";
 
 const styles = (theme) => ({
   dialogBody: {
@@ -26,6 +26,8 @@ class DialogAddAvaliacao extends Component {
     avaliador: 1,
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
     this.newAvaliacao();
   }
@@ -38,7 +40,7 @@ class DialogAddAvaliacao extends Component {
 
   getCriteriosList = async () => {
     try {
-      const { data } = await axios.get(getCriterios);
+      const { data } = await this.api.get(getCriterios);
       return data;
     } catch (err) {
       console.log(err);
@@ -74,7 +76,7 @@ class DialogAddAvaliacao extends Component {
     const { onSaveError, onClose, onSave } = this.props;
     const { avaliacao, time, avaliador, isNewAvaliacao } = this.state;
     console.log({ avaliacao, time, avaliador, isNewAvaliacao });
-    const req = isNewAvaliacao ? axios.post(addAvaliacao, { time: time.id, avaliacao, avaliador }) : axios.put(editAvaliacao, { time: time.id, avaliacao, avaliador });
+    const req = isNewAvaliacao ? this.api.post(addAvaliacao, { time: time.id, avaliacao, avaliador }) : this.api.put(editAvaliacao, { time: time.id, avaliacao, avaliador });
     req
       .then((rs) => {
         onSave();

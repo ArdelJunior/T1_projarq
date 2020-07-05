@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
 import { withRouter } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import axios from "axios";
 
 import Typography from "@material-ui/core/Typography";
 
@@ -11,6 +10,7 @@ import Toastr from "../../components/common/Toastr";
 import { Box, Grid, Table, TableHead, TableBody, TableCell, TableRow, TableContainer, Tooltip, FormControlLabel, Switch } from "@material-ui/core";
 import { getAvaliacoes, getTimeFinal, getAvaliacoesTime } from "../../utils/api";
 import DialogAvaliacoesAdm from "../../components/dialogs/DialogAvaliacoesAdm";
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 const gold = require("../../images/gold-cup.svg");
@@ -88,12 +88,14 @@ class GerenciarAvaliacoes extends Component {
     switchChecked: true,
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
     this.getTimes();
   }
 
   getTimes = () => {
-    axios
+    this.api
       .get(getTimeFinal)
       .then((rs) => {
         this.setState(
@@ -162,7 +164,7 @@ class GerenciarAvaliacoes extends Component {
   };
 
   getAvaliacoes = () => {
-    axios
+    this.api
       .get(getAvaliacoes)
       .then((rs) => {
         this.setState({
@@ -176,7 +178,7 @@ class GerenciarAvaliacoes extends Component {
 
   getAvaliacoesTime = async (id) => {
     try {
-      const rs = await axios.get(getAvaliacoesTime + id);
+      const rs = await this.api.get(getAvaliacoesTime + id);
       return rs.data;
     } catch (err) {
       this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");

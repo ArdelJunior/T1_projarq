@@ -22,6 +22,20 @@ import Avaliacoes from "./views/avaliador/Avaliacoes";
 import Page404 from "./views/common/Page404";
 import DashboardAdministrador from "./views/administrador/DashboardAdministrador";
 import LoginAdministrador from "./views/administrador/LoginAdministrador";
+import Logout from "./views/common/Logout";
+import authHeader from "./services/AuthHeader";
+
+const ProtectedRoute = ({component: Component, auth, ...rest}) => {
+  return (
+    <Route {...rest} render={(props) => {
+      const header = authHeader();
+      if(header) {
+        return <Component {...props} />;
+      }
+      return <Redirect to="/" />;
+    }} />
+  )
+}
 
 export default (props) => (
   <BrowserRouter>
@@ -31,24 +45,22 @@ export default (props) => (
 
         <Route path="/aluno/login" component={LoginAluno} />
         <Route path="/aluno/signup" component={SignUpAluno} />
-        <Route path="/aluno/criar-time-sugerido" component={CriarTimeSugerido} />
-        <Route path="/aluno" component={DashboardAluno} />
+        <ProtectedRoute path="/aluno/criar-time-sugerido" component={CriarTimeSugerido} />
+        <ProtectedRoute path="/aluno" component={DashboardAluno} />
 
         <Route path="/avaliador/login" component={LoginAvaliador} />
         <Route path="/avaliador/signup" component={SignupAvaliador} />
-        <Route path="/avaliador" component={Avaliacoes} />
+        <ProtectedRoute path="/avaliador" component={Avaliacoes} />
 
-        <Route path="/administrador/alunos" component={GerenciarAlunos} />
-        <Route path="/administrador/times/add" component={AddTime} />
-        <Route path="/administrador/times/edit/:id" component={EditTime} />
-        <Route path="/administrador/times" component={GerenciarTimes} />
-        <Route path="/administrador/avaliacoes" component={GerenciarAvaliacoes} />
+        <ProtectedRoute path="/administrador/alunos" component={GerenciarAlunos} />
+        <ProtectedRoute path="/administrador/times/add" component={AddTime} />
+        <ProtectedRoute path="/administrador/times/edit/:id" component={EditTime} />
+        <ProtectedRoute path="/administrador/times" component={GerenciarTimes} />
+        <ProtectedRoute path="/administrador/avaliacoes" component={GerenciarAvaliacoes} />
         <Route path="/administrador/login" component={LoginAdministrador} />
-        <Route path="/administrador" component={DashboardAdministrador} />
+        <ProtectedRoute path="/administrador" component={DashboardAdministrador} />
 
-        <Route path="/logout">
-          <Redirect to="/" />
-        </Route>
+        <ProtectedRoute path="/logout" component={Logout} />
 
         <Route path="*" component={Page404} />
       </Switch>

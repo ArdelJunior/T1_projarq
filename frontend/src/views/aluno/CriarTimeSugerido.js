@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
 import { CssBaseline, Typography, Grid, Fab, Button, Box, Backdrop, CircularProgress } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
@@ -11,6 +10,8 @@ import Toastr from "../../components/common/Toastr";
 
 import { getAlunos, getTimeSugeridoAluno, setTimeSugerido } from "../../utils/api";
 import DialogListAlunos from "../../components/dialogs/DialogListAlunos";
+
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -66,8 +67,10 @@ class CriarTimeSugerido extends Component {
     toastMessage: "",
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
-    axios
+    this.api
       .get(getAlunos)
       .then((response) => {
         this.setState({
@@ -85,7 +88,7 @@ class CriarTimeSugerido extends Component {
         });
       });
 
-    axios
+    this.api
       .get(getTimeSugeridoAluno + this.state.idAluno)
       .then((rs) => {
         this.setState({
@@ -150,8 +153,8 @@ class CriarTimeSugerido extends Component {
     // }
 
     const req = this.state.timeId
-      ? axios.put(setTimeSugerido + "/" + this.state.timeId, { alunos: time, aluno: this.state.idAluno })
-      : axios.post(setTimeSugerido, { time, aluno: this.state.idAluno });
+      ? this.api.put(setTimeSugerido + "/" + this.state.timeId, { alunos: time, aluno: this.state.idAluno })
+      : this.api.post(setTimeSugerido, { time, aluno: this.state.idAluno });
     req
       .then((response) => {
         console.log(response);

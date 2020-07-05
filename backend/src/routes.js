@@ -1,5 +1,6 @@
 const express = require('express');
  
+const AuthController = require('./controllers/AuthController');
 const AlunoController = require('./controllers/AlunoController');
 const AvaliadorController = require('./controllers/AvaliadorController');
 const AlunoSessionController = require('./controllers/AlunoSessionController');
@@ -10,19 +11,18 @@ const TimeController = require('./controllers/TimeController');
 const TimeSugeridoController = require('./controllers/TimeSugeridoController');
 const CriterioController = require('./controllers/CriterioController');
 const AdministradorController = require('./controllers/AdministradorController');
+const authJwt = require('./config/middlewares/authJwt');
 // const CriterioController = require('./controllers/CriterioController');
  
 const routes = express.Router();
- 
-routes.post('/alunoSession', AlunoSessionController.login);
 
-routes.post('/avaliadorSession', AvaliadorSessionController.login);
+routes.post('/login', AuthController.login);
 
-routes.get('/alunos', AlunoController.index);
-routes.get('/alunos/disponiveis', AlunoController.listUnassigned);
-routes.get('/alunos/disponiveis/:id', AlunoController.listAvailable);
-routes.get('/alunos/:id', AlunoController.get);
-routes.post('/alunos', AlunoController.create);
+routes.get('/alunos', [authJwt.verifyToken], AlunoController.index);
+routes.get('/alunos/disponiveis', [authJwt.verifyToken], AlunoController.listUnassigned);
+routes.get('/alunos/disponiveis/:id', [authJwt.verifyToken], AlunoController.listAvailable);
+routes.get('/alunos/:id', [authJwt.verifyToken], AlunoController.get);
+routes.post('/alunos', [authJwt.verifyToken], AlunoController.create);
 
 routes.get('/avaliadores', AvaliadorController.index);
 routes.post('/avaliadores', AvaliadorController.create);
@@ -41,13 +41,13 @@ routes.get('/cursos', CursoController.index);
 
 routes.get('/criterios', CriterioController.index);
 
-routes.get('/times_sugeridos', TimeSugeridoController.index);
-routes.get('/times_sugeridos/:id', TimeSugeridoController.get);
-routes.post('/times_sugeridos', TimeSugeridoController.create);
-routes.put('/times_sugeridos/:id', TimeSugeridoController.update)
-routes.delete('/times_sugeridos/:id', TimeSugeridoController.delete);
-routes.get('/times_sugeridos/aluno/:id', TimeSugeridoController.getByCriador);
-routes.delete('/times_sugeridos/aluno/:id', TimeSugeridoController.deleteByCriador);
+routes.get('/times_sugeridos', [authJwt.verifyToken], TimeSugeridoController.index);
+routes.get('/times_sugeridos/:id', [authJwt.verifyToken], TimeSugeridoController.get);
+routes.post('/times_sugeridos', [authJwt.verifyToken], TimeSugeridoController.create);
+routes.put('/times_sugeridos/:id', [authJwt.verifyToken], TimeSugeridoController.update)
+routes.delete('/times_sugeridos/:id',[authJwt.verifyToken], TimeSugeridoController.delete);
+routes.get('/times_sugeridos/aluno/:id', [authJwt.verifyToken], TimeSugeridoController.getByCriador);
+routes.delete('/times_sugeridos/aluno/:id', [authJwt.verifyToken], TimeSugeridoController.deleteByCriador);
 
 routes.get('/times', TimeController.index);
 routes.get('/times/:id', TimeController.get);

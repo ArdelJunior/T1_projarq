@@ -46,6 +46,14 @@ module.exports = class Aluno extends IPessoa {
       .first();
   }
 
+  async getByEmail(email) {
+    return await connection("alunos as a")
+      .select(["a.id", "a.matricula", "a.nome", "c.nome as curso", "a.email"])
+      .join("cursos as c", "a.curso", "c.id")
+      .where("a.email", "=", email)
+      .first();
+  }
+
   async getPassword(id) {
     return await connection("alunos")
       .select("password")

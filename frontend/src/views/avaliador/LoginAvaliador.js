@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 
 import Login from "../../components/screens/Login";
-import { loginAvaliador } from "../../utils/api";
-import axios from "axios";
+import { login } from "../../utils/api";
+import ApiReq from "../../components/common/ApiReq";
 
 class LoginAvaliador extends Component {
+  api = ApiReq.getInstance();
+  
   handleSubmit = (data) => {
-    axios.post(loginAvaliador, data)
+    this.api.post(login, data)
       .then((data) => {
         this.props.history.push("/avaliador")
       })

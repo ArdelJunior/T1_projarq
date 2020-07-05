@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 
 import { CssBaseline, Typography, Box, Grid, Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
@@ -13,6 +12,7 @@ import CardAvaliacao from "../../components/cards/CardAvaliacao";
 import { getAvaliacoesAvaliador, deleteAvaliacao } from "../../utils/api";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
 import DialogAddAvaliacao from "../../components/dialogs/DialogAddAvaliacao";
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -51,6 +51,8 @@ class Avaliacoes extends Component {
     promptMessage: "",
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
     this.getAvaliacoes();
   }
@@ -73,7 +75,7 @@ class Avaliacoes extends Component {
 
   getAvaliacoes = () => {
     const { avaliador } = this.state;
-    axios
+    this.api
       .get(`${getAvaliacoesAvaliador}${avaliador}`)
       .then((rs) => {
         this.setState({
@@ -148,7 +150,7 @@ class Avaliacoes extends Component {
 
     const { avaliacaoToDelete } = this.state;
 
-    Promise.all(avaliacaoToDelete.map((av) => axios.delete(`${deleteAvaliacao}${av.id}`)))
+    Promise.all(avaliacaoToDelete.map((av) => this.api.delete(`${deleteAvaliacao}${av.id}`)))
       .then((data) => {
         this.getAvaliacoes();
         this.showToast("success", "Avaliação excluída com sucesso");

@@ -19,7 +19,8 @@ module.exports = class AlunoFactory {
       throw new Error("Senha não inserida");
     }
 
-    const exists = await Aluno.getByMatricula(matricula);
+    const ac = new Aluno();
+    const exists = await ac.getByMatricula(matricula);
     if(exists) {
       throw new Error("Este aluno já existe");
     }
@@ -33,7 +34,6 @@ module.exports = class AlunoFactory {
       throw new Error(`Curso ${curso} não encontrado`);
     }
 
-    const ac = new Aluno();
     return await ac.new(matricula, nome, idCurso, email, password);
   }
 };

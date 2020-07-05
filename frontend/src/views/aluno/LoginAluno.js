@@ -1,22 +1,58 @@
 import React, { Component } from "react";
 
 import Login from "../../components/screens/Login";
-import { loginAluno } from "../../utils/api";
-import axios from "axios";
+import Toastr from "../../components/common/Toastr";
+import AuthService from "../../services/AuthService";
 
 class LoginAluno extends Component {
+  state = {
+    toastOpen: false,
+    toastSeverity: "info",
+    toastMessage: "",
+  }
+
   handleSubmit = (data) => {
-    axios.post(loginAluno, data)
+    console.log({ data });
+    AuthService.login(data)
       .then((data) => {
-        this.props.history.push("/aluno")
+        this.props.history.push("/aluno");
       })
-      .catch((error) => {
-        console.error(error.response.data);
+      .catch((err) => {
+        console.error(err.response.data);
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
 
+  showToast = (severity, message) => {
+    this.setState({
+      toastOpen: true,
+      toastSeverity: severity,
+      toastMessage: message,
+    });
+  };
+
+  handleToastClose = () => {
+    this.setState({
+      toastOpen: false,
+      toastSeverity: "info",
+      toastMessage: "",
+    });
+  };
+
   render() {
-    return <Login loginRole="aluno" onSubmit={this.handleSubmit} signup />;
+    return (
+      <React.Fragment>
+        <Toastr
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          timeout={6000}
+          severity={this.state.toastSeverity}
+          message={this.state.toastMessage}
+          open={this.state.toastOpen}
+          onClose={this.handleToastClose}
+        />
+        <Login loginRole="aluno" onSubmit={this.handleSubmit} signup />
+      </React.Fragment>
+    );
   }
 }
 

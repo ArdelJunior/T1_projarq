@@ -18,6 +18,13 @@ module.exports = class Avaliador extends IPessoa {
       .first();
   }
 
+  async getByEmail(email) {
+    return await connection(this.table)
+      .where("email", "=", email)
+      .select(["id", "nome", "email"])
+      .first();
+  }
+
   async getPassword(id) {
     return await connection(this.table)
       .select("password")

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
 import {
   CssBaseline,
@@ -24,6 +23,7 @@ import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 
 import { getAlunos, getTimeSugeridoAluno } from "../../utils/api";
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -88,9 +88,11 @@ class GerenciarAlunos extends Component {
     toastSeverity: "info",
     toastMessage: "",
   };
+  
+  api = ApiReq.getInstance();
 
   componentDidMount() {
-    axios
+    this.api
       .get(getAlunos)
       .then((rs) => {
         this.setState({
@@ -120,7 +122,7 @@ class GerenciarAlunos extends Component {
 
   getAlunosTime = (aluno) => {
     console.log({ aluno });
-    axios
+    this.api
       .get(getTimeSugeridoAluno + aluno.id)
       .then((rs) => {
         this.setState({

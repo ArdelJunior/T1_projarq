@@ -1,17 +1,17 @@
 const apiRoot = "http://localhost:3333/";
 
+export const login = apiRoot + "login";
+export const logout = apiRoot + "logout";
+export const signUp = apiRoot + "signup";
+
 export const getCursos = apiRoot + "cursos";
 export const getCriterios = apiRoot + "criterios";
 
 export const getAlunos = apiRoot + "alunos";
 export const getAlunosDisponiveis = apiRoot + "alunos/disponiveis/";
-export const loginAluno = apiRoot + "alunos/login";
 export const createAluno = apiRoot + "alunos";
 
 export const getAvaliadores = apiRoot + "avaliadores";
-export const loginAvaliador = apiRoot + "avaliadores/login";
-
-export const loginAdministrador = apiRoot + "administradores/login";
 
 export const getTimeSugerido = apiRoot + "times_sugeridos/"
 export const setTimeSugerido = apiRoot + "times_sugeridos";

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
 import { CssBaseline, Typography, Box } from "@material-ui/core";
 
 import Topbar from "../../components/common/Topbar";
 
 import { getTimeSugeridoAluno } from "../../utils/api";
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -38,13 +38,15 @@ class Dashboard extends Component {
   };
 
   componentDidMount() {
-    axios.get(getTimeSugeridoAluno + this.state.id).then((rs) => {
+    this.api.get(getTimeSugeridoAluno + this.state.id).then((rs) => {
       console.log(rs);
       this.setState({
         alunos: rs.data,
       });
     });
   }
+
+  api = ApiReq.getInstance();
 
   render() {
     const { classes } = this.props;

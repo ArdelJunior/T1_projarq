@@ -19,8 +19,8 @@ import {
 import { Rating } from "@material-ui/lab";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import axios from "axios";
 import { getTimeFinal } from "../../utils/api";
+import ApiReq from "../common/ApiReq";
 
 const styles = (theme) => ({
   root: {
@@ -63,6 +63,8 @@ class CardAvaliacao extends Component {
     selectOpen: false,
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
     if (this.props.toAdd) {
       this.getTimes();
@@ -92,7 +94,7 @@ class CardAvaliacao extends Component {
   };
 
   getTimes = () => {
-    axios
+    this.api
       .get(getTimeFinal)
       .then((rs) => {
         this.setState(

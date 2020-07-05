@@ -9,14 +9,13 @@ import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import BackIcon from "@material-ui/icons/ArrowBack";
 
-import axios from "axios";
-
 import { getAlunosDisponiveis, getTimeFinal, setTimeFinal } from "../../utils/api";
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import { Backdrop, CircularProgress, Box, Fab, Button, TextField } from "@material-ui/core";
 import ListCardAluno from "../../components/cards/ListCardAluno";
 import DialogListAlunos from "../../components/dialogs/DialogListAlunos";
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -74,13 +73,15 @@ class AddTime extends Component {
     toastMessage: "",
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
     this.loadAlunos();
   }
 
   loadAlunos = () => {
     const url = `${getAlunosDisponiveis}${this.props.id ? this.props.id : ""}`;
-    axios
+    this.api
       .get(url)
       .then((response) => {
         this.setState(
@@ -106,7 +107,7 @@ class AddTime extends Component {
   };
 
   loadTime = (id) => {
-    axios
+    this.api
       .get(getTimeFinal + id)
       .then((rs) => {
         this.setState({
@@ -183,8 +184,8 @@ class AddTime extends Component {
     console.log({ nome, criador, alunos });
 
     const req = this.props.id
-      ? axios.put(`${setTimeFinal}/${this.props.id}`, { time: { alunos, nome } })
-      : axios.post(setTimeFinal, { alunos, nome, criador: criador });
+      ? this.api.put(`${setTimeFinal}/${this.props.id}`, { time: { alunos, nome } })
+      : this.api.post(setTimeFinal, { alunos, nome, criador: criador });
 
     req
       .then((response) => {

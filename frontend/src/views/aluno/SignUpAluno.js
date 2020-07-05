@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Container, CssBaseline, Grid, Typography, TextField, Button, Select, MenuItem, Box } from "@material-ui/core";
 import withStyles from "@material-ui/styles/withStyles";
 import { withRouter, Redirect } from "react-router-dom";
-import axios from "axios";
 
 import { getCursos } from "../../utils/api";
 import Toastr from "../../components/common/Toastr";
 import Topbar from "../../components/common/Topbar";
+import ApiReq from "../../components/common/ApiReq";
 const backgroundShape = require("../../images/shape.svg");
 
 const styles = (theme) => ({
@@ -48,9 +48,11 @@ class SignupAluno extends Component {
 
     loaded: false,
   };
+  
+  api = ApiReq.getInstance();
 
   componentDidMount = () => {
-    axios
+    this.api
       .get(getCursos)
       .then((response) => {
         this.setState({

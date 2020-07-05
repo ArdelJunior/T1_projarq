@@ -34,7 +34,15 @@ class Login extends Component {
   state = {
     email: null,
     password: null,
+    role: null,
   };
+
+  componentDidMount() {
+    const { loginRole } = this.props;
+    this.setState({
+      role: loginRole,
+    });
+  }
 
   handleInputChange = (event) => {
     this.setState({

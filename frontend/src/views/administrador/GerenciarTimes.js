@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import withStyles from "@material-ui/styles/withStyles";
 import {
   CssBaseline,
@@ -27,6 +26,7 @@ import CardTime from "../../components/cards/CardTime";
 
 import { getAlunos, getTimeFinal, deleteTimeFinal } from "../../utils/api";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
+import ApiReq from "../../components/common/ApiReq";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -97,6 +97,8 @@ class GerenciarTimes extends Component {
     alunos: [],
   };
 
+  api = ApiReq.getInstance();
+
   componentDidMount() {
     this.getTimes();
     this.getAlunosList();
@@ -119,7 +121,7 @@ class GerenciarTimes extends Component {
   };
 
   getTimes = () => {
-    axios
+    this.api
       .get(getTimeFinal)
       .then((rs) => {
         this.setState({
@@ -132,7 +134,7 @@ class GerenciarTimes extends Component {
   };
 
   getAlunosList = () => {
-    axios
+    this.api
       .get(getAlunos)
       .then((rs) => {
         this.setState({
@@ -189,7 +191,7 @@ class GerenciarTimes extends Component {
 
     const { id } = this.state.timeToDelete;
 
-    axios
+    this.api
       .delete(deleteTimeFinal + id)
       .then((data) => {
         this.getTimes();
