@@ -16,7 +16,7 @@ class LoginAvaliador extends Component {
   };
 
   render() {
-    return <Login loginRole="avaliador" onSubmit={this.handleSubmit} />;
+    return <Login loginRole="avaliador" onSubmit={this.handleSubmit} signup />;
   }
 }
 

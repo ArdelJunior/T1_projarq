@@ -27,8 +27,7 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
@@ -84,13 +83,16 @@ class AddTime extends Component {
     axios
       .get(url)
       .then((response) => {
-        this.setState({
-          alunos: response.data,
-        }, () => {
-          if (this.props.id) {
-            this.loadTime(this.props.id);
+        this.setState(
+          {
+            alunos: response.data,
+          },
+          () => {
+            if (this.props.id) {
+              this.loadTime(this.props.id);
+            }
           }
-        });
+        );
       })
       .catch((err) => {
         console.error(err);
@@ -155,15 +157,15 @@ class AddTime extends Component {
       toastSeverity: severity,
       toastMessage: message,
     });
-  }
+  };
 
   handleToastClose = () => {
     this.setState({
       toastOpen: false,
       toastSeverity: "info",
-      toastMessage: ""
-    })
-  }
+      toastMessage: "",
+    });
+  };
 
   toggleSelect = (key, selected) => {
     this.setState((state) => {
@@ -178,7 +180,7 @@ class AddTime extends Component {
 
     const alunos = this.state.alunos.filter((aluno) => aluno.selected);
     const { nome, criador } = this.state;
-    console.log({nome, criador, alunos});
+    console.log({ nome, criador, alunos });
 
     const req = this.props.id
       ? axios.put(`${setTimeFinal}/${this.props.id}`, { time: { alunos, nome } })
@@ -201,7 +203,6 @@ class AddTime extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="administrador" currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -216,6 +217,7 @@ class AddTime extends Component {
           <div className={classes.root}>
             <form onSubmit={this.handleSubmit}>
               <Box display="flex" flexDirection="column" className={classes.block}>
+                <Topbar type="administrador" currentPath={currentPath} />
                 <Box flex={1} style={{ marginBottom: "2em" }}>
                   <Grid container alignItems="center">
                     <Grid item xs={1} style={{ position: "absolute" }}>
@@ -224,7 +226,9 @@ class AddTime extends Component {
                       </Fab>
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography align="center" variant="h5">{id ? "Editar" : "Criar"} time</Typography>
+                      <Typography align="center" variant="h5">
+                        {id ? "Editar" : "Criar"} time
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Box>

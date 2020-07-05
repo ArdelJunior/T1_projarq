@@ -21,6 +21,7 @@ import Avaliacoes from "./views/avaliador/Avaliacoes";
 
 import Page404 from "./views/common/Page404";
 import DashboardAdministrador from "./views/administrador/DashboardAdministrador";
+import LoginAdministrador from "./views/administrador/LoginAdministrador";
 
 export default (props) => (
   <BrowserRouter>
@@ -42,6 +43,7 @@ export default (props) => (
         <Route path="/administrador/times/edit/:id" component={EditTime} />
         <Route path="/administrador/times" component={GerenciarTimes} />
         <Route path="/administrador/avaliacoes" component={GerenciarAvaliacoes} />
+        <Route path="/administrador/login" component={LoginAdministrador} />
         <Route path="/administrador" component={DashboardAdministrador} />
 
         <Route path="/logout">

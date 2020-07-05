@@ -21,12 +21,11 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    height: "90vh",
+    minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -61,7 +60,7 @@ class CriarTimeSugerido extends Component {
     timeId: null,
 
     idAluno: 2,
-    
+
     toastOpen: false,
     toastSeverity: "info",
     toastMessage: "",
@@ -130,15 +129,15 @@ class CriarTimeSugerido extends Component {
       toastSeverity: severity,
       toastMessage: message,
     });
-  }
+  };
 
   handleToastClose = () => {
     this.setState({
       toastOpen: false,
       toastSeverity: "info",
-      toastMessage: ""
-    })
-  }
+      toastMessage: "",
+    });
+  };
 
   handleSubmitClick = () => {
     const time = this.state.alunos.filter((aluno) => aluno.selected);
@@ -185,7 +184,6 @@ class CriarTimeSugerido extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -199,6 +197,7 @@ class CriarTimeSugerido extends Component {
           </Backdrop>
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
+              <Topbar currentPath={currentPath} />
               <Box flex={2}>
                 <Grid container>
                   <Grid item xs={11}>

@@ -17,19 +17,18 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    height: "100vh",
+    minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
   center: {
     margin: "auto",
     textAlign: "center",
-  }
+  },
 });
 
 class Dashboard extends Component {
@@ -52,13 +51,13 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="avaliador" currentPath={0} />
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
+              <Topbar type="avaliador" currentPath={0} />
               <Box flex={2}></Box>
               <Box flex={10}>
                 <div className={classes.center}>
-                  <Typography variant="h5">OLAAARRRR</Typography>
+                  <Typography variant="h5"></Typography>
                 </div>
               </Box>
             </Box>

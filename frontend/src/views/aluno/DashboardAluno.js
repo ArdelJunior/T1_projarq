@@ -5,7 +5,6 @@ import { CssBaseline, Typography, Box } from "@material-ui/core";
 
 import Topbar from "../../components/common/Topbar";
 
-
 const backgroundShape = require("../../images/shape.svg");
 
 const styles = (theme) => ({
@@ -15,12 +14,11 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    height: "100vh",
+    minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -42,9 +40,9 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar currentPath={0} />
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
+              <Topbar currentPath={0} />
               <Box flex={2}></Box>
               <Box flex={10}>
                 <div className={classes.center}>

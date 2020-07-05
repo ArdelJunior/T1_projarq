@@ -15,12 +15,11 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    height: "100vh",
+    minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -36,30 +35,29 @@ class Index extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar noTabs />
           <div className={classes.root}>
             <Container component="main" maxWidth="xs">
-              <Box display="flex" flexDirection="column" className={classes.block}>
-                <Box flex={3}></Box>
-                <Box flex={9}>
+              <Box display="flex" alignItems="center" className={classes.block}>
+                <Topbar noTabs />
+                <Box flex={1}>
                   {/* <Paper variant="outlined" className={classes.paper}> */}
-                    <Grid container spacing={6}>
-                      <Grid item xs={12}>
-                        <Button component={Link} to="/aluno/login" variant="contained" color="primary" size="large" fullWidth>
-                          Sou aluno
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button component={Link} to="/avaliador/login" variant="contained" color="primary" size="large" fullWidth>
-                          Sou avaliador
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button component={Link} to="/administrador/login" variant="contained" color="primary" size="large" fullWidth>
-                          Sou administrador
-                        </Button>
-                      </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item xs={12}>
+                      <Button component={Link} to="/aluno/login" variant="contained" color="primary" size="large" fullWidth>
+                        Sou aluno
+                      </Button>
                     </Grid>
+                    <Grid item xs={12}>
+                      <Button component={Link} to="/avaliador/login" variant="contained" color="primary" size="large" fullWidth>
+                        Sou avaliador
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button component={Link} to="/administrador/login" variant="contained" color="primary" size="large" fullWidth>
+                        Sou administrador
+                      </Button>
+                    </Grid>
+                  </Grid>
                   {/* </Paper> */}
                 </Box>
               </Box>

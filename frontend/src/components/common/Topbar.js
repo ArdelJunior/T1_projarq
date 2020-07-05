@@ -22,7 +22,7 @@ const logo = require("../../images/logo.svg");
 
 const styles = (theme) => ({
   appBar: {
-    position: "relative",
+    // position: "relative",
     boxShadow: "none",
     borderBottom: `1px solid ${theme.palette.grey["100"]}`,
     backgroundColor: "white",
@@ -146,7 +146,8 @@ class Topbar extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar color="default" className={classes.appBar}>
+      <React.Fragment>
+      <AppBar color="default" position="fixed" className={classes.appBar}>
         <Toolbar>
           <Grid container spacing={10} alignItems="baseline">
             <Grid item xs={12} className={classes.flex}>
@@ -185,6 +186,8 @@ class Topbar extends Component {
           </Grid>
         </Toolbar>
       </AppBar>
+      <Toolbar />
+      </React.Fragment>
     );
   }
 }

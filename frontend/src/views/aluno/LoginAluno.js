@@ -16,7 +16,7 @@ class LoginAluno extends Component {
   };
 
   render() {
-    return <Login loginRole="aluno" onSubmit={this.handleSubmit} />;
+    return <Login loginRole="aluno" onSubmit={this.handleSubmit} signup />;
   }
 }
 

@@ -1,30 +1,25 @@
 import React, { Component } from "react";
-import { Container, CssBaseline, Grid, Typography, TextField, Button } from "@material-ui/core";
+import { Container, CssBaseline, Grid, Typography, TextField, Button, Box } from "@material-ui/core";
 import withStyles from "@material-ui/styles/withStyles";
 import { withRouter, Link } from "react-router-dom";
+
+import Topbar from "../../components/common/Topbar";
 
 const backgroundShape = require("../../images/shape.svg");
 
 const styles = (theme) => ({
   root: {
-    flexGrow: 1,
     backgroundColor: theme.palette.grey["100"],
     overflow: "hidden",
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+  block: {
+    padding: theme.spacing(4),
+    minHeight: "100vh",
+    maxWidth: 1200,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -38,50 +33,79 @@ const styles = (theme) => ({
 class Login extends Component {
   state = {
     email: null,
-    password: null
-  }
+    password: null,
+  };
 
   handleInputChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
-  }
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.onSubmit(this.state);
-  }
+  };
 
   render() {
-    const { classes } = this.props;
-    const role = this.props.loginRole === "avaliador" ? "avaliador" : "aluno";
+    const { classes, signup, loginRole } = this.props;
 
     return (
       <React.Fragment>
         <CssBaseline>
           <div className={classes.root}>
-          <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-              <Typography variant="h5">Login</Typography>
-              <form className={classes.form} onSubmit={this.handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField id="email" name="email" type="email" label="E-mail" autoComplete="email" variant="outlined" required autoFocus fullWidth onChange={this.handleInputChange} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField id="password" name="password" label="Senha" variant="outlined" type="password" required autoFocus fullWidth onChange={this.handleInputChange} />
-                  </Grid>
-                </Grid>
-                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                  Entrar
-                </Button>
+            <Container component="main" maxWidth="xs">
+              <Box display="flex" alignItems="center" className={classes.block}>
+                <Topbar noTabs />
+                <Box flex={1}>
+                  <Typography variant="h5" align="center">
+                    Login
+                  </Typography>
+                  <form className={classes.form} onSubmit={this.handleSubmit}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="email"
+                          name="email"
+                          type="email"
+                          label="E-mail"
+                          autoComplete="email"
+                          variant="outlined"
+                          required
+                          autoFocus
+                          fullWidth
+                          onChange={this.handleInputChange}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="password"
+                          name="password"
+                          label="Senha"
+                          variant="outlined"
+                          type="password"
+                          required
+                          autoFocus
+                          fullWidth
+                          onChange={this.handleInputChange}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                      Entrar
+                    </Button>
 
-                <Button component={Link} to={`/${role}/signup`}  fullWidth variant="contained" color="primary" className={classes.submit}>
-                  Inscrever-se
-                </Button>
-              </form>
-            </div>
-          </Container>
+                    {signup ? (
+                      <Button component={Link} to={`/${loginRole}/signup`} fullWidth variant="contained" color="primary" className={classes.submit}>
+                        Inscrever-se
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                  </form>
+                </Box>
+              </Box>
+            </Container>
           </div>
         </CssBaseline>
       </React.Fragment>

@@ -39,7 +39,6 @@ const styles = theme => ({
     backgroundPosition: '0 400px',
     marginTop: 10,
     padding: 20,
-    paddingBottom: 500
   },
   grid: {
     margin: `0 ${theme.spacing(2)}px`

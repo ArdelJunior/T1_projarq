@@ -17,7 +17,6 @@ const styles = theme => ({
     backgroundPosition: '0 400px',
     marginTop: 20,
     padding: 20,
-    paddingBottom: 200
   },
   grid: {
     width: 1000

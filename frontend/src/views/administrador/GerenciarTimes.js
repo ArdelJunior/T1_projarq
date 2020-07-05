@@ -37,12 +37,11 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
     minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    // height: "100vh",
+    // minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -109,15 +108,15 @@ class GerenciarTimes extends Component {
       toastSeverity: severity,
       toastMessage: message,
     });
-  }
+  };
 
   handleToastClose = () => {
     this.setState({
       toastOpen: false,
       toastSeverity: "info",
-      toastMessage: ""
-    })
-  }
+      toastMessage: "",
+    });
+  };
 
   getTimes = () => {
     axios
@@ -178,28 +177,32 @@ class GerenciarTimes extends Component {
     this.setState({
       promptOpen: true,
       timeToDelete: time,
-      promptDeleteTime: `Confirma a exclusão do time ${time.nome}?`
+      promptDeleteTime: `Confirma a exclusão do time ${time.nome}?`,
     });
   };
 
   handleDeleteTimePromptClick = (option) => {
-    if(!option) {
+    if (!option) {
       this.closePrompt();
       return false;
     }
 
     const { id } = this.state.timeToDelete;
 
-    axios.delete(deleteTimeFinal + id).then((data) => {
-      this.getTimes();
-      this.getAlunosList();
-      this.showToast("success", "Time excluído com sucesso");
-    }).catch((err) => {
-      this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
-    }).finally(() => {
-      this.closePrompt();
-    });
-  }
+    axios
+      .delete(deleteTimeFinal + id)
+      .then((data) => {
+        this.getTimes();
+        this.getAlunosList();
+        this.showToast("success", "Time excluído com sucesso");
+      })
+      .catch((err) => {
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      })
+      .finally(() => {
+        this.closePrompt();
+      });
+  };
 
   renderDialogContent = () => {
     const { classes } = this.props;
@@ -242,7 +245,6 @@ class GerenciarTimes extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="administrador" currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -251,17 +253,15 @@ class GerenciarTimes extends Component {
             open={this.state.toastOpen}
             onClose={this.handleToastClose}
           />
-
           <Backdrop className={classes.backdrop} open={!this.state.loaded}>
             <CircularProgress />
           </Backdrop>
-
           {/* <Dialog open={this.state.modalOpen} onClose={this.handleModalClose}>
             {this.state.modalOpen ? this.renderDialogContent() : ""}
           </Dialog> */}
-
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
+              <Topbar type="administrador" currentPath={currentPath} />
               <Box flex={1}>
                 <Grid container>
                   <Grid item xs={11}>
@@ -290,8 +290,13 @@ class GerenciarTimes extends Component {
               </Box>
             </Box>
           </div>
-
-          <DialogPrompt open={this.state.promptOpen} onClick={(option) => this.handleDeleteTimePromptClick(option)} title={"Excluir Time"} prompt={this.state.promptDeleteTime} />;
+          <DialogPrompt
+            open={this.state.promptOpen}
+            onClick={(option) => this.handleDeleteTimePromptClick(option)}
+            title={"Excluir Time"}
+            prompt={this.state.promptDeleteTime}
+          />
+          ;
         </CssBaseline>
       </React.Fragment>
     );

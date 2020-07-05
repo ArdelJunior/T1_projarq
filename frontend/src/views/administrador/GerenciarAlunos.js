@@ -34,12 +34,11 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    height: "100vh",
+    minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -109,15 +108,15 @@ class GerenciarAlunos extends Component {
       toastSeverity: severity,
       toastMessage: message,
     });
-  }
+  };
 
   handleToastClose = () => {
     this.setState({
       toastOpen: false,
       toastSeverity: "info",
-      toastMessage: ""
-    })
-  }
+      toastMessage: "",
+    });
+  };
 
   getAlunosTime = (aluno) => {
     console.log({ aluno });
@@ -201,7 +200,6 @@ class GerenciarAlunos extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="administrador" currentPath={currentPath} />
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -220,6 +218,7 @@ class GerenciarAlunos extends Component {
 
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
+              <Topbar type="administrador" currentPath={currentPath} />
               <Box flex={1}>
                 <Grid container>
                   <Grid item xs={12} style={{ textAlign: "center" }}>

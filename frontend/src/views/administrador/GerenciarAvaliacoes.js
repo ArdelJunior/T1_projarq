@@ -24,12 +24,11 @@ const styles = (theme) => ({
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
-    paddingBottom: 200,
-    height: "100vh",
+    minHeight: "100vh",
   },
   block: {
     padding: theme.spacing(4),
-    height: "100vh",
+    minHeight: "100vh",
     maxWidth: 1200,
     margin: "auto",
   },
@@ -248,8 +247,6 @@ class GerenciarAvaliacoes extends Component {
     return (
       <React.Fragment>
         <CssBaseline>
-          <Topbar type="administrador" currentPath={currentPath} />
-
           <Toastr
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             timeout={6000}
@@ -261,6 +258,7 @@ class GerenciarAvaliacoes extends Component {
 
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
+              <Topbar type="administrador" currentPath={currentPath} />
               <Box flex={2}>
                 <Grid container>
                   <Grid item xs={12} style={{ textAlign: "center" }}>
@@ -270,16 +268,18 @@ class GerenciarAvaliacoes extends Component {
                   </Grid>
                 </Grid>
               </Box>
-              <Box flex={10} className={classes.vScroll}>
+              <Box flex={10}>
                 <Grid container spacing={3} className={classes.list}>
                   <Grid item xs={12} style={{ textAlign: "center" }}>
                     {this.state.timesSorted && this.state.timesSorted.length ? (
                       <>
-                        <FormControlLabel
-                          className={classes.switch}
-                          label={"Mostrar avaliações inválidas"}
-                          control={<Switch checked={this.state.switchChecked} onChange={this.handleSwitchChange} name="showInvalid" />}
-                        />
+                        <div align="left">
+                          <FormControlLabel
+                            className={classes.switch}
+                            label={"Mostrar avaliações inválidas"}
+                            control={<Switch checked={this.state.switchChecked} onChange={this.handleSwitchChange} name="showInvalid" />}
+                          />
+                        </div>
                         <TableContainer>
                           <Table stickyHeader>
                             <TableHead>
