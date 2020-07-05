@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import withStyles from "@material-ui/styles/withStyles";
-import { CssBaseline, Typography, Box } from "@material-ui/core";
+// import { CssBaseline, Typography, Box } from "@material-ui/core";
 
-import Topbar from "../../components/common/Topbar";
+// import Topbar from "../../components/common/Topbar";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -37,23 +37,24 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
-      <React.Fragment>
-        <CssBaseline>
-          <Topbar type="administrador" currentPath={0} />
-          <div className={classes.root}>
-            <Box display="flex" flexDirection="column" className={classes.block}>
-              <Box flex={2}></Box>
-              <Box flex={10}>
-                <div className={classes.center}>
-                  <Typography variant="h5"></Typography>
-                </div>
-              </Box>
-            </Box>
-          </div>
-        </CssBaseline>
-      </React.Fragment>
+      <Redirect to="/administrador/avaliacoes" />
+      // <React.Fragment>
+      //   <CssBaseline>
+      //     <Topbar type="administrador" currentPath={0} />
+      //     <div className={classes.root}>
+      //       <Box display="flex" flexDirection="column" className={classes.block}>
+      //         <Box flex={2}></Box>
+      //         <Box flex={10}>
+      //           <div className={classes.center}>
+      //             <Typography variant="h5"></Typography>
+      //           </div>
+      //         </Box>
+      //       </Box>
+      //     </div>
+      //   </CssBaseline>
+      // </React.Fragment>
     );
   }
 }

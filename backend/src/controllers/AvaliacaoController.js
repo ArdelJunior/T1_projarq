@@ -1,6 +1,7 @@
 const Avaliacao = require("../models/Avaliacao");
 const AvaliacaoFactory = require("../factories/AvaliacaoFactory");
 const Time = require("../models/Time");
+const { checkAvaliacaoAlreadyExists, checkAvaliacoesTime } = require("../helper/constraints");
 
 module.exports = {
   async index(request, response) {
@@ -37,6 +38,13 @@ module.exports = {
       const time = await tc.get(id);
       time.avaliacoes = await ac.getByTime(id);
       time.nota = tc.getNota();
+      try {
+        await checkAvaliacoesTime(time);
+        time.valid = true;
+      } catch (e){
+        time.valid = false;
+        time.warning = e.message;
+      }
       
       return response.json(time);
     } catch (error) {
@@ -60,6 +68,7 @@ module.exports = {
     const { avaliador, time, avaliacao } = request.body;
 
     try {
+      await checkAvaliacaoAlreadyExists(time, avaliador);
       await AvaliacaoFactory.create(avaliador, time, avaliacao);
       return response.json({ success: true });
     } catch (error) {

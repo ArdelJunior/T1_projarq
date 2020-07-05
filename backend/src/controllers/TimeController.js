@@ -1,5 +1,6 @@
 const Time = require("../models/Time");
 const TimeFactory = require("../factories/TimeFactory");
+const { checkCursos } = require("../helper/constraints");
 
 module.exports = {
   async index(request, response) {
@@ -37,17 +38,8 @@ module.exports = {
   async create(request, response) {
     const { criador, nome, alunos } = request.body;
 
-    const checkCursos = [...new Set(alunos.map((a) => a.curso))];
-    if (checkCursos.length < 2) {
-      return response
-        .status(400)
-        .json({
-          error:
-            "Devem ser adicionados alunos de pelo menos 2 cursos diferentes.",
-        });
-    }
-
     try {
+      checkCursos(alunos);
       await TimeFactory.create(criador, nome, alunos);
       return response.status(201).json({ success: true });
     } catch (error) {
@@ -84,17 +76,8 @@ module.exports = {
     const { id } = request.params;
     const { time } = request.body;
 
-    const checkCursos = [...new Set(time.alunos.map((a) => a.curso))];
-    if (checkCursos.length < 2) {
-      return response
-        .status(400)
-        .json({
-          error:
-            "Devem ser adicionados alunos de pelo menos 2 cursos diferentes.",
-        });
-    }
-
     try {
+      checkCursos(time.alunos);
       const tc = new Time();
       await tc.update(id, time);
     } catch (error) {

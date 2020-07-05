@@ -8,11 +8,14 @@ import Typography from "@material-ui/core/Typography";
 
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
-import { Box, Grid, Table, TableHead, TableBody, TableCell, TableRow, TableContainer } from "@material-ui/core";
+import { Box, Grid, Table, TableHead, TableBody, TableCell, TableRow, TableContainer, Tooltip, FormControlLabel, Switch } from "@material-ui/core";
 import { getAvaliacoes, getTimeFinal, getAvaliacoesTime } from "../../utils/api";
 import DialogAvaliacoesAdm from "../../components/dialogs/DialogAvaliacoesAdm";
 
 const backgroundShape = require("../../images/shape.svg");
+const gold = require("../../images/gold-cup.svg");
+const silver = require("../../images/silver-medal.svg");
+const bronze = require("../../images/bronze-medal.svg");
 
 const styles = (theme) => ({
   root: {
@@ -38,7 +41,36 @@ const styles = (theme) => ({
     textAlign: "center",
     minWidth: 100,
   },
+  cellRank: {
+    textAlign: "center",
+    width: 20,
+  },
+  row: {},
+  rowWarning: {
+    backgroundColor: "#FFCCCC",
+    "&:hover": {
+      backgroundColor: "#FF8888",
+    },
+  },
+  imgRank: {
+    height: "2em",
+  },
+  switch: {
+    paddingLeft: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+  },
 });
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: "0.875rem",
+    padding: theme.spacing(1),
+  },
+}))(Tooltip);
 
 class GerenciarAvaliacoes extends Component {
   state = {
@@ -53,6 +85,8 @@ class GerenciarAvaliacoes extends Component {
     modalOpen: false,
 
     timeModal: [],
+
+    switchChecked: true,
   };
 
   componentDidMount() {
@@ -93,13 +127,40 @@ class GerenciarAvaliacoes extends Component {
 
   rankAvaliacoes = (times) => {
     let rank = 1;
-    times.forEach(time => {
-      if(time.valid) {
+    times.forEach((time) => {
+      if (time.valid) {
         time.rank = rank++;
       }
     });
     return times;
-  }
+  };
+
+  drawRank = (rank) => {
+    const { classes } = this.props;
+
+    let img = null;
+    let alt = null;
+    switch (rank) {
+      case 1:
+        img = gold;
+        alt = "Ouro";
+        break;
+      case 2:
+        img = silver;
+        alt = "Prata";
+        break;
+      case 3:
+        img = bronze;
+        alt = "Bronze";
+        break;
+      default:
+        img = null;
+        alt = null;
+        break;
+    }
+
+    return img ? <img src={img} alt={alt} className={classes.imgRank} /> : "";
+  };
 
   getAvaliacoes = () => {
     axios
@@ -156,17 +217,27 @@ class GerenciarAvaliacoes extends Component {
     });
   };
 
+  handleSwitchChange = () => {
+    this.setState({
+      switchChecked: !this.state.switchChecked,
+    });
+  };
+
   renderAvaliacoes = () => {
     const { classes } = this.props;
-    const { timesSorted } = this.state;
+    const { timesSorted, switchChecked } = this.state;
     console.log({ timesSorted });
-    return timesSorted.map((time, key) => {
+    const times = switchChecked ? timesSorted : timesSorted.filter((t) => t.valid);
+    return times.map((time, key) => {
       return (
-        <TableRow key={key} hover onClick={() => this.handleRowClick(time)}>
-          <TableCell className={classes.cell}>{time.nome}</TableCell>
-          <TableCell className={classes.cell}>{time.nota}</TableCell>
-          <TableCell className={classes.cell}>{time.avaliacoes.length}</TableCell>
-        </TableRow>
+        <LightTooltip key={key} title={time.warning || time.nome}>
+          <TableRow key={key} className={time.warning ? classes.rowWarning : classes.row} hover={!time.warning} onClick={() => this.handleRowClick(time)}>
+            <TableCell className={classes.cellRank}>{this.drawRank(time.rank)}</TableCell>
+            <TableCell className={classes.cell}>{time.nome}</TableCell>
+            <TableCell className={classes.cell}>{time.nota}</TableCell>
+            <TableCell className={classes.cell}>{time.avaliacoes.length}</TableCell>
+          </TableRow>
+        </LightTooltip>
       );
     });
   };
@@ -192,33 +263,47 @@ class GerenciarAvaliacoes extends Component {
             <Box display="flex" flexDirection="column" className={classes.block}>
               <Box flex={2}>
                 <Grid container>
-                  <Typography variant="h6" gutterBottom>
-                    Avaliações
-                  </Typography>
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                    <Typography variant="h6" gutterBottom>
+                      Avaliações
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Box>
-              <Box flex={9} className={classes.vScroll}>
+              <Box flex={10} className={classes.vScroll}>
                 <Grid container spacing={3} className={classes.list}>
-                  <TableContainer>
-                    <Table stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          {["Time", "Nota", "Avaliações"].map((item, key) => {
-                            return (
-                              <TableCell key={key} className={classes.cell}>
-                                {item}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>{this.state.timesSorted && this.state.timesSorted.length ? this.renderAvaliacoes() : <TableRow></TableRow>}</TableBody>
-                    </Table>
-                  </TableContainer>
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                    {this.state.timesSorted && this.state.timesSorted.length ? (
+                      <>
+                        <FormControlLabel
+                          className={classes.switch}
+                          label={"Mostrar avaliações inválidas"}
+                          control={<Switch checked={this.state.switchChecked} onChange={this.handleSwitchChange} name="showInvalid" />}
+                        />
+                        <TableContainer>
+                          <Table stickyHeader>
+                            <TableHead>
+                              <TableRow>
+                                {["", "Time", "Nota", "Avaliações"].map((item, key) => {
+                                  return (
+                                    <TableCell key={key} className={classes.cell}>
+                                      {item}
+                                    </TableCell>
+                                  );
+                                })}
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>{this.state.timesSorted && this.state.timesSorted.length ? this.renderAvaliacoes() : <TableRow></TableRow>}</TableBody>
+                          </Table>
+                        </TableContainer>
+                      </>
+                    ) : (
+                      <Typography variant="h6" align="center">
+                        Não há avaliações para exibir!
+                      </Typography>
+                    )}
+                  </Grid>
                 </Grid>
-              </Box>
-              <Box flex={2}>
-                <Grid container></Grid>
               </Box>
             </Box>
           </div>
