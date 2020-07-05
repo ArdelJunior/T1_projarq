@@ -41,4 +41,8 @@ module.exports = class Avaliador extends IPessoa {
   }
 
   async update() {}
+
+  async delete(id) {
+    return await connection(this.table).where("id", "=", id).delete();
+  }
 };

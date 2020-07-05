@@ -57,4 +57,17 @@ module.exports = {
       return response.status(400).json({ error: error.message });
     }
   },
+
+  async delete(request, response) {
+    const { id } = request.params;
+
+    try {
+      const ac = new Aluno();
+      await ac.delete(id);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+
+    return response.status(204).send();
+  },
 };

@@ -43,9 +43,11 @@ routes.get('/times/disponiveis', [authJwt.verifyToken, authJwt.isAvaliador], Tim
 
 // Permissão para Administrador
 routes.post('/alunos', [authJwt.verifyToken, authJwt.isAdministrador], AlunoController.create);
+routes.delete('/alunos/:id', [authJwt.verifyToken, authJwt.isAdministrador], AlunoController.delete);
 
 routes.get('/avaliadores', [authJwt.verifyToken, authJwt.isAdministrador], AvaliadorController.index);
 routes.post('/avaliadores', [authJwt.verifyToken, authJwt.isAdministrador], AvaliadorController.create);
+routes.delete('/avaliadores/:id', [authJwt.verifyToken, authJwt.isAdministrador], AvaliadorController.delete);
 
 routes.get('/adm', [authJwt.verifyToken, authJwt.isAdministrador], AdministradorController.index);
 routes.post('/adm', [authJwt.verifyToken, authJwt.isAdministrador], AdministradorController.create);

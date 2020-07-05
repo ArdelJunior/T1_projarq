@@ -17,13 +17,17 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  IconButton,
 } from "@material-ui/core";
+
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 
-import { getAlunos, getTimeSugeridoAluno } from "../../utils/api";
+import { getAlunos, getTimeSugeridoAluno, deleteAluno } from "../../utils/api";
 import ApiReq from "../../components/common/ApiReq";
+import DialogPrompt from "../../components/dialogs/DialogPrompt";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -48,6 +52,9 @@ const styles = (theme) => ({
   },
   center: {
     margin: "auto",
+  },
+  title: {
+    marginBottom: theme.spacing(4),
   },
   vScroll: {
     overflowX: "hidden",
@@ -87,11 +94,18 @@ class GerenciarAlunos extends Component {
     toastOpen: false,
     toastSeverity: "info",
     toastMessage: "",
+
+    toDelete: null,
+    promptDeleteOpen: false,
   };
-  
+
   api = ApiReq.getInstance();
 
   componentDidMount() {
+    this.loadAlunos();
+  }
+
+  loadAlunos = () => {
     this.api
       .get(getAlunos)
       .then((rs) => {
@@ -102,7 +116,7 @@ class GerenciarAlunos extends Component {
       .catch((err) => {
         this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
-  }
+  };
 
   showToast = (severity, message) => {
     this.setState({
@@ -118,6 +132,46 @@ class GerenciarAlunos extends Component {
       toastSeverity: "info",
       toastMessage: "",
     });
+  };
+
+  closePrompt = () => {
+    this.setState({
+      promptDeleteOpen: false,
+      toDelete: null,
+      promptDelete: "",
+    });
+  };
+
+  handleDeleteClick = (e, aluno) => {
+    e.stopPropagation();
+    this.setState({
+      promptDeleteOpen: true,
+      toDelete: aluno,
+      promptDelete: `Confirma a exclusão do aluno ${aluno.nome}?`,
+    });
+  };
+
+  handleDeletePromptClick = (option) => {
+    if (!option) {
+      this.closePrompt();
+      return false;
+    }
+
+    const { id } = this.state.toDelete;
+
+    this.api
+      .delete(deleteAluno + id)
+      .then(() => {
+        this.showToast("success", "Aluno excluído com sucesso");
+        this.loadAlunos();
+      })
+      .catch((err) => {
+        console.log({ err });
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      })
+      .finally(() => {
+        this.closePrompt();
+      });
   };
 
   getAlunosTime = (aluno) => {
@@ -191,6 +245,13 @@ class GerenciarAlunos extends Component {
           <TableCell align="center">{aluno.matricula}</TableCell>
           <TableCell align="center">{aluno.curso}</TableCell>
           <TableCell align="center">{aluno.email}</TableCell>
+          <TableCell align="center">
+            {
+              <IconButton onClick={(e) => this.handleDeleteClick(e, aluno)} size="small">
+                <DeleteIcon />
+              </IconButton>
+            }
+          </TableCell>
         </TableRow>
       );
     });
@@ -221,7 +282,7 @@ class GerenciarAlunos extends Component {
           <div className={classes.root}>
             <Box display="flex" flexDirection="column" className={classes.block}>
               <Topbar type="administrador" currentPath={currentPath} />
-              <Box flex={1}>
+              <Box flex={2} className={classes.title}>
                 <Grid container>
                   <Grid item xs={12} style={{ textAlign: "center" }}>
                     <Typography variant="h6" gutterBottom>
@@ -230,7 +291,7 @@ class GerenciarAlunos extends Component {
                   </Grid>
                 </Grid>
               </Box>
-              <Box flex={9} className={classes.vScroll}>
+              <Box flex={10}>
                 <TableContainer>
                   <Table stickyHeader>
                     <TableHead>
@@ -247,6 +308,9 @@ class GerenciarAlunos extends Component {
                         <TableCell key="aluno_email" align="center" style={{ minWidth: 100 }}>
                           E-mail
                         </TableCell>
+                        <TableCell key="aluno_acoes" align="center" style={{ minWidth: 100 }}>
+                          Ações
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>{this.renderRows()}</TableBody>
@@ -255,6 +319,13 @@ class GerenciarAlunos extends Component {
               </Box>
             </Box>
           </div>
+
+          <DialogPrompt
+            open={this.state.promptDeleteOpen}
+            onClick={(option) => this.handleDeletePromptClick(option)}
+            title={"Excluir Aluno"}
+            prompt={this.state.promptDelete}
+          />
         </CssBaseline>
       </React.Fragment>
     );

@@ -27,7 +27,8 @@ module.exports = class Aluno extends IPessoa {
       .join("cursos as c", "a.curso", "c.id")
       .leftJoin("alunos_times as at", "a.id", "at.id_aluno")
       .leftJoin("times as t", "t.id", "at.id_time")
-      .whereNull("at.id").orWhere("t.id", "=", time);
+      .whereNull("at.id")
+      .orWhere("t.id", "=", time);
   }
 
   async get(id) {
@@ -69,6 +70,10 @@ module.exports = class Aluno extends IPessoa {
     return await connection("alunos")
       .where("id", "=", aluno.id)
       .update({ ...aluno });
+  }
+
+  async delete(id) {
+    return await connection("alunos").where("id", "=", id).delete();
   }
 
   async new(matricula, nome, curso, email, password) {

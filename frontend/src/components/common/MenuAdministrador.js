@@ -12,6 +12,10 @@ const MenuAdministrador = [
     pathname: "/administrador/alunos"
   },
   {
+    label: "Avaliadores",
+    pathname: "/administrador/avaliadores"
+  },
+  {
     label: "Sair",
     pathname: "/logout",
   },

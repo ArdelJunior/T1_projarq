@@ -24,6 +24,7 @@ import DashboardAdministrador from "./views/administrador/DashboardAdministrador
 import LoginAdministrador from "./views/administrador/LoginAdministrador";
 import Logout from "./views/common/Logout";
 import authParams from "./services/AuthParams";
+import GerenciarAvaliadores from "./views/administrador/GerenciarAvaliadores";
 
 const ProtectedRoute = ({component: Component, authRole, ...rest}) => {
   return (
@@ -58,6 +59,7 @@ export default (props) => (
         <ProtectedRoute path="/administrador/times/edit/:id" authRole="administrador" component={EditTime} />
         <ProtectedRoute path="/administrador/times" authRole="administrador" component={GerenciarTimes} />
         <ProtectedRoute path="/administrador/avaliacoes" authRole="administrador" component={GerenciarAvaliacoes} />
+        <ProtectedRoute path="/administrador/avaliadores" authRole="administrador" component={GerenciarAvaliadores} />
         <Route path="/administrador/login" component={LoginAdministrador} />
         <ProtectedRoute path="/administrador" authRole="administrador" component={DashboardAdministrador} />
 
