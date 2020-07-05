@@ -65,7 +65,8 @@ module.exports = {
   },
 
   async create(request, response) {
-    const { time, avaliacao } = request.body;
+    const { id: time } = request.params;
+    const { avaliacao } = request.body;
     const { id: avaliador } = request;
 
     try {

@@ -23,7 +23,6 @@ class DialogAddAvaliacao extends Component {
     time: null,
     avaliacao: null,
     isNewAvaliacao: true,
-    avaliador: 1,
   };
 
   api = ApiReq.getInstance();
@@ -74,16 +73,16 @@ class DialogAddAvaliacao extends Component {
 
   saveAvaliacao = () => {
     const { onSaveError, onClose, onSave } = this.props;
-    const { avaliacao, time, avaliador, isNewAvaliacao } = this.state;
-    console.log({ avaliacao, time, avaliador, isNewAvaliacao });
+    const { avaliacao, time, isNewAvaliacao } = this.state;
+    console.log({ avaliacao, time, isNewAvaliacao });
     if (!time.id) {
       onSaveError({ validation: "Escolha o time para avaliar" });
       return;
     }
 
     const req = isNewAvaliacao
-      ? this.api.post(addAvaliacao, { time: time.id, avaliacao, avaliador })
-      : this.api.put(editAvaliacao, { time: time.id, avaliacao, avaliador });
+      ? this.api.post(addAvaliacao, { time: time.id, avaliacao })
+      : this.api.put(editAvaliacao + time.id, { avaliacao });
     req
       .then((rs) => {
         onSave();

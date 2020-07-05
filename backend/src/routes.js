@@ -36,7 +36,7 @@ routes.delete('/times_sugeridos/:id',[authJwt.verifyToken, authJwt.isAluno], Tim
 // Permissão para Avaliador
 routes.get('/avaliacoes/avaliador', [authJwt.verifyToken, authJwt.isAvaliador], AvaliacaoController.getByAvaliador);
 routes.post('/avaliacoes', [authJwt.verifyToken, authJwt.isAvaliador], AvaliacaoController.create);
-routes.put('/avaliacoes', [authJwt.verifyToken, authJwt.isAvaliador], AvaliacaoController.update);
+routes.put('/avaliacoes/:id', [authJwt.verifyToken, authJwt.isAvaliador], AvaliacaoController.update);
 routes.delete('/avaliacoes/:id', [authJwt.verifyToken, authJwt.isAvaliador], AvaliacaoController.delete);
 
 routes.get('/times/disponiveis', [authJwt.verifyToken, authJwt.isAvaliador], TimeController.getNaoAvaliados);
