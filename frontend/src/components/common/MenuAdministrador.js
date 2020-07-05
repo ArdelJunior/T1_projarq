@@ -4,12 +4,12 @@ const MenuAdministrador = [
     pathname: "/administrador/avaliacoes"
   },
   {
-    label: "Alunos",
-    pathname: "/administrador/alunos"
-  },
-  {
     label: "Times",
     pathname: "/administrador/times"
+  },
+  {
+    label: "Alunos",
+    pathname: "/administrador/alunos"
   },
   {
     label: "Sair",

@@ -32,6 +32,16 @@ module.exports = {
     }
   },
 
+  async getByCriadorAdmin(request, response) {
+    const { id } = request.params;
+    try {
+      const time = await TimeSugerido.getByCriador(id);
+      return response.json(time);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+  },
+
   async create(request, response) {
     const { alunos } = request.body;
     const { id: criador } = request;

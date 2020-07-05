@@ -54,6 +54,8 @@ routes.get('/avaliacoes', [authJwt.verifyToken, authJwt.isAdministrador], Avalia
 routes.get('/avaliacoes/time/:id', [authJwt.verifyToken, authJwt.isAdministrador], AvaliacaoController.getByTime);
 
 routes.get('/times_sugeridos', [authJwt.verifyToken, authJwt.isAdministrador], TimeSugeridoController.index);
+routes.get('/times_sugeridos/aluno/:id', [authJwt.verifyToken, authJwt.isAdministrador], TimeSugeridoController.getByCriadorAdmin);
+
 
 routes.get('/times', [authJwt.verifyToken, authJwt.isAdministrador], TimeController.index);
 routes.get('/times/:id', [authJwt.verifyToken, authJwt.isAdministrador], TimeController.get);
