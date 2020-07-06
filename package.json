@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run devserver\" \"npm run devclient\"",
+    "dev": "concurrently \"npm run devserver\" \"npm run devclient\"",
     "devserver": "nodemon src/index.js",
-    "devclient": "cd client && npm start"
+    "devclient": "cd client && npm start",
+    "start": "node src/index.js",
+    "heroku-postbuild": "cd client && yarn && yarn run build"
   },
   "keywords": [],
   "author": "",

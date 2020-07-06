@@ -2,7 +2,7 @@
   "name": "hackatona",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/ArdelJunior/T1_projarq",
+  "homepage": "/",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.2.0",
@@ -38,5 +38,8 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "engines": {
+    "node": "12.x"
+  },
   "proxy": "http://localhost:3333"
 }
