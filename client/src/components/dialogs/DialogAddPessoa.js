@@ -3,8 +3,6 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { Dialog, CssBaseline, DialogTitle, DialogContent, DialogActions, Button, Select, Grid, TextField, MenuItem } from "@material-ui/core";
 
-import ApiReq from "../common/ApiReq";
-
 const styles = (theme) => ({
   dialogBody: {
     backgroundColor: "#f5f5f5",

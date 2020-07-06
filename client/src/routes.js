@@ -30,7 +30,6 @@ const ProtectedRoute = ({component: Component, authRole, ...rest}) => {
   return (
     <Route {...rest} render={(props) => {
       const params = authParams();
-      console.log({params});
       if(params && Object.keys(params).length > 0 && (!authRole || params.role === authRole)) {
         return <Component {...props} />;
       }
