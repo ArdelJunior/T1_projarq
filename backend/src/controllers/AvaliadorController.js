@@ -41,12 +41,8 @@ module.exports = {
 
     try {
       const ac = new Avaliador();
-      const check = await ac.get(id);
-      if(check) {
-        return response.status(400).json({error: "Este avaliador não pode ser excluído enquanto houver avaliações associadas"})
-      }
       await ac.delete(id);
-      return response.status(204).send();
+      return response.status(200).json({ success: true });
     } catch (error) {
       console.error(error);
       return response.status(400).json({ error: error.message });

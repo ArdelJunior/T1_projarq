@@ -2,15 +2,18 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
 import { withRouter } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Box, Grid, Typography, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton } from "@material-ui/core";
+import { Box, Grid, Typography, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Fab } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+
+import AddIcon from "@material-ui/icons/Add";
 
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import ApiReq from "../../components/common/ApiReq";
-import { getAvaliadores, deleteAvaliador, getAvaliacoesAvaliador } from "../../utils/api";
+import { getAvaliadores, deleteAvaliador, getAvaliacoesAvaliador, addAvaliador } from "../../utils/api";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
 import DialogAvaliacoesAdm from "../../components/dialogs/DialogAvaliacoesAdm";
+import DialogAddPessoa from "../../components/dialogs/DialogAddPessoa";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -48,15 +51,17 @@ class GerenciarAvaliadores extends Component {
     modalOpen: false,
     modalAvaliador: "",
     modalAvaliacoes: [],
+
+    modalAddAvaliadorOpen: false,
   };
 
   api = ApiReq.getInstance();
 
   componentDidMount() {
-    this.loadAvaliacoes();
+    this.loadAvaliadores();
   }
 
-  loadAvaliacoes = () => {
+  loadAvaliadores = () => {
     this.api
       .get(getAvaliadores)
       .then((rs) => {
@@ -119,11 +124,12 @@ class GerenciarAvaliadores extends Component {
     });
   };
 
-  handleDeleteClick = (avaliador) => {
+  handleDeleteClick = (e, avaliador) => {
+    e.stopPropagation();
     this.setState({
       promptOpen: true,
       toDelete: avaliador,
-      promptDelete: `Confirma a exclusão do avaaliador ${avaliador.nome}?`,
+      promptDelete: `Confirma a exclusão do avaaliador ${avaliador.nome}? Todas as avaliações dele serão excluídas também.`,
     });
   };
 
@@ -139,7 +145,7 @@ class GerenciarAvaliadores extends Component {
       .delete(deleteAvaliador + id)
       .then(() => {
         this.showToast("success", "Avaliador excluído com sucesso");
-        this.getAvaliadores();
+        this.loadAvaliadores();
       })
       .catch((err) => {
         console.log({ err });
@@ -147,6 +153,38 @@ class GerenciarAvaliadores extends Component {
       })
       .finally(() => {
         this.closePrompt();
+      });
+  };
+
+  handleButtonAddAvaliadorClick = () => {
+    this.setState({
+      modalAddAvaliadorOpen: true,
+    });
+  };
+
+  handleModalAddAvaliadorClose = () => {
+    this.setState({
+      modalAddAvaliadorOpen: false,
+    });
+  };
+
+  handleAddAvaliadorSubmit = (e) => {
+    e.preventDefault();
+    const {
+      nome: { value: nome },
+      email: { value: email },
+      password: { value: password },
+    } = e.target;
+    console.log({ nome, email, password, addAvaliador });
+    this.api
+      .post(addAvaliador, { nome, email, password })
+      .then(() => {
+        this.showToast("success", "Avaliador adicionado com sucesso");
+        this.loadAvaliadores();
+        this.handleModalAddAvaliadorClose();
+      })
+      .catch((err) => {
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       });
   };
 
@@ -174,7 +212,7 @@ class GerenciarAvaliadores extends Component {
                 <TableCell align="center">{av.nome}</TableCell>
                 <TableCell align="center">{av.email}</TableCell>
                 <TableCell align="center">
-                  <IconButton onClick={() => this.handleDeleteClick(av)} size="small">
+                  <IconButton onClick={(e) => this.handleDeleteClick(e, av)} size="small">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -207,10 +245,15 @@ class GerenciarAvaliadores extends Component {
               <Topbar type="administrador" currentPath={currentPath} />
               <Box flex={1} className={classes.title}>
                 <Grid container>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                  <Grid item xs={11} style={{ textAlign: "center" }}>
                     <Typography variant="h6" gutterBottom>
                       Avaliadores
                     </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Fab color="primary" aria-label="add" onClick={this.handleButtonAddAvaliadorClick}>
+                      <AddIcon />
+                    </Fab>
                   </Grid>
                 </Grid>
               </Box>
@@ -238,6 +281,12 @@ class GerenciarAvaliadores extends Component {
             title={modalAvaliador}
             showInCardTitle="time"
             onClose={this.handleModalClose}
+          />
+          <DialogAddPessoa
+            open={this.state.modalAddAvaliadorOpen}
+            onClose={this.handleModalAddAvaliadorClose}
+            onSubmit={this.handleAddAvaliadorSubmit}
+            personRole="avaliador"
           />
         </CssBaseline>
       </React.Fragment>

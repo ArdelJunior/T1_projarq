@@ -9,10 +9,11 @@ export const getCriterios = apiRoot + "criterios";
 
 export const getAlunos = apiRoot + "alunos";
 export const getAlunosDisponiveis = apiRoot + "alunos/disponiveis/";
-export const createAluno = apiRoot + "alunos";
+export const addAluno = apiRoot + "alunos";
 export const deleteAluno = apiRoot + "alunos/";
 
 export const getAvaliadores = apiRoot + "avaliadores";
+export const addAvaliador = apiRoot + "avaliadores";
 export const deleteAvaliador = apiRoot + "avaliadores/";
 
 export const getTimeSugerido = apiRoot + "times_sugeridos/"

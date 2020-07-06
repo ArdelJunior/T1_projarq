@@ -65,7 +65,7 @@ module.exports = {
       return response.status(400).json({ error: error.message });
     }
 
-    return response.status(204).send();
+    return response.status(200).json({ success: true });
   },
 
   async deleteByCriador(request, response) {
@@ -73,7 +73,7 @@ module.exports = {
 
     try {
       await TimeSugerido.deleteByCriador(id);
-      return response.status(204).send();
+      return response.status(200).json({ success: true });
     } catch (error) {
       return response.status(400).json({ error: error.message });
     }
