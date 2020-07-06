@@ -4,7 +4,9 @@ const path = require('path');
 const routes = require('./routes'); 
 const app = express();
 
-app.listen(3333);
+const port = process.env.PORT || 3333;
+
+app.listen(port);
 
 app.use(express.json());
 app.use(cors());
