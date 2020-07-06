@@ -1,4 +1,4 @@
-const apiRoot = "http://localhost:3333/";
+const apiRoot = "/api/";
 
 export const login = apiRoot + "login";
 export const logout = apiRoot + "logout";
