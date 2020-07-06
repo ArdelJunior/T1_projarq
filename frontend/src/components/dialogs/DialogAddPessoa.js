@@ -20,11 +20,11 @@ const styles = (theme) => ({
 class DialogAddPessoa extends Component {
   state = {};
 
-  handleInputChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
+  // handleInputChange = (event) => {
+  //   this.setState({
+  //     [event.target.name]: event.target.value,
+  //   });
+  // };
 
   renderCursos = () => {
     const { cursos } = this.props;
@@ -62,6 +62,23 @@ class DialogAddPessoa extends Component {
                     />
                   </Grid>
                 )}
+                {personRole === "aluno" && (
+                  <Grid item xs={12}>
+                    <Select
+                      id="curso"
+                      name="curso"
+                      label="Curso"
+                      variant="outlined"
+                      type="curso"
+                      required
+                      autoFocus
+                      fullWidth
+                      // onChange={this.handleInputChange}
+                    >
+                      {cursos && cursos.length && this.renderCursos()}
+                    </Select>
+                  </Grid>
+                )}
                 <Grid item xs={12}>
                   <TextField id="nome" name="nome" label="Nome" autoComplete="nome" variant="outlined" required fullWidth onChange={this.handleInputChange} />
                 </Grid>
@@ -92,23 +109,6 @@ class DialogAddPessoa extends Component {
                     // onChange={this.handleInputChange}
                   />
                 </Grid>
-                {personRole === "aluno" && (
-                  <Grid item xs={12}>
-                    <Select
-                      id="curso"
-                      name="curso"
-                      label="Curso"
-                      variant="outlined"
-                      type="curso"
-                      required
-                      autoFocus
-                      fullWidth
-                      // onChange={this.handleInputChange}
-                    >
-                      {cursos && cursos.length && this.renderCursos()}
-                    </Select>
-                  </Grid>
-                )}
               </Grid>
             </DialogContent>
             <DialogActions>

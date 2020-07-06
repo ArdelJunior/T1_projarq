@@ -118,6 +118,6 @@ module.exports = class Avaliacao extends IAvaliavel {
   }
 
   async delete(id) {
-    return await connection("avaliacoes").where("id", "=", id).delete();
+    return await connection("avaliacoes").where("id_time", "=", id).delete();
   }
 };

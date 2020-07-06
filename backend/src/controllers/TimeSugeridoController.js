@@ -45,7 +45,6 @@ module.exports = {
   async create(request, response) {
     const { alunos } = request.body;
     const { id: criador } = request;
-    console.log({alunos});
 
     try {
       checkCursos(alunos);

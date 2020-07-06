@@ -1,8 +1,5 @@
 const jwt = require("jsonwebtoken");
 const config = require("../auth.config");
-const connection = require("../../database/connection");
-const Administrador = require("../../models/Administrador");
-const Aluno = require("../../models/Aluno");
 const RoleFactory = require("../../factories/RoleFactory");
 
 module.exports = {

@@ -25,15 +25,15 @@ module.exports = class AlunoFactory {
       throw new Error("Este aluno já existe");
     }
 
-    let idCurso;
+    // let idCurso;
 
-    try {
-      const c = await Curso.get(curso);
-      idCurso = c.id;
-    } catch (err) {
-      throw new Error(`Curso ${curso} não encontrado`);
-    }
+    // try {
+    //   const c = await Curso.get(curso);
+    //   idCurso = c.id;
+    // } catch (err) {
+    //   throw new Error(`Curso ${curso} não encontrado`);
+    // }
 
-    return await ac.new(matricula, nome, idCurso, email, password);
+    return await ac.new(matricula, nome, curso, email, password);
   }
 };

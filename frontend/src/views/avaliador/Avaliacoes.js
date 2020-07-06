@@ -54,7 +54,7 @@ class Avaliacoes extends Component {
   api = ApiReq.getInstance();
 
   componentDidMount() {
-    this.getAvaliacoes();
+    this.loadAvaliacoes();
   }
 
   showToast = (severity, message) => {
@@ -73,7 +73,7 @@ class Avaliacoes extends Component {
     });
   };
 
-  getAvaliacoes = () => {
+  loadAvaliacoes = () => {
     this.api
       .get(`${getAvaliacoesAvaliador}`)
       .then((rs) => {
@@ -135,7 +135,7 @@ class Avaliacoes extends Component {
   };
 
   handleSaveAvaliacao = () => {
-    this.getAvaliacoes();
+    this.loadAvaliacoes();
   };
 
   handleSaveAvaliacaoError = (err) => {
@@ -151,7 +151,7 @@ class Avaliacoes extends Component {
   handleDeleteAvaliacaoClick = (avaliacao, time) => {
     this.setState({
       promptOpen: true,
-      avaliacaoToDelete: avaliacao,
+      avaliacaoToDelete: time.id,
       promptDeleteAvaliacao: `Confirma a exclusão da avaliação do time ${time.nome}?`,
     });
   };
@@ -164,9 +164,10 @@ class Avaliacoes extends Component {
 
     const { avaliacaoToDelete } = this.state;
 
-    Promise.all(avaliacaoToDelete.map((av) => this.api.delete(`${deleteAvaliacao}${av.id}`)))
-      .then((data) => {
-        this.getAvaliacoes();
+    // Promise.all(avaliacaoToDelete.map((av) => this.api.delete(`${deleteAvaliacao}${av.id}`)))
+    this.api.delete(deleteAvaliacao + avaliacaoToDelete)
+      .then(() => {
+        this.loadAvaliacoes();
         this.showToast("success", "Avaliação excluída com sucesso");
       })
       .catch((err) => {
