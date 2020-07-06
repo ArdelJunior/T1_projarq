@@ -1,28 +1,20 @@
+function truncate(knex, tables) {
+  return Promise.each(tables, function(table) {
+    return knex.raw(`TRUNCATE TABLE ${table} CASCADE;`);
+  });
+}
+
+const tables = [
+  "alunos_times_sugeridos",
+  "alunos_times",
+  "times",
+  "alunos",
+  "avaliadores",
+  "cursos",
+  "criterios",
+  "administradores"
+]
+
 exports.seed = function (knex) {
-  return knex("alunos_times_sugeridos")
-    .truncate()
-    .then(function () {
-      return knex("times_sugeridos").truncate();
-    })
-    .then(function () {
-      return knex("alunos_times").truncate();
-    })
-    .then(function () {
-      return knex("times").truncate();
-    })
-    .then(function () {
-      return knex("alunos").truncate();
-    })
-    .then(function () {
-      return knex("avaliadores").truncate();
-    })
-    .then(function () {
-      return knex("cursos").truncate();
-    })
-    .then(function () {
-      return knex("criterios").truncate();
-    })
-    .then(function() {
-      return knex("administradores").truncate();
-    });
+  return truncate(knex, tables);
 };
