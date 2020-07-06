@@ -1,6 +1,14 @@
+const Promise = require("bluebird");
+
+function truncateRaw(knex, tables) {
+  return Promise.each(tables, function (table) {
+    return knex.raw(`TRUNCATE TABLE ${table} RESTART IDENTITY CASCADE`);
+  });
+}
+
 function truncate(knex, tables) {
-  return Promise.each(tables, function(table) {
-    return knex.raw(`TRUNCATE TABLE ${table} CASCADE;`);
+  return Promise.each(tables, function (table) {
+    return knex(table).truncate();
   });
 }
 
@@ -12,9 +20,9 @@ const tables = [
   "avaliadores",
   "cursos",
   "criterios",
-  "administradores"
-]
+  "administradores",
+];
 
 exports.seed = function (knex) {
-  return truncate(knex, tables);
+  return truncateRaw(knex, tables).catch(() => truncate(knex, tables));
 };
