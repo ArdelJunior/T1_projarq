@@ -283,6 +283,13 @@ const alunos = [
     email: uuid().split("-")[0] + "@test.com",
     password: bcrypt.hashSync(crypto.randomBytes(16).toString("utf-8"), 8),
   },
+  {
+    matricula: 123456789,
+    nome: "Aluno de Testes",
+    curso: 1,
+    email: "aluno@test.com",
+    password: bcrypt.hashSync("12345678", 8),
+  },
 ];
 
 exports.seed = function (knex) {

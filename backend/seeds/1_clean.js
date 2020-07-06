@@ -21,5 +21,8 @@ exports.seed = function (knex) {
     })
     .then(function () {
       return knex("criterios").truncate();
+    })
+    .then(function() {
+      return knex("administradores").truncate();
     });
 };

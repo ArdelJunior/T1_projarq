@@ -28,6 +28,11 @@ const avaliadores = [
     email: uuid().split("-")[0] + "@test.com",
     password: bcrypt.hashSync(crypto.randomBytes(16).toString("utf-8"), 8),
   },
+  {
+    nome: "Avaliador de testes",
+    email: "avaliador@test.com",
+    password: bcrypt.hashSync("12345678", 8),
+  },
 ];
 
 exports.seed = function (knex) {
