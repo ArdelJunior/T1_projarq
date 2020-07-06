@@ -4,8 +4,8 @@ exports.up = function (knex) {
     table.integer("matricula").unique();
     table.string("nome").notNullable();
     table.integer("curso").notNullable().references("id").inTable("cursos");
-    table.integer("email").unique().notNullable();
-    table.integer("password").notNullable();
+    table.string("email").unique().notNullable();
+    table.string("password").notNullable();
   });
 };
 
