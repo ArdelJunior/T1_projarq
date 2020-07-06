@@ -17,8 +17,9 @@ const styles = (theme) => ({
 });
 
 class DialogAvaliacoesAdm extends Component {
-  renderAvaliacoes = (time) => {
-    return time.avaliacoes.map((av, key) => {
+  renderAvaliacoes = (avaliacoes) => {
+  const { showInCardTitle } = this.props;
+  return avaliacoes.map((av, key) => {
       return (
         // <Grid item xs={4} key={key}>
           <CardAvaliacao
@@ -26,7 +27,7 @@ class DialogAvaliacoesAdm extends Component {
             time={av.time}
             avaliacao={av.avaliacao}
             avaliador={av.avaliador}
-            showInTitle="avaliador"
+            showInTitle={showInCardTitle}
             readOnly
             // onEditClick={() => this.handleEditAvaliacaoClick(av)}
             // onDeleteClick={() => this.handleDeleteAvaliacaoClick(av.avaliacao, av.time)}
@@ -37,16 +38,15 @@ class DialogAvaliacoesAdm extends Component {
   };
 
   render() {
-    const { open, onClose, time } = this.props;
-    console.log({time});
+    const { open, onClose, avaliacoes, title } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
         <Dialog open={open} onClose={this.handleClose} maxWidth="lg" fullWidth>
-          <DialogTitle>{time.nome}</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogContent>
             <Grid container spacing={3}>
-              {time && time.avaliacoes && time.avaliacoes.length && this.renderAvaliacoes(time)}
+              {avaliacoes && avaliacoes.length ? this.renderAvaliacoes(avaliacoes) : <Grid item size={12}>Sem avaliações para exibir</Grid>}
             </Grid>
           </DialogContent>
           <DialogActions>

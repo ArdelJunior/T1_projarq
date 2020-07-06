@@ -300,7 +300,7 @@ class GerenciarAvaliacoes extends Component {
             </Box>
           </div>
 
-          <DialogAvaliacoesAdm open={this.state.modalOpen} time={this.state.timeModal} onClose={this.handleModalClose} />
+          <DialogAvaliacoesAdm open={this.state.modalOpen} avaliacoes={this.state.timeModal.avaliacoes} title={this.state.timeModal.nome} showInCardTitle="avaliador" onClose={this.handleModalClose} />
         </CssBaseline>
       </React.Fragment>
     );

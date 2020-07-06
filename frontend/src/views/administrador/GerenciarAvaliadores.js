@@ -8,8 +8,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 import ApiReq from "../../components/common/ApiReq";
-import { getAvaliadores, deleteAvaliador } from "../../utils/api";
+import { getAvaliadores, deleteAvaliador, getAvaliacoesAvaliador } from "../../utils/api";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
+import DialogAvaliacoesAdm from "../../components/dialogs/DialogAvaliacoesAdm";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -43,6 +44,10 @@ class GerenciarAvaliadores extends Component {
     toastOpen: false,
     toastSeverity: "info",
     toastMessage: "",
+
+    modalOpen: false,
+    modalAvaliador: "",
+    modalAvaliacoes: [],
   };
 
   api = ApiReq.getInstance();
@@ -88,6 +93,32 @@ class GerenciarAvaliadores extends Component {
     });
   };
 
+  handleRowClick = (avaliador) => {
+    this.api.get(getAvaliacoesAvaliador + avaliador.id).then((rs) => {
+      this.setState(
+        {
+          modalAvaliacoes: rs.data,
+          modalAvaliador: avaliador.nome,
+        },
+        () => {
+          if (this.state.modalAvaliacoes && this.state.modalAvaliacoes.length) {
+            this.setState({
+              modalOpen: true,
+            });
+          } else {
+            this.showToast("warning", "Sem avaliações para exibir");
+          }
+        }
+      );
+    });
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      modalOpen: false,
+    });
+  };
+
   handleDeleteClick = (avaliador) => {
     this.setState({
       promptOpen: true,
@@ -111,7 +142,7 @@ class GerenciarAvaliadores extends Component {
         this.getAvaliadores();
       })
       .catch((err) => {
-        console.log({err});
+        console.log({ err });
         this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
       })
       .finally(() => {
@@ -139,7 +170,7 @@ class GerenciarAvaliadores extends Component {
         <TableBody>
           {avaliadores.map((av, key) => {
             return (
-              <TableRow hover key={key}>
+              <TableRow hover key={key} onClick={() => this.handleRowClick(av)}>
                 <TableCell align="center">{av.nome}</TableCell>
                 <TableCell align="center">{av.email}</TableCell>
                 <TableCell align="center">
@@ -157,7 +188,7 @@ class GerenciarAvaliadores extends Component {
 
   render() {
     const { classes } = this.props;
-    const { avaliadores } = this.state;
+    const { avaliadores, modalAvaliador, modalAvaliacoes } = this.state;
     const currentPath = this.props.location.pathname;
     return (
       <React.Fragment>
@@ -200,6 +231,13 @@ class GerenciarAvaliadores extends Component {
             onClick={(option) => this.handleDeletePromptClick(option)}
             title={"Excluir Avaliador"}
             prompt={this.state.promptDelete}
+          />
+          <DialogAvaliacoesAdm
+            open={this.state.modalOpen}
+            avaliacoes={modalAvaliacoes}
+            title={modalAvaliador}
+            showInCardTitle="time"
+            onClose={this.handleModalClose}
           />
         </CssBaseline>
       </React.Fragment>

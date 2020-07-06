@@ -64,6 +64,18 @@ module.exports = {
     }
   },
 
+  async getByAvaliadorAdmin(request, response) {
+    const { id } = request.params;
+
+    try {
+      const ac = new Avaliacao();
+      const avaliacoes = await ac.getByAvaliador(id);
+      return response.json(avaliacoes);
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+  },
+
   async create(request, response) {
     const { id: time } = request.params;
     const { avaliacao } = request.body;
