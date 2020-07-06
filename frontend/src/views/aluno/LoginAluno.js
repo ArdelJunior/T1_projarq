@@ -49,7 +49,7 @@ class LoginAluno extends Component {
           open={this.state.toastOpen}
           onClose={this.handleToastClose}
         />
-        <Login loginRole="aluno" onSubmit={this.handleSubmit} signup />
+        <Login loginRole="aluno" onSubmit={this.handleSubmit} />
       </React.Fragment>
     );
   }

@@ -18,16 +18,19 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  Fab,
 } from "@material-ui/core";
 
 import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
 
 import Topbar from "../../components/common/Topbar";
 import Toastr from "../../components/common/Toastr";
 
-import { getAlunos, getTimeSugeridoAluno, deleteAluno } from "../../utils/api";
+import { getAlunos, getTimeSugeridoAluno, deleteAluno, addAluno, getCursos } from "../../utils/api";
 import ApiReq from "../../components/common/ApiReq";
 import DialogPrompt from "../../components/dialogs/DialogPrompt";
+import DialogAddPessoa from "../../components/dialogs/DialogAddPessoa";
 
 const backgroundShape = require("../../images/shape.svg");
 
@@ -97,6 +100,9 @@ class GerenciarAlunos extends Component {
 
     toDelete: null,
     promptDeleteOpen: false,
+
+    modalAddAlunoOpen: false,
+    cursos: [],
   };
 
   api = ApiReq.getInstance();
@@ -200,6 +206,53 @@ class GerenciarAlunos extends Component {
     });
   };
 
+  handleButtonAddAlunoClick = () => {
+    this.api
+      .get(getCursos)
+      .then((rs) => {
+        this.setState(
+          {
+            cursos: rs.data,
+          },
+          () => {
+            this.setState({
+              modalAddAlunoOpen: true,
+            });
+          }
+        );
+      })
+      .catch((err) => {
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      });
+  };
+
+  handleModalAddAlunoClose = () => {
+    this.setState({
+      modalAddAlunoOpen: false,
+    });
+  };
+
+  handleAddAlunoSubmit = (e) => {
+    e.preventDefault();
+    const {
+      nome: { value: nome },
+      email: { value: email },
+      password: { value: password },
+      matricula: { value: matricula },
+      curso: { value: curso },
+    } = e.target;
+    this.api
+      .post(addAluno, { nome, email, password, matricula, curso })
+      .then(() => {
+        this.showToast("success", "Aluno adicionado com sucesso");
+        this.loadAlunos();
+        this.handleModalAddAlunoClose();
+      })
+      .catch((err) => {
+        this.showToast("error", err.response ? err.response.data.error : "Erro de conexão");
+      });
+  };
+
   renderDialogContent = () => {
     const { classes } = this.props;
     return (
@@ -284,10 +337,15 @@ class GerenciarAlunos extends Component {
               <Topbar type="administrador" currentPath={currentPath} />
               <Box flex={2} className={classes.title}>
                 <Grid container>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                  <Grid item xs={11} style={{ textAlign: "center" }}>
                     <Typography variant="h6" gutterBottom>
                       Alunos inscritos
                     </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Fab color="primary" aria-label="add" onClick={this.handleButtonAddAlunoClick}>
+                      <AddIcon />
+                    </Fab>
                   </Grid>
                 </Grid>
               </Box>
@@ -325,6 +383,13 @@ class GerenciarAlunos extends Component {
             onClick={(option) => this.handleDeletePromptClick(option)}
             title={"Excluir Aluno"}
             prompt={this.state.promptDelete}
+          />
+          <DialogAddPessoa
+            open={this.state.modalAddAlunoOpen}
+            onClose={this.handleModalAddAlunoClose}
+            onSubmit={this.handleAddAlunoSubmit}
+            personRole="aluno"
+            cursos={this.state.cursos}
           />
         </CssBaseline>
       </React.Fragment>
