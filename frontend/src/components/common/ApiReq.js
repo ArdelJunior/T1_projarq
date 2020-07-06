@@ -9,12 +9,9 @@ export default class ApiReq {
     if (!this.instance) {
       this.instance = axios.create();
     }
-    this.instance.interceptors.request.use((config) => {
-      Object.entries(header).forEach((entry) => {
-        config.headers[entry[0]] = entry[1];
-      });
-      return config;
-    })
+    Object.entries(header).forEach((entry) => {
+      this.instance.defaults.headers[entry[0]] = entry[1];
+    });
     return this.instance;
   }
 }

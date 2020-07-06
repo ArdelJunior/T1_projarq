@@ -175,7 +175,7 @@ class GerenciarAvaliadores extends Component {
       email: { value: email },
       password: { value: password },
     } = e.target;
-    console.log({ nome, email, password, addAvaliador });
+
     this.api
       .post(addAvaliador, { nome, email, password })
       .then(() => {
